@@ -1,0 +1,109 @@
+Created At: 2026-08-23T17:16:42+08:00
+Completed At: 2026-08-23T17:16:42+08:00
+File Path: `file:///Users/liminxuan/Documents/antigravity/taiwan-pt-web/index.html`
+Total Lines: 833
+Total Bytes: 26515
+Showing lines 620 to 720
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+620:         console.log('[Copy fallback error]', err);
+621:       }
+622:     }
+623:   }
+624: 
+625:   function appendMsg(role, html, rawText = '') {
+626:     const isBot = role === 'bot';
+627:     const div = document.createElement('div');
+628:     div.className = `msg ${role}`;
+629:     
+630:     let actionsHtml = '';
+631:     if (isBot) {
+632:       actionsHtml = `
+633:         <div class="bubble-actions">
+634:           <button class="copy-btn" data-raw="${escapeAttr(rawText)}" onclick="copyMsg(this)" title="複製回答內容">
+635:             📋 複製
+636:           </button>
+637:         </div>
+638:       `;
+639:     }
+640: 
+641:     div.innerHTML = `
+642:       <div class="avatar">${isBot ? '🩺' : '👤'}</div>
+643:       <div class="bubble-wrapper">
+644:         <div class="bubble">${html}</div>
+645:         ${actionsHtml}
+646:       </div>
+647:     `;
+648:     messagesEl.appendChild(div);
+649:     messagesEl.scrollTop = messagesEl.scrollHeight;
+650:     return div;
+651:   }
+652: 
+653:   function escapeAttr(str) {
+654:     return str
+655:       .replace(/&/g, '&amp;')
+656:       .replace(/"/g, '&quot;')
+657:       .replace(/'/g, '&#39;')
+658:       .replace(/</g, '&lt;')
+659:       .replace(/>/g, '&gt;');
+660:   }
+661: 
+662:   let searchTimer = null;
+663:   function showTyping() {
+664:     const div = document.createElement('div');
+665:     div.className = 'msg bot';
+666:     div.id = 'typing-indicator';
+667:     div.innerHTML = `
+668:       <div class="avatar">🩺</div>
+669:       <div class="bubble-wrapper">
+670:         <div class="bubble">
+671:           <div class="search-status">
+672:             <div class="search-spinner"></div>
+673:             <span id="search-status-text">正在檢索 PubMed 實證資料庫…</span>
+674:           </div>
+675:         </div>
+676:       </div>
+677:     `;
+678:     messagesEl.appendChild(div);
+679:     messagesEl.scrollTop = messagesEl.scrollHeight;
+680: 
+681:     const steps = [
+682:       '正在檢索 PubMed 實證資料庫…',
+683:       '正在比對臨床物理治療指引…',
+684:       '正在統整實證處置與運動指引…'
+685:     ];
+686:     let stepIndex = 0;
+687:     if (searchTimer) clearInterval(searchTimer);
+688:     searchTimer = setInterval(() => {
+689:       stepIndex = (stepIndex + 1) % steps.length;
+690:       const textEl = document.getElementById('search-status-text');
+691:       if (textEl) textEl.textContent = steps[stepIndex];
+692:     }, 600);
+693:   }
+694: 
+695:   function removeTyping() {
+696:     if (searchTimer) {
+697:       clearInterval(searchTimer);
+698:       searchTimer = null;
+699:     }
+700:     document.getElementById('typing-indicator')?.remove();
+701:   }
+702: 
+703:   // Enhanced Markdown → HTML（支援中文標題、清單、粗體、引用、分隔線、超連結）
+704:   function md(text) {
+705:     if (!text) return '';
+706:     let html = text
+707:       // 跳脫 HTML 特殊字元
+708:       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+709:       // 分隔線 ---
+710:       .replace(/^\s*---\s*$/gm, '<hr class="md-hr" />')
+711:       // 引用區塊 >
+712:       .replace(/^>\s*(.+)$/gm, '<blockquote class="md-quote">$1</blockquote>')
+713:       // 中文標題 【1. ...】 或 【...】
+714:       .replace(/^\s*(【\d+\..+?】)\s*$/gm, '<strong class="md-heading">$1</strong>')
+715:       .replace(/^\s*(【.+?】)\s*$/gm, '<strong class="md-heading">$1</strong>')
+716:       // Markdown 標題（1 到 6 個 #，並自動轉為 heading）
+717:       .replace(/^\s*#{1,6}\s*(.+)$/gm, '<strong class="md-heading">$1</strong>')
+718:       // 項目清單 * 或 -
+719:       .replace(/^\s*[\*\-]\s+(.+)$/gm, '<div class="md-li"><span class="bullet">•</span><span>$1</span></div>')
+720:       // 數字清單 1. 2.
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

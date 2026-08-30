@@ -1,0 +1,3436 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
+  <title>臺灣物理治療實證助手 — 專業實證 AI 衛教</title>
+  <meta name="description" content="臺灣物理治療實證助手 — 即時查詢 PubMed 實證文獻、臨床指南、《物理治療師法》與解剖生物力學資訊。" />
+  
+  <!-- PWA & Theme -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#007AFF" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  
+  <!-- Apple iOS PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="物治" />
+  <!-- Apple iOS PWA -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-touch-icon-precomposed.png?v=3" />
+
+  <!-- Favicons for Desktop Browsers (Chrome, Safari, Edge, Firefox) -->
+  <link rel="shortcut icon" href="/favicon.ico?v=3" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png?v=3" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png?v=3" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=3" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=3" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg?v=3" />
+
+  <!-- Open Graph / Facebook / LINE / Threads / Discord -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://taiwan-pt-web.vercel.app/" />
+  <meta property="og:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
+  <meta property="og:description" content="即時查詢 PubMed 實證文獻、臨床指南與臺灣《物理治療師法》，提供專業實證衛教資訊與運動處方建議。" />
+  <meta property="og:image" content="https://taiwan-pt-web.vercel.app/og-image.png?v=3" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="臺灣物理治療實證助手" />
+  <meta property="og:locale" content="zh_TW" />
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
+  <meta name="twitter:description" content="即時查詢 PubMed 實證文獻、臨床指南與臺灣《物理治療師法》。" />
+  <meta name="twitter:image" content="https://taiwan-pt-web.vercel.app/og-image.png?v=3" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal-900: #0d4a4a;
+      --teal-700: #0f6b6b;
+      --teal-600: #12828b;
+      --teal-500: #14919b;
+      --teal-400: #22b2bd;
+      --teal-200: #a8e6eb;
+      --teal-100: #d4f4f7;
+      --teal-50:  #f0fbfc;
+      --gray-900: #111827;
+      --gray-700: #374151;
+      --gray-600: #4b5563;
+      --gray-500: #6b7280;
+      --gray-300: #d1d5db;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+      --white: #ffffff;
+      --radius-lg: 1.15rem;
+      --radius-md: 0.75rem;
+      --radius-sm: 0.5rem;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 36px rgba(0,0,0,0.12);
+      --font-zh: 'Noto Sans TC', sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-zh);
+      background: #F2F2F7;
+      color: var(--gray-900);
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── Layout ─────────────────────────────────────────── */
+    .app {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Header (Apple Frosted Glass Navigation Bar) ─────── */
+    header {
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.88);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+      padding: max(0.65rem, env(safe-area-inset-top)) 0.9rem 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-main {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-width: 0;
+    }
+
+    /* ── Header Icon Buttons ──────────────────────── */
+    .header-icon-btn {
+      background: transparent;
+      border: none;
+      color: #007AFF;
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s ease, transform 0.1s ease;
+      touch-action: manipulation;
+    }
+    .header-icon-btn:hover, .header-icon-btn:active {
+      background: rgba(0, 122, 255, 0.08);
+      transform: scale(0.96);
+    }
+    .header-icon-btn svg {
+      width: 1.35rem;
+      height: 1.35rem;
+    }
+    .header-title-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #1C1C1E;
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* ── Messages ───────────────────────────────────────── */
+    #messages {
+      flex: 1 1 0%;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 0.85rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    #messages::-webkit-scrollbar { width: 4px; }
+    #messages::-webkit-scrollbar-track { background: transparent; }
+    #messages::-webkit-scrollbar-thumb { background: var(--teal-200); border-radius: 4px; }
+
+    /* Welcome Hero */
+    .welcome {
+      text-align: center;
+      padding: 2.5rem 1rem 1rem;
+      margin: auto 0;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .welcome h2 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .welcome p {
+      font-size: 0.84rem;
+      color: #6e6e73;
+      line-height: 1.6;
+      max-width: 330px;
+      margin: 0 auto;
+    }
+
+    /* OpenEvidence Style: Docked Suggestions Strip above Input */
+    .suggestions-strip {
+      display: flex;
+      overflow: hidden; /* hide scrollbar, use CSS transform marquee */
+      white-space: nowrap;
+      padding: 0.5rem 0 0.25rem;
+      position: relative;
+    }
+    .marquee-content {
+      display: inline-flex;
+      gap: 0.45rem;
+      flex-shrink: 0;
+      align-items: center;
+      padding: 0 0.85rem;
+    }
+
+    .chip {
+      background: #ffffff;
+      border: 1px solid #d1d1d6;
+      color: #007aff;
+      border-radius: 1.25rem;
+      padding: 0.38rem 0.82rem;
+      font-size: 0.76rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-zh);
+      white-space: nowrap;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .chip:hover, .chip:active {
+      background: #007aff;
+      border-color: #007aff;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+
+
+    /* Message bubbles */
+    .msg {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      animation: fadeUp 0.2s ease;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
+    .msg.user { flex-direction: row-reverse; }
+
+    .avatar {
+      width: 1.85rem;
+      height: 1.85rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .msg.bot .avatar { background: linear-gradient(135deg, #007AFF, #00C7BE); color: white; }
+    .msg.user .avatar { background: var(--gray-200); color: var(--gray-600); }
+
+    .bubble-wrapper {
+      max-width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .msg.user .bubble-wrapper {
+      align-items: flex-end;
+    }
+
+    .bubble {
+      padding: 0.75rem 0.95rem;
+      border-radius: var(--radius-lg);
+      line-height: 1.65;
+      font-size: 0.88rem;
+      position: relative;
+      word-break: break-word;
+    }
+    .msg.bot .bubble {
+      background: #ffffff;
+      border: 1px solid #e5e5ea;
+      border-bottom-left-radius: var(--radius-sm);
+      color: #1c1c1e;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .msg.user .bubble {
+      background: linear-gradient(135deg, #007AFF 0%, #00C7BE 100%);
+      color: #ffffff;
+      border-bottom-right-radius: var(--radius-sm);
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.16);
+    }
+
+    /* ── OpenEvidence Style Response Action Bar ──────── */
+    .bubble-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.32rem;
+      padding-left: 0.15rem;
+      margin-top: 0.35rem;
+      flex-wrap: wrap;
+    }
+    .action-pill-btn {
+      background: transparent;
+      border: 1px solid #d1d1d6;
+      color: #6e6e73;
+      font-size: 0.73rem;
+      padding: 0.22rem 0.52rem;
+      border-radius: 0.45rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-zh);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
+      touch-action: manipulation;
+      background: #ffffff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .action-pill-btn:hover {
+      background: #f2f2f7;
+      color: #1c1c1e;
+      border-color: #c6c6c8;
+    }
+    .action-pill-btn svg {
+      width: 0.85rem;
+      height: 0.85rem;
+      flex-shrink: 0;
+    }
+    .action-pill-btn.voted-up {
+      background: rgba(48, 209, 88, 0.12);
+      border-color: #30d158;
+      color: #30d158;
+      font-weight: 600;
+    }
+    .action-pill-btn.voted-down {
+      background: rgba(255, 69, 58, 0.12);
+      border-color: #ff453a;
+      color: #ff453a;
+      font-weight: 600;
+    }
+
+    /* Markdown styling inside bubbles */
+    .bubble strong { font-weight: 700; color: #111111; }
+    .msg.user .bubble strong { color: #ffffff; }
+    .bubble em { font-style: italic; }
+    .bubble a {
+      color: #007AFF;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      font-weight: 600;
+      word-break: break-all;
+      padding: 0.1rem 0;
+      display: inline-block;
+    }
+    .bubble a:hover, .bubble a:active { color: #0051C5; }
+    .msg.user .bubble a { color: #ffffff; }
+    .bubble code { background: rgba(0,0,0,0.06); padding: 0.1em 0.35em; border-radius: 0.25rem; font-size: 0.85em; }
+
+    /* 📚 PubMed 實證研究超連結標籤（簡潔好讀） */
+    .bubble a[href*="pubmed.ncbi.nlm.nih.gov"] {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      background: rgba(0, 122, 255, 0.07);
+      border: 1px solid rgba(0, 122, 255, 0.25);
+      color: #007AFF;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.12rem 0.45rem;
+      border-radius: 0.35rem;
+      text-decoration: none;
+      margin: 0 0.15rem;
+      vertical-align: middle;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .bubble a[href*="pubmed.ncbi.nlm.nih.gov"]:hover,
+    .bubble a[href*="pubmed.ncbi.nlm.nih.gov"]:active {
+      background: #007AFF;
+      color: #ffffff;
+      border-color: #007AFF;
+    }
+
+    /* 💡 智慧延伸追問區塊 (Smart Follow-up Questions - Placed outside the bubble) */
+    .followup-container {
+      width: 100%;
+      margin-top: 0.4rem;
+      margin-bottom: 0.15rem;
+    }
+    .followup-box {
+      padding: 0.55rem 0.75rem;
+      background: rgba(0, 122, 255, 0.04);
+      border: 1px solid rgba(0, 122, 255, 0.2);
+      border-radius: var(--radius-md);
+      animation: fadeUp 0.25s ease;
+    }
+    .followup-title {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #007AFF;
+      margin-bottom: 0.4rem;
+    }
+    .followup-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .followup-chip {
+      background: var(--white);
+      border: 1px solid rgba(0, 122, 255, 0.25);
+      color: #007AFF;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.38rem 0.68rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      font-family: var(--font-zh);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      touch-action: manipulation;
+      width: 100%;
+    }
+    .followup-chip:hover, .followup-chip:active {
+      background: rgba(0, 122, 255, 0.06);
+      border-color: #007AFF;
+      color: #007AFF;
+      transform: translateX(2px);
+    }
+
+    .md-heading {
+      display: block;
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: #000000;
+      margin-top: 0.9rem;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+    }
+    .md-heading:first-child { margin-top: 0; }
+
+    .md-li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      margin: 0.2rem 0;
+      line-height: 1.55;
+      font-size: 0.86rem;
+    }
+    .md-li .bullet {
+      color: #007AFF;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.35;
+      flex-shrink: 0;
+    }
+
+    .md-oli {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      margin: 0.2rem 0;
+      line-height: 1.55;
+      font-size: 0.86rem;
+    }
+    .md-oli .num {
+      color: #007aff;
+      font-weight: 700;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+      min-width: 1.1rem;
+    }
+
+    .md-hr {
+      border: none;
+      border-top: 1px solid var(--teal-200);
+      margin: 0.65rem 0;
+      opacity: 0.6;
+    }
+
+    .md-quote {
+      border-left: 3.5px solid var(--teal-500);
+      background: rgba(15, 107, 107, 0.07);
+      padding: 0.5rem 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 0 0.4rem 0.4rem 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* 🎙️ / ✈️ 動態切換按鈕 (LINE & OpenEvidence Style) */
+    .action-btn {
+      width: 2.75rem;
+      height: 2.75rem;
+      min-width: 2.75rem;
+      max-width: 2.75rem;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      touch-action: manipulation;
+      box-sizing: border-box;
+    }
+    /* 麥克風狀態（未輸入文字時） */
+    .action-btn.mic-mode {
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 1.5px solid var(--gray-200);
+      box-shadow: none;
+    }
+    .action-btn.mic-mode:hover {
+      background: var(--teal-50);
+      border-color: var(--teal-300);
+      color: var(--teal-700);
+      transform: scale(1.06);
+    }
+    /* 錄音中狀態（即時辨識呼吸燈） */
+    .action-btn.recording-mode {
+      background: #fef2f2;
+      border: 1.5px solid #ef4444;
+      color: #ef4444;
+      animation: pulse-recording 1.2s infinite;
+      transform: scale(1.06);
+    }
+    /* 送出狀態（已輸入文字時） */
+    .action-btn.send-mode {
+      background: linear-gradient(135deg, #007AFF, #0051C5);
+      color: var(--white);
+      border: none;
+      box-shadow: 0 2px 8px rgba(20,145,155,0.35);
+    }
+    .action-btn.send-mode:hover {
+      transform: scale(1.06);
+      box-shadow: 0 4px 14px rgba(20,145,155,0.45);
+    }
+    .action-btn.send-mode:active {
+      transform: scale(0.96);
+    }
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .action-btn svg {
+      width: 1.15rem;
+      height: 1.15rem;
+      transition: transform 0.18s ease;
+    }
+    @keyframes pulse-recording {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+
+
+    /* Search Status & Typing indicator */
+    .search-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.15rem 0;
+      color: var(--teal-700);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    #search-status-text {
+      transition: opacity 0.2s ease;
+    }
+    .search-spinner {
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 2px solid var(--teal-200);
+      border-top-color: var(--teal-500);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Input area ─────────────────────────────────────── */
+    .input-wrapper {
+      flex-shrink: 0;
+      border-top: 1px solid var(--gray-200);
+      background: var(--white);
+      padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .input-area {
+      padding: 0.75rem 1rem 0.35rem;
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-end;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #input {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 0.875rem;
+      font-size: 16px; /* 16px 防止 iOS Safari 點擊聚焦時自動放大畫面 */
+      font-family: var(--font-zh);
+      resize: none;
+      min-height: 2.75rem;
+      max-height: 7.5rem;
+      line-height: 1.45;
+      transition: border-color 0.18s;
+      outline: none;
+      color: var(--gray-900);
+      background: #fafafa;
+      -webkit-appearance: none;
+      box-sizing: border-box;
+    }
+    #input:focus { border-color: var(--teal-500); background: var(--white); }
+    #input::placeholder { color: var(--gray-500); font-size: 0.88rem; }
+
+
+
+    /* Disclaimer */
+    .disclaimer {
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--gray-500);
+      padding: 0.15rem 1rem 0.5rem;
+      line-height: 1.4;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── History Drawer / Modal ──────────────────────────── */
+    .drawer-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(2px);
+      z-index: 999;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .drawer-backdrop.show {
+      display: block;
+      opacity: 1;
+    }
+    /* ── Left Slide-in Drawer (OpenEvidence Pure History Style) ──────── */
+    .drawer-content {
+      position: absolute; /* relative to .app */
+      top: 0;
+      left: 0;
+      transform: translateX(-100%);
+      width: min(82%, 310px);
+      height: 100%;
+      background: var(--white);
+      border-radius: 0 1rem 1rem 0;
+      box-shadow: 4px 0 28px rgba(0,0,0,0.16);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      padding-top: max(0px, env(safe-area-inset-top));
+      padding-bottom: max(0.8rem, env(safe-area-inset-bottom));
+    }
+    .drawer-content.show {
+      transform: translateX(0);
+    }
+    .drawer-brand {
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 0.5px solid #E5E5EA;
+      padding: 1.05rem 1rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .drawer-brand-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #1C1C1E;
+      letter-spacing: -0.015em;
+    }
+    .drawer-brand-subtitle {
+      font-size: 0.66rem;
+      color: #8E8E93;
+      margin-top: 0.14rem;
+    }
+    .drawer-new-btn {
+      background: rgba(0, 122, 255, 0.08);
+      border: 1px solid rgba(0, 122, 255, 0.18);
+      color: #007AFF;
+      width: 2.05rem;
+      height: 2.05rem;
+      border-radius: 0.55rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .drawer-new-btn:hover, .drawer-new-btn:active {
+      background: rgba(0, 122, 255, 0.16);
+      transform: scale(0.96);
+    }
+    .drawer-new-btn svg { width: 1.05rem; height: 1.05rem; }
+
+    .drawer-section-header {
+      padding: 0.75rem 1rem 0.45rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #E5E5EA;
+      flex-shrink: 0;
+    }
+    .drawer-section-title {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #8E8E93;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      letter-spacing: 0.02em;
+    }
+    .drawer-count-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #007AFF;
+      background: rgba(0, 122, 255, 0.08);
+      padding: 0.1rem 0.45rem;
+      border-radius: 1rem;
+    }
+
+    .drawer-body {
+      padding: 0.75rem 0.85rem;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      min-height: 160px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .drawer-item {
+      background: #F2F2F7;
+      border: 1px solid #E5E5EA;
+      border-radius: 0.65rem;
+      padding: 0.65rem 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.22rem;
+      text-align: left;
+    }
+    .drawer-item:hover, .drawer-item:active {
+      background: #E5E5EA;
+      border-color: #007AFF;
+      transform: translateX(2px);
+    }
+    .drawer-item-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #1C1C1E;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .drawer-item-meta {
+      font-size: 0.7rem;
+      color: #8E8E93;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drawer-empty {
+      text-align: center;
+      color: #8E8E93;
+      font-size: 0.82rem;
+      padding: 3rem 1rem;
+      line-height: 1.6;
+    }
+    .drawer-footer {
+      padding: 0.6rem 1rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      border-top: 1px solid #E5E5EA;
+      flex-shrink: 0;
+    }
+    .drawer-clear-btn {
+      background: transparent;
+      border: none;
+      color: #8E8E93;
+      font-size: 0.74rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.4rem;
+      font-family: var(--font-zh);
+      transition: all 0.15s;
+    }
+    .drawer-clear-btn:hover {
+      color: #FF3B30;
+      background: rgba(255, 59, 48, 0.08);
+    }
+
+    @media (max-width: 480px) {
+      .input-area { padding: 0.6rem 0.75rem 0.25rem; gap: 0.5rem; }
+      .bubble-wrapper { max-width: 90%; }
+      .bubble { font-size: 0.86rem; padding: 0.75rem 0.9rem; }
+      .chip { font-size: 0.74rem; padding: 0.35rem 0.75rem; }
+      .header-text h1 { font-size: 0.95rem; }
+    }
+
+    /* ── 🚨 醫療紅旗警訊與注意事項視覺卡片 ──────────────── */
+    .alert-heading {
+      display: flex;
+      width: fit-content;
+      align-items: center;
+      gap: 0.38rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 0.32rem 0.68rem 0.32rem 0.55rem;
+      border-radius: 0.55rem;
+      margin-top: 0.95rem;
+      margin-bottom: 0.45rem;
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+    }
+    .alert-heading .alert-icon {
+      width: 1.05rem;
+      height: 1.05rem;
+      flex-shrink: 0;
+    }
+    .alert-safety {
+      background: rgba(255, 59, 48, 0.08);
+      border: 1px solid rgba(255, 59, 48, 0.28);
+      color: #D70015;
+    }
+    .alert-avoid {
+      background: rgba(255, 149, 0, 0.08);
+      border: 1px solid rgba(255, 149, 0, 0.28);
+      color: #C93400;
+    }
+
+    /* ── 🏃‍♂️ 運動處方「分步步驟卡片」 ──────────────────────── */
+    .md-oli {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      margin: 0.4rem 0;
+      padding: 0.48rem 0.7rem;
+      background: #F2F2F7;
+      border: 1px solid #E5E5EA;
+      border-radius: 0.65rem;
+      line-height: 1.55;
+      font-size: 0.86rem;
+      color: #1C1C1E;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .md-oli .num {
+      background: #007AFF;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.74rem;
+      width: 1.35rem;
+      height: 1.35rem;
+      border-radius: 0.35rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.08rem;
+    }
+
+    /* ── 📲 「加入手機主畫面」優雅浮動導引卡 ─────────────── */
+    .pwa-install-banner {
+      position: absolute;
+      bottom: max(5.5rem, calc(4.8rem + env(safe-area-inset-bottom)));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      width: calc(100% - 1.5rem);
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 122, 255, 0.25);
+      border-radius: 1rem;
+      padding: 0.75rem 0.9rem;
+      box-shadow: 0 8px 32px rgba(0, 80, 200, 0.14);
+      z-index: 900;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pwa-install-banner.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .pwa-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .pwa-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: #ffffff;
+      border-radius: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+    }
+    .pwa-icon svg {
+      width: 1.35rem;
+      height: 1.35rem;
+    }
+    .pwa-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .pwa-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1C1C1E;
+      line-height: 1.25;
+    }
+    .pwa-desc {
+      font-size: 0.72rem;
+      color: #6E6E73;
+      margin-top: 0.12rem;
+      line-height: 1.35;
+    }
+    .pwa-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-shrink: 0;
+    }
+    .pwa-btn-primary {
+      background: linear-gradient(135deg, #007AFF 0%, #00C7BE 100%);
+      color: #ffffff;
+      border: none;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-zh);
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .pwa-btn-primary:hover, .pwa-btn-primary:active {
+      opacity: 0.9;
+      transform: scale(0.97);
+    }
+    .pwa-btn-close {
+      background: transparent;
+      border: none;
+      color: #8E8E93;
+      font-size: 0.95rem;
+      padding: 0.3rem 0.4rem;
+      cursor: pointer;
+      border-radius: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .pwa-btn-close:hover {
+      background: rgba(0,0,0,0.06);
+      color: #1C1C1E;
+    }
+
+    /* ── iOS PWA Install Guide Bottom Sheet ───────────── */
+    .ios-pwa-guide {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.48);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0 1rem 1.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ios-pwa-guide.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .ios-pwa-guide-sheet {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 1.35rem;
+      padding: 1.25rem 1.25rem 1.1rem;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+      transform: translateY(20px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ios-pwa-guide.show .ios-pwa-guide-sheet {
+      transform: translateY(0);
+    }
+    .ios-guide-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+    .ios-guide-icon {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 0.7rem;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+    .ios-guide-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ios-guide-title-box {
+      flex: 1;
+      min-width: 0;
+    }
+    .ios-guide-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #1C1C1E;
+      line-height: 1.2;
+    }
+    .ios-guide-sub {
+      font-size: 0.76rem;
+      color: #8E8E93;
+      margin-top: 0.15rem;
+    }
+    .ios-guide-close {
+      background: #F2F2F7;
+      border: none;
+      color: #8E8E93;
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .ios-guide-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.15rem;
+    }
+    .ios-guide-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: #F2F2F7;
+      border-radius: 0.85rem;
+      padding: 0.75rem 0.85rem;
+    }
+    .step-badge {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #007AFF, #00C7BE);
+      color: #FFFFFF;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-content {
+      flex: 1;
+      font-size: 0.86rem;
+      color: #1C1C1E;
+      line-height: 1.45;
+    }
+    .step-icon-preview {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
+      background: #FFFFFF;
+      border: 0.5px solid #D1D1D6;
+      border-radius: 0.45rem;
+      padding: 0.15rem 0.45rem;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #007AFF;
+      margin-top: 0.3rem;
+    }
+    .step-icon-preview svg {
+      width: 0.95rem;
+      height: 0.95rem;
+    }
+    .ios-guide-ok-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #007AFF, #00C7BE);
+      color: #FFFFFF;
+      border: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 0.72rem;
+      border-radius: 0.85rem;
+      cursor: pointer;
+      font-family: var(--font-zh);
+      transition: opacity 0.15s;
+    }
+    .ios-guide-ok-btn:active {
+      opacity: 0.88;
+    }
+
+    /* ── 🎨 1080×1920 Apple InfoCard Modal ────────────── */
+    .card-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-modal.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .card-modal-sheet {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 420px;
+      max-height: 92vh;
+      border-radius: 1.45rem;
+      padding: 1.15rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.93);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .card-modal.show .card-modal-sheet {
+      transform: scale(1);
+    }
+    .card-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .card-modal-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #1C1C1E;
+      line-height: 1.25;
+    }
+    .card-modal-sub {
+      font-size: 0.72rem;
+      color: #8E8E93;
+      margin-top: 0.1rem;
+    }
+    .card-modal-close {
+      background: #F2F2F7;
+      border: none;
+      color: #8E8E93;
+      width: 1.85rem;
+      height: 1.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .card-preview-area {
+      flex: 1;
+      min-height: 260px;
+      max-height: 52vh;
+      background: #F2F2F7;
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      border: 0.5px solid rgba(0, 0, 0, 0.08);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+      padding: 0.4rem;
+    }
+    .card-loading {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: #8E8E93;
+      font-size: 0.82rem;
+    }
+    .card-preview-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 0.65rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transition: opacity 0.2s;
+    }
+    .card-modal-actions {
+      display: flex;
+      gap: 0.55rem;
+      margin-top: 0.85rem;
+    }
+    .card-action-btn {
+      flex: 1;
+      border: none;
+      padding: 0.72rem 0.5rem;
+      border-radius: 0.85rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      font-family: var(--font-zh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .card-action-btn svg {
+      width: 1.05rem;
+      height: 1.05rem;
+      flex-shrink: 0;
+    }
+    .card-action-btn.primary {
+      background: linear-gradient(135deg, #007AFF 0%, #00C7BE 100%);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+    }
+    .card-action-btn.secondary {
+      background: #F2F2F7;
+      color: #1C1C1E;
+      border: 0.5px solid #D1D1D6;
+    }
+    .card-action-btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+
+    /* ── Dark Mode (Apple HIG Medical Dark System) ──────────── */
+    @media (prefers-color-scheme: dark) {
+      html, body {
+        background: #000000;
+      }
+      .app {
+        background: #1c1c1e;
+        box-shadow: 0 0 0 0.5px #38383a;
+      }
+
+      /* Header: Frosted Apple Dark Glass */
+      header {
+        background: rgba(28, 28, 30, 0.85);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
+        box-shadow: none;
+      }
+      .header-title-center {
+        color: #ffffff;
+      }
+      .header-icon-btn {
+        color: #0a84ff;
+      }
+      .header-icon-btn:hover, .header-icon-btn:active {
+        background: rgba(10, 132, 255, 0.14);
+      }
+
+      /* Messages Area */
+      #messages {
+        background: #1c1c1e;
+      }
+      #messages::-webkit-scrollbar-thumb {
+        background: #38383a;
+      }
+
+      /* Welcome Hero */
+      .welcome h2 {
+        color: #ffffff;
+      }
+      .welcome p {
+        color: #8e8e93;
+      }
+      .welcome-icon {
+        background: #2c2c2e;
+        border-color: #38383a;
+        color: #0a84ff;
+        box-shadow: none;
+      }
+
+      /* Marquee suggestions strip & chips */
+      .suggestions-strip {
+        background: #1c1c1e;
+      }
+      .chip {
+        background: #2c2c2e;
+        border: 0.5px solid #38383a;
+        color: #63e6e2;
+        box-shadow: none;
+      }
+      .chip:hover, .chip:active {
+        background: rgba(10, 132, 255, 0.2);
+        border-color: #0a84ff;
+        color: #ffffff;
+      }
+
+      /* Bot & User Chat Bubbles */
+      .msg.bot .avatar {
+        background: linear-gradient(135deg, #00c7be 0%, #0a84ff 100%);
+        color: #ffffff;
+      }
+      .msg.bot .bubble {
+        background: #2c2c2e;
+        border: 0.5px solid #38383a;
+        color: #ffffff;
+      }
+      .msg.user .bubble {
+        background: linear-gradient(135deg, #0a84ff 0%, #00c7be 100%);
+        color: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Headings, Text & Markdown Typography inside Bubbles */
+      .md-heading {
+        color: #ffffff !important;
+      }
+      .bubble strong {
+        color: #ffffff !important;
+      }
+      .msg.bot .bubble strong {
+        color: #ffffff !important;
+      }
+      .bubble em {
+        color: #ebebf5;
+      }
+      .bubble code {
+        background: #3a3a3c;
+        color: #63e6e2;
+      }
+      .md-li {
+        color: #ebebf5;
+      }
+      .md-li .bullet {
+        color: #00c7be;
+      }
+      .md-oli {
+        background: #242426;
+        border-color: #38383a;
+        color: #ebebf5;
+      }
+      .md-oli .num {
+        background: linear-gradient(135deg, #0a84ff, #00c7be);
+        color: #ffffff;
+      }
+      .md-quote {
+        background: #1c1c1e;
+        border-left: 3px solid #00c7be;
+        color: #ebebf5;
+      }
+      .md-hr {
+        border-top-color: #38383a;
+      }
+
+      /* PubMed Link Badges */
+      .bubble a {
+        color: #63e6e2;
+      }
+      .bubble a[href*="pubmed.ncbi.nlm.nih.gov"] {
+        background: rgba(0, 199, 190, 0.15);
+        border: 1px solid rgba(0, 199, 190, 0.35);
+        color: #63e6e2;
+      }
+      .bubble a[href*="pubmed.ncbi.nlm.nih.gov"]:hover,
+      .bubble a[href*="pubmed.ncbi.nlm.nih.gov"]:active {
+        background: #00c7be;
+        color: #000000;
+        border-color: #00c7be;
+      }
+
+      /* Smart Follow-up Questions Box */
+      .followup-box {
+        background: #1c1c1e;
+        border: 1px solid #38383a;
+      }
+      .followup-title {
+        color: #63e6e2;
+      }
+      .followup-chip {
+        background: rgba(10, 132, 255, 0.1);
+        border: 0.5px solid rgba(10, 132, 255, 0.28);
+        color: #63e6e2;
+      }
+      .followup-chip:hover, .followup-chip:active {
+        background: rgba(10, 132, 255, 0.22);
+        border-color: #0a84ff;
+        color: #ffffff;
+      }
+
+      /* Action Buttons (OpenEvidence Style) */
+      .action-pill-btn {
+        background: #2c2c2e;
+        border: 0.5px solid #38383a;
+        color: #8e8e93;
+        box-shadow: none;
+      }
+      .action-pill-btn:hover {
+        background: #3a3a3c;
+        color: #ffffff;
+        border-color: #48484a;
+      }
+      .action-pill-btn.voted-up {
+        background: rgba(48, 209, 88, 0.15);
+        border-color: #30d158;
+        color: #30d158;
+      }
+      .action-pill-btn.voted-down {
+        background: rgba(255, 69, 58, 0.15);
+        border-color: #ff453a;
+        color: #ff453a;
+      }
+
+      /* Input Area */
+      .input-wrapper {
+        background: rgba(28, 28, 30, 0.92);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-top: 0.5px solid rgba(255, 255, 255, 0.12);
+      }
+      .input-area {
+        background: transparent;
+      }
+      #input {
+        background: #2c2c2e;
+        border: 0.5px solid #38383a;
+        color: #ffffff;
+      }
+      #input:focus {
+        background: #2c2c2e;
+        border-color: #0a84ff;
+      }
+      #input::placeholder {
+        color: #6e6e73;
+      }
+
+      /* Dynamic Action Button (Mic / Send) */
+      .action-btn.mic-mode {
+        background: #2c2c2e;
+        border: 0.5px solid #48484a;
+        color: #ebebf5;
+      }
+      .action-btn.mic-mode:hover {
+        background: #3a3a3c;
+        color: #0a84ff;
+      }
+      .action-btn.send-mode {
+        background: linear-gradient(135deg, #0a84ff 0%, #00c7be 100%);
+        border: none;
+        box-shadow: 0 2px 10px rgba(10, 132, 255, 0.4);
+      }
+      .action-btn.recording-mode {
+        background: rgba(255, 69, 58, 0.15);
+        border-color: #ff453a;
+        color: #ff453a;
+      }
+
+      /* Sidebar Drawer */
+      .drawer-backdrop {
+        background: rgba(0, 0, 0, 0.65);
+      }
+      .drawer-content {
+        background: #1c1c1e;
+        box-shadow: 4px 0 32px rgba(0, 0, 0, 0.6);
+      }
+      .drawer-brand {
+        background: rgba(28, 28, 30, 0.95);
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
+      }
+      .drawer-brand-title {
+        color: #ffffff;
+      }
+      .drawer-brand-subtitle {
+        color: #8e8e93;
+      }
+      .drawer-new-btn {
+        background: rgba(10, 132, 255, 0.15);
+        border: 1px solid rgba(10, 132, 255, 0.3);
+        color: #0a84ff;
+      }
+      .drawer-new-btn:hover, .drawer-new-btn:active {
+        background: rgba(10, 132, 255, 0.25);
+        transform: scale(0.96);
+      }
+      .drawer-section-header {
+        border-bottom-color: #38383a;
+      }
+      .drawer-section-title {
+        color: #8e8e93;
+      }
+      .drawer-count-badge {
+        background: rgba(0, 199, 190, 0.15);
+        color: #63e6e2;
+      }
+      .drawer-body {
+        background: #1c1c1e;
+      }
+      .drawer-item {
+        background: #2c2c2e;
+        border: 0.5px solid #38383a;
+      }
+      .drawer-item:hover, .drawer-item:active {
+        background: #3a3a3c;
+        border-color: #0a84ff;
+      }
+      .drawer-item-title {
+        color: #ffffff;
+      }
+      .drawer-item-meta {
+        color: #8e8e93;
+      }
+      .drawer-empty {
+        color: #8e8e93;
+      }
+      .drawer-footer {
+        border-top: 0.5px solid #38383a;
+      }
+      .drawer-clear-btn {
+        color: #8e8e93;
+      }
+      .drawer-clear-btn:hover {
+        color: #ff453a;
+        background: rgba(255, 69, 58, 0.12);
+      }
+
+      /* Search Status & Typing Indicator */
+      .search-status {
+        color: #ebebf5;
+      }
+      .search-spinner {
+        border-color: #38383a;
+        border-top-color: #00c7be;
+      }
+      .disclaimer {
+        color: #6e6e73;
+      }
+      .status-dot {
+        background: #30d158;
+      }
+
+      /* Alert & Step cards in dark mode */
+      .alert-safety {
+        background: rgba(255, 69, 58, 0.16);
+        border-color: rgba(255, 69, 58, 0.4);
+        color: #FF453A;
+      }
+      .alert-avoid {
+        background: rgba(255, 159, 10, 0.16);
+        border-color: rgba(255, 159, 10, 0.4);
+        color: #FF9F0A;
+      }
+      .md-oli {
+        background: #1C1C1E;
+        border-color: #38383A;
+        color: #EBEBF5;
+      }
+      .md-oli .num {
+        background: #0A84FF;
+        color: #ffffff;
+      }
+      .pwa-install-banner {
+        background: rgba(28, 28, 30, 0.96);
+        border-color: rgba(10, 132, 255, 0.35);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      }
+      .pwa-title {
+        color: #FFFFFF;
+      }
+      .pwa-desc {
+        color: #8E8E93;
+      }
+      .pwa-btn-primary {
+        background: #0A84FF;
+      }
+      .pwa-btn-close:hover {
+        background: rgba(255,255,255,0.1);
+        color: #FFFFFF;
+      }
+
+      /* iOS Guide Sheet Dark Mode */
+      .ios-pwa-guide-sheet {
+        background: #1C1C1E;
+        border: 0.5px solid #38383A;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+      }
+      .ios-guide-title {
+        color: #FFFFFF;
+      }
+      .ios-guide-close {
+        background: #2C2C2E;
+        color: #8E8E93;
+      }
+      .ios-guide-step {
+        background: #2C2C2E;
+        border: 0.5px solid #38383A;
+      }
+      .step-content {
+        color: #EBEBF5;
+      }
+      .step-icon-preview {
+        background: #1C1C1E;
+        border-color: #48484A;
+        color: #63E6E2;
+      }
+
+      /* Card Modal Dark Mode */
+      .card-modal-sheet {
+        background: #1C1C1E;
+        border: 0.5px solid #38383A;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+      .card-modal-title {
+        color: #FFFFFF;
+      }
+      .card-modal-close {
+        background: #2C2C2E;
+        color: #8E8E93;
+      }
+      .card-preview-area {
+        background: #000000;
+        border-color: #38383A;
+      }
+      .card-action-btn.secondary {
+        background: #2C2C2E;
+        color: #FFFFFF;
+        border-color: #38383A;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- Header: Hamburger | Title (centered) | Compose -->
+  <header style="position:relative;">
+    <!-- Left: Hamburger -->
+    <button class="header-icon-btn" onclick="openHistoryDrawer()" aria-label="選單與紀錄" title="選單">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- Center: Title (absolute) -->
+    <span class="header-title-center">臺灣物理治療實證助手</span>
+
+    <!-- Right: New Compose -->
+    <button class="header-icon-btn" onclick="resetChat()" aria-label="新對話" title="開啟新對話">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Messages -->
+  <div id="messages">
+    <!-- Welcome Hero rendered by JS on init/reset -->
+  </div>
+
+  <!-- Input & Suggestions Container (OpenEvidence Style) -->
+  <div class="input-wrapper">
+    <!-- Quick Suggestions Strip (Dynamic Hot Trends Docked right above input) -->
+    <div id="suggestions-strip" class="suggestions-strip">
+      <!-- Populated dynamically by renderSuggestions() -->
+    </div>
+    <div class="input-area">
+      <textarea id="input" rows="1" placeholder="請在此輸入或說出身體狀況…" maxlength="500"></textarea>
+      <button id="action-btn" class="action-btn mic-mode" onclick="handleActionButton()" aria-label="語音或送出" title="語音輸入 (繁體中文)">
+        <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+    </div>
+    <p class="disclaimer">⚠️ AI 生成內容僅供衛教參考，可能存在錯誤，無法取代專業醫療診斷。若有身體不適，請務必諮詢合格醫師或物理治療師進行實體評估。</p>
+  </div>
+</div>
+
+  <!-- PWA Install Banner -->
+  <div id="pwa-install-banner" class="pwa-install-banner">
+    <div class="pwa-banner-content">
+      <div class="pwa-icon">
+        <img src="/apple-touch-icon.png" alt="物治" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+      </div>
+      <div class="pwa-text">
+        <div class="pwa-title">加到手機主畫面</div>
+        <div class="pwa-desc" id="pwa-desc-text">一鍵開啟，享受極速全螢幕原生體驗</div>
+      </div>
+      <div class="pwa-actions">
+        <button class="pwa-btn-primary" id="pwa-install-btn" onclick="handlePwaInstall()">一鍵加入</button>
+        <button class="pwa-btn-close" onclick="dismissPwaBanner()" aria-label="關閉提示">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Add to Home Screen Animated Guide Sheet -->
+  <div id="ios-pwa-guide" class="ios-pwa-guide" onclick="closeIosGuide()">
+    <div class="ios-pwa-guide-sheet" onclick="event.stopPropagation()">
+      <div class="ios-guide-header">
+        <div class="ios-guide-icon">
+          <img src="/apple-touch-icon.png" alt="物治" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+        <div class="ios-guide-title-box">
+          <div class="ios-guide-title">加入 iPhone 主畫面</div>
+          <div class="ios-guide-sub">簡單 2 步，享受原生 App 體驗</div>
+        </div>
+        <button class="ios-guide-close" onclick="closeIosGuide()" aria-label="關閉">✕</button>
+      </div>
+      <div class="ios-guide-steps">
+        <div class="ios-guide-step">
+          <div class="step-badge">1</div>
+          <div class="step-content">
+            點擊 Safari 底部工具列的 <strong>「分享」</strong> 按鈕
+            <div class="step-icon-preview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
+              </svg>
+              <span>分享</span>
+            </div>
+          </div>
+        </div>
+        <div class="ios-guide-step">
+          <div class="step-badge">2</div>
+          <div class="step-content">
+            在選單中往下滑動，點選 <strong>「加入主畫面」</strong>
+            <div class="step-icon-preview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="12" y1="8" x2="12" y2="16"/>
+                <line x1="8" y1="12" x2="16" y2="12"/>
+              </svg>
+              <span>加入主畫面</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="ios-guide-ok-btn" onclick="closeIosGuide()">知道了</button>
+    </div>
+  </div>
+
+  <!-- 🎨 1080x1920 Apple 風格衛教美圖卡片 Modal -->
+  <div id="card-modal" class="card-modal" onclick="closeCardModal()">
+    <div class="card-modal-sheet" onclick="event.stopPropagation()">
+      <div class="card-modal-header">
+        <div class="card-modal-title-box">
+          <div class="card-modal-title">🎨 物理治療實證衛教圖卡</div>
+          <div class="card-modal-sub">1080×1920 高解析度 · 專為 IG 限動 / Threads / LINE 設計</div>
+        </div>
+        <button class="card-modal-close" onclick="closeCardModal()" aria-label="關閉">✕</button>
+      </div>
+
+      <div class="card-preview-area">
+        <div id="card-loading" class="card-loading">
+          <div class="search-spinner" style="width:28px;height:28px;border-width:2.5px;"></div>
+          <span>正在排版 Apple 衛教美圖…</span>
+        </div>
+        <img id="card-preview-img" class="card-preview-img" alt="衛教卡片預覽" />
+      </div>
+
+      <div class="card-modal-actions">
+        <button class="card-action-btn primary" id="card-share-btn" onclick="shareCardImage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+          <span id="card-share-text">一鍵分享 (IG / LINE)</span>
+        </button>
+        <button class="card-action-btn secondary" onclick="downloadCardImage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>儲存高畫質美圖</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<!-- Sidebar Drawer: Left Slide-in (OpenEvidence Pure History Style) -->
+<div id="drawer-backdrop" class="drawer-backdrop" onclick="closeHistoryDrawer()"></div>
+<div id="drawer-content" class="drawer-content">
+  <!-- Brand Bar -->
+  <div class="drawer-brand">
+    <div>
+      <div class="drawer-brand-title">臺灣物理治療實證助手</div>
+      <div class="drawer-brand-subtitle">🔒 本地安全儲存 · 無個資上傳</div>
+    </div>
+    <button class="drawer-new-btn" onclick="closeHistoryDrawer(); resetChat();" title="新諮詢對話" aria-label="新對話">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Section Header -->
+  <div class="drawer-section-header">
+    <div class="drawer-section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.85rem;height:0.85rem;">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span>歷史諮詢紀錄</span>
+    </div>
+    <span class="drawer-count-badge" id="history-count">0</span>
+  </div>
+
+  <!-- Body (History List) -->
+  <div id="drawer-body" class="drawer-body">
+    <!-- Populated dynamically by renderDrawerContent() -->
+  </div>
+
+  <!-- Footer -->
+  <div class="drawer-footer">
+    <button class="drawer-clear-btn" onclick="clearAllHistory()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.85rem;height:0.85rem;">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+      </svg>
+      <span>清除歷史紀錄</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  const messagesEl = document.getElementById('messages');
+  const inputEl    = document.getElementById('input');
+  // dynamic action-btn handled by updateActionButtonState()
+  let history = [];
+  let isLoading = false;
+  let currentSessionId = 'session_' + Date.now();
+
+
+      // 臨床趨勢與熱門搜尋庫（全量 50+ 題庫無縫流動）
+  const TRENDING_TOPICS = [
+    "超慢跑會不會傷膝蓋？",
+    "久坐腰痠與深層核心啟動",
+    "久坐屁股痛是梨狀肌症候群嗎？",
+    "重訓硬舉後下背緊繃該如何放鬆？",
+    "低頭族頸椎前傾與富貴包矯正",
+    "深蹲膝蓋內夾是哪裡肌力不足？",
+    "足底筋膜炎到底能不能踩網球？",
+    "跑步膝蓋外側刺痛（ITBS 髂脛束）",
+    "腳踝翻船急性期 PRICE 還是 PEACE？",
+    "阿基里斯腱發炎離心運動怎麼做？",
+    "深蹲屁股眨眼（骨盆後傾）原因",
+    "臥推肩膀前側刺痛與旋轉肌夾擠",
+    "硬舉時腰部不適與核心發力技巧",
+    "引體向上手肘內側高爾夫球肘",
+    "臀中肌啟動：彈力帶蚌殼式要點",
+    "辦公室久坐腰椎椎間盤突出保養",
+    "滑鼠手腕隧道症候群神經鬆動術",
+    "圓肩駝背胸小肌緊繃放鬆",
+    "落枕脖子卡住轉不過去快速改善",
+    "膏肓痛與肩胛骨內側緊繃釋放",
+    "骨盆前傾放鬆與臀肌強化",
+    "五十肩沾黏手臂舉不高自我運動",
+    "退化性膝關節炎該走動還是多休息？",
+    "前十字韌帶（ACL）重建分期復健",
+    "半月板撕裂保守治療與運動指引",
+    "腰椎滑脫核心穩定運動指引",
+    "媽媽手手腕橈骨側邊刺痛改善",
+    "閃到腰急性期可以拉筋嗎？",
+    "無醫師處方能直接看物理治療嗎？",
+    "自費物理治療所評估流程與收費",
+    "脊椎紅旗危險警訊自我篩檢",
+    "徒手治療、健保電療、整復師差異",
+    "健保復健做很久沒好該看自費嗎？"
+  ];
+
+  let marqueeReqId = null;
+  let isUserPausedMarquee = false;
+
+  function renderSuggestions() {
+    const strip = document.getElementById('suggestions-strip');
+    if (!strip) return;
+
+    // 雙重複製生成兩組完全相同的項目，達成 100% 無縫無感循環滾動
+    let singleGroupHtml = '';
+    TRENDING_TOPICS.forEach(t => {
+      const cleanText = t.trim();
+      singleGroupHtml += `<button class="chip" data-raw="${escapeAttr(cleanText)}" onclick="sendChip(this)">${escapeHtml(cleanText)}</button>`;
+    });
+
+    strip.innerHTML = `
+      <div class="marquee-content" id="marquee-content">
+        ${singleGroupHtml}
+        ${singleGroupHtml}
+      </div>
+    `;
+    strip.scrollLeft = 0;
+
+    initMarqueeScroller();
+  }
+
+  function initMarqueeScroller() {
+    const strip = document.getElementById('suggestions-strip');
+    const content = document.getElementById('marquee-content');
+    if (!strip || !content) return;
+
+    if (marqueeReqId) cancelAnimationFrame(marqueeReqId);
+
+    // Wait one frame for layout so scrollWidth is accurate
+    requestAnimationFrame(() => {
+      const halfWidth = content.scrollWidth / 2;
+      if (halfWidth <= 0) return;
+
+      // Use CSS animation for buttery smooth cross-device marquee
+      content.style.willChange = 'transform';
+      content.style.animation = 'none';
+      // Force reflow before re-applying animation
+      void content.offsetWidth;
+      content.style.animation = '';
+
+      // Inject keyframe dynamically if not already there
+      if (!document.getElementById('marquee-keyframe')) {
+        const style = document.createElement('style');
+        style.id = 'marquee-keyframe';
+        style.textContent = `
+          @keyframes marqueeSlide {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      const duration = Math.max(20, halfWidth / 50); // speed: ~50px/s
+      content.style.animation = `marqueeSlide ${duration}s linear infinite`;
+
+      // 滑鼠懸停暫停
+      strip.onmouseenter = () => { content.style.animationPlayState = 'paused'; };
+      strip.onmouseleave = () => { content.style.animationPlayState = 'running'; };
+
+      // 行動端觸控微暫停 + 100% 精準點擊偵測（解決移動動畫中點擊掉幀問題）
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchedChip = null;
+
+      strip.ontouchstart = (e) => {
+        if (e.touches.length === 1) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchedChip = e.target.closest('.chip');
+        }
+      };
+
+      strip.ontouchend = (e) => {
+        if (touchedChip && e.changedTouches.length > 0) {
+          const touch = e.changedTouches[0];
+          const dx = Math.abs(touch.clientX - touchStartX);
+          const dy = Math.abs(touch.clientY - touchStartY);
+          // 手指位移小於 12px 視為精準點擊，立即送出
+          if (dx < 12 && dy < 12) {
+            sendChip(touchedChip);
+          }
+        }
+        touchedChip = null;
+      };
+    });
+  }
+
+  // 初始渲染純淨歡迎畫面
+  function renderWelcome() {
+    messagesEl.innerHTML = `
+      <div class="welcome">
+        <h2>你好，我是臺灣物理治療實證助手</h2>
+        <p>依據國際醫學實證與臨床指引，為你提供安心、客觀的動作衛教與運動指引。</p>
+      </div>
+    `;
+    const strip = document.getElementById('suggestions-strip');
+    if (strip) {
+      strip.style.display = 'flex';
+      renderSuggestions();
+    }
+  }
+  renderWelcome();
+
+  // ── LocalStorage 隱私安全本地儲存管理 ──────────────────
+  function getFavorites() {
+    try {
+      return JSON.parse(localStorage.getItem('tw_pt_favorites') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveFavorites(list) {
+    try {
+      localStorage.setItem('tw_pt_favorites', JSON.stringify(list));
+    } catch (e) {}
+    updateBadgeCounts();
+  }
+
+  function getHistorySessions() {
+    try {
+      return JSON.parse(localStorage.getItem('tw_pt_history_sessions') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHistorySessions(list) {
+    try {
+      localStorage.setItem('tw_pt_history_sessions', JSON.stringify(list));
+    } catch (e) {}
+    updateBadgeCounts();
+  }
+
+  function updateBadgeCounts() {
+    const historyList = getHistorySessions();
+    const histCountEl = document.getElementById('history-count');
+    if (histCountEl) histCountEl.textContent = historyList.length;
+  }
+
+    // ── OpenEvidence Style Actions ────────────────────────────────
+  async function sendVote(btn, type, msgId) {
+    triggerHaptic('light');
+    const parent = btn.closest('.bubble-actions');
+    if (!parent) return;
+
+    const allVoteBtns = parent.querySelectorAll('.action-pill-btn');
+    if (type === 'up') {
+      btn.classList.add('voted-up');
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>感謝回饋</span>
+      `;
+    } else {
+      btn.classList.add('voted-down');
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>已記錄反饋</span>
+      `;
+    }
+
+    const userMsgEl = btn.closest('.msg.bot')?.previousElementSibling?.querySelector('.bubble');
+    const query = userMsgEl ? userMsgEl.innerText.trim() : '';
+
+    try {
+      fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, query, msgId, timestamp: Date.now() }),
+      }).catch(() => {});
+    } catch (e) {}
+  }
+
+    // ── OpenEvidence 動作與純文字/圖片生成模組 ──────────────────────
+  function getCleanMessageText(msgEl, bubbleEl) {
+    let raw = msgEl ? msgEl.getAttribute('data-raw') : '';
+    if (raw) {
+      const parsed = parseBotResponse(raw);
+      let body = parsed.body.trim();
+      body = body.replace(/\[(.*?)\]\(https?:\/\/[^\)]+\)/g, '$1');
+      body = body.replace(/\*\*(.*?)\*\*/g, '$1');
+      body = body.replace(/\*(.*?)\*/g, '$1');
+      body = body.replace(/`([^`]+)`/g, '$1');
+      body = body.replace(/\n{3,}/g, '\n\n');
+      return body.trim();
+    }
+    if (!bubbleEl) return '';
+    let clone = bubbleEl.cloneNode(true);
+    clone.querySelectorAll('.md-heading').forEach(h => {
+      h.textContent = '\n' + h.textContent.trim() + '\n';
+    });
+    clone.querySelectorAll('.md-li').forEach(li => {
+      const bullet = li.querySelector('.bullet')?.textContent.trim() || '•';
+      const textSpan = li.querySelector('span:last-child')?.textContent.trim() || '';
+      li.textContent = bullet + ' ' + textSpan + '\n';
+    });
+    clone.querySelectorAll('.md-oli').forEach(oli => {
+      const num = oli.querySelector('.num')?.textContent.trim() || '';
+      const textSpan = oli.querySelector('span:last-child')?.textContent.trim() || '';
+      oli.textContent = num + ' ' + textSpan + '\n';
+    });
+    let txt = clone.innerText || clone.textContent;
+    return txt.replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  function copyMsgText(btn, msgId) {
+    const msgEl = document.querySelector(`[data-id="${msgId}"]`) || btn.closest('.msg');
+    const bubbleEl = msgEl ? msgEl.querySelector('.bubble') : null;
+    if (!bubbleEl) return;
+
+    const textToCopy = getCleanMessageText(msgEl, bubbleEl);
+    copyToClipboard(textToCopy, () => {
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>已複製文字</span>
+      `;
+      setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+    });
+  }
+
+  // ── 🎨 1080×1920 Apple 質感衛教美圖生成引擎 ───────────────────
+  let currentCardBlob = null;
+  let currentCardFilename = '臺灣物理治療實證衛教_1080x1920.png';
+
+  function drawRoundedRect(ctx, x, y, width, height, radius, fillStyle = null, strokeStyle = null, lineWidth = 1) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    if (fillStyle) {
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+    }
+    if (strokeStyle) {
+      ctx.strokeStyle = strokeStyle;
+      ctx.lineWidth = lineWidth;
+      ctx.stroke();
+    }
+  }
+
+  function drawSpineIcon(ctx, cx, cy, size = 50) {
+    const s = size / 100;
+    const discs = [
+      { dx: -5, dy: -36, w: 22, h: 9, r: 4.5 },
+      { dx: 6, dy: -18, w: 26, h: 10, r: 5 },
+      { dx: 9, dy: 0, w: 29, h: 11, r: 5.5 },
+      { dx: -2, dy: 18, w: 30, h: 11, r: 5.5 },
+      { dx: -8, dy: 36, w: 25, h: 9.5, r: 4.75 }
+    ];
+    discs.forEach(d => {
+      const grad = ctx.createLinearGradient(cx, cy - 40 * s, cx, cy + 40 * s);
+      grad.addColorStop(0, '#00C7BE');
+      grad.addColorStop(1, '#007AFF');
+      drawRoundedRect(
+        ctx,
+        cx + d.dx * s - (d.w * s) / 2,
+        cy + d.dy * s - (d.h * s) / 2,
+        d.w * s,
+        d.h * s,
+        d.r * s,
+        grad
+      );
+    });
+  }
+
+  function wrapText(ctx, text, maxWidth) {
+    if (!text || !text.trim()) return [];
+    const chars = Array.from(text);
+    const lines = [];
+    let curLine = '';
+    for (let i = 0; i < chars.length; i++) {
+      const char = chars[i];
+      const test = curLine + char;
+      if (ctx.measureText(test).width > maxWidth && curLine.length > 0) {
+        lines.push(curLine);
+        curLine = char;
+      } else {
+        curLine = test;
+      }
+    }
+    if (curLine) lines.push(curLine);
+    return lines;
+  }
+
+  function generateApple1080x1920CardBlob(topic, fullRawText) {
+    return new Promise((resolve, reject) => {
+      try {
+        const W = 1080;
+        const H = 1920;
+        const canvas = document.createElement('canvas');
+        canvas.width = W;
+        canvas.height = H;
+        const ctx = canvas.getContext('2d');
+
+        // 1. Studio Light Gradient Background
+        const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+        bgGrad.addColorStop(0, '#F6F8FB');
+        bgGrad.addColorStop(1, '#EBF0F6');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Ambient Top-Right Radial Glow
+        const glowGrad = ctx.createRadialGradient(W - 100, 100, 10, W - 100, 100, 500);
+        glowGrad.addColorStop(0, 'rgba(0, 199, 190, 0.18)');
+        glowGrad.addColorStop(0.5, 'rgba(0, 122, 255, 0.10)');
+        glowGrad.addColorStop(1, 'rgba(235, 240, 246, 0)');
+        ctx.fillStyle = glowGrad;
+        ctx.fillRect(0, 0, W, 800);
+
+        // 2. Main Squircle Card Container
+        const cardX = 54;
+        const cardY = 54;
+        const cardW = 972;
+        const cardH = 1812;
+        const cardRadius = 44;
+
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 35, 85, 0.08)';
+        ctx.shadowBlur = 48;
+        ctx.shadowOffsetY = 18;
+        drawRoundedRect(ctx, cardX, cardY, cardW, cardH, cardRadius, '#FFFFFF');
+        ctx.restore();
+
+        // 1.5px Subtle Border
+        drawRoundedRect(ctx, cardX, cardY, cardW, cardH, cardRadius, null, 'rgba(0, 0, 0, 0.05)', 1.5);
+
+        // 3. Top Header: Brand Pill & Topic Title
+        const pillX = 104;
+        const pillY = 104;
+        const pillW = 400;
+        const pillH = 56;
+        drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 28, 'rgba(0, 122, 255, 0.07)', 'rgba(0, 122, 255, 0.22)', 1.5);
+        
+        // Mini Spine Icon inside pill
+        drawSpineIcon(ctx, pillX + 32, pillY + 28, 38);
+
+        ctx.fillStyle = '#007AFF';
+        ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('臺灣物理治療實證助手', pillX + 62, pillY + 36);
+
+        // Verified PubMed Tag
+        ctx.fillStyle = '#8E8E93';
+        ctx.font = '600 22px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('✓ PubMed 實證醫學指引', cardX + cardW - 50, pillY + 36);
+        ctx.textAlign = 'left';
+
+        // Main Topic Title
+        let cleanTopic = topic || '物理治療實證衛教指南';
+        if (cleanTopic.length > 20) cleanTopic = cleanTopic.substring(0, 20) + '…';
+        ctx.fillStyle = '#1C1C1E';
+        ctx.font = 'bold 44px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText(cleanTopic, 104, 218);
+
+        // Gradient Accent Line (#007AFF -> #00C7BE)
+        const lineGrad = ctx.createLinearGradient(104, 0, 264, 0);
+        lineGrad.addColorStop(0, '#007AFF');
+        lineGrad.addColorStop(1, '#00C7BE');
+        drawRoundedRect(ctx, 104, 242, 160, 6, 3, lineGrad);
+
+        // 4. Content Parsing & Dynamic Section Card Generation
+        let cleanText = fullRawText
+          .replace(/\[\d+\]\s*/g, '')
+          .replace(/\*\*(.*?)\*\*/g, '$1')
+          .replace(/#{1,6}\s+/g, '')
+          .replace(/```[\s\S]*?```/g, '')
+          .trim();
+
+        const sections = [];
+        const rawLines = cleanText.split('\n');
+        let curSec = { title: '衛教重點分析', items: [] };
+
+        rawLines.forEach(l => {
+          const t = l.trim();
+          if (!t) return;
+          if (t.startsWith('【') && t.includes('】')) {
+            if (curSec.items.length > 0) sections.push(curSec);
+            curSec = { title: t.replace(/[【】]/g, ''), items: [] };
+          } else {
+            const item = t.replace(/^[•\*\-\d\.]+\s*/, '').trim();
+            if (item && !item.startsWith('⚠️ AI 生成內容') && !item.startsWith('---')) {
+              curSec.items.push(item);
+            }
+          }
+        });
+        if (curSec.items.length > 0) sections.push(curSec);
+
+        if (sections.length === 0) {
+          sections.push({ title: '建議運動與日常調整', items: rawLines.slice(0, 8) });
+        }
+
+        // Render Cards (Max 3 Cards)
+        let curY = 275;
+        const maxContentY = 1680;
+        const availableHeight = maxContentY - curY;
+        const sectionCount = Math.min(sections.length, 3);
+        const cardGap = 20;
+        const singleCardMaxH = (availableHeight - (sectionCount - 1) * cardGap) / sectionCount;
+
+        for (let sIdx = 0; sIdx < sectionCount; sIdx++) {
+          const sec = sections[sIdx];
+          const isAlert = sec.title.includes('避免') || sec.title.includes('警訊') || sec.title.includes('就醫') || sec.title.includes('危險');
+          const isAction = sec.title.includes('可以這樣做') || sec.title.includes('運動') || sec.title.includes('建議') || sec.title.includes('步驟');
+
+          const secCardW = cardW - 100;
+          const innerW = secCardW - 60;
+          
+          let cardH = 80;
+          const itemLinesArr = [];
+          sec.items.slice(0, 4).forEach(it => {
+            ctx.font = 'normal 25px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+            const wrapped = wrapText(ctx, it, isAction ? innerW - 55 : innerW - 35);
+            itemLinesArr.push(wrapped);
+            cardH += wrapped.length * 36 + 18;
+          });
+
+          if (cardH > singleCardMaxH) cardH = singleCardMaxH;
+
+          if (isAlert) {
+            drawRoundedRect(ctx, 104, curY, secCardW, cardH, 24, 'rgba(255, 149, 0, 0.08)', 'rgba(255, 149, 0, 0.28)', 1.5);
+          } else if (isAction) {
+            drawRoundedRect(ctx, 104, curY, secCardW, cardH, 24, '#FFFFFF', 'rgba(0, 122, 255, 0.22)', 1.5);
+          } else {
+            drawRoundedRect(ctx, 104, curY, secCardW, cardH, 24, '#F6F7FA', 'rgba(0, 0, 0, 0.04)', 1);
+          }
+
+          ctx.font = 'bold 30px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+          if (isAlert) ctx.fillStyle = '#D97706';
+          else if (isAction) ctx.fillStyle = '#007AFF';
+          else ctx.fillStyle = '#1C1C1E';
+
+          const icon = isAlert ? '⚠️ ' : isAction ? '🏋️ ' : '💡 ';
+          ctx.fillText(icon + sec.title, 134, curY + 48);
+
+          let itemY = curY + 92;
+          for (let i = 0; i < itemLinesArr.length; i++) {
+            if (itemY + 36 > curY + cardH) break;
+            const itemLines = itemLinesArr[i];
+
+            if (isAction) {
+              const badgeX = 134;
+              const badgeY = itemY - 20;
+              const bGrad = ctx.createLinearGradient(badgeX, badgeY, badgeX + 38, badgeY + 38);
+              bGrad.addColorStop(0, '#007AFF');
+              bGrad.addColorStop(1, '#00C7BE');
+              drawRoundedRect(ctx, badgeX, badgeY, 38, 38, 19, bGrad);
+              ctx.fillStyle = '#FFFFFF';
+              ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, sans-serif';
+              ctx.textAlign = 'center';
+              ctx.fillText((i + 1).toString(), badgeX + 19, badgeY + 27);
+              ctx.textAlign = 'left';
+
+              ctx.fillStyle = '#1C1C1E';
+              ctx.font = 'normal 25px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+              itemLines.forEach(l => {
+                if (itemY + 8 <= curY + cardH) {
+                  ctx.fillText(l, 186, itemY + 6);
+                  itemY += 36;
+                }
+              });
+              itemY += 12;
+            } else {
+              ctx.fillStyle = isAlert ? '#FF9500' : '#00C7BE';
+              ctx.beginPath();
+              ctx.arc(142, itemY - 6, 6, 0, Math.PI * 2);
+              ctx.fill();
+
+              ctx.fillStyle = '#3C3C43';
+              ctx.font = 'normal 25px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+              itemLines.forEach(l => {
+                if (itemY + 8 <= curY + cardH) {
+                  ctx.fillText(l, 164, itemY);
+                  itemY += 36;
+                }
+              });
+              itemY += 10;
+            }
+          }
+
+          curY += cardH + cardGap;
+        }
+
+        // 5. Bottom Brand Footer
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.07)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(104, 1690);
+        ctx.lineTo(cardX + cardW - 50, 1690);
+        ctx.stroke();
+
+        drawSpineIcon(ctx, 134, 1740, 48);
+
+        ctx.fillStyle = '#1C1C1E';
+        ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('臺灣物理治療實證助手', 170, 1735);
+
+        ctx.fillStyle = '#8E8E93';
+        ctx.font = 'normal 20px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('taiwan-pt-web.vercel.app · 即時 PubMed 醫學指引', 170, 1762);
+
+        ctx.fillStyle = '#AEAEB2';
+        ctx.font = 'normal 19px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('⚠️ 本圖卡僅供健康促進與運動參考，若有身體不適請務必尋求物理治療師實體評估。', 104, 1812);
+
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob);
+          else reject(new Error('Canvas toBlob returned null'));
+        }, 'image/png');
+
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  async function openShareCardModal(btn, msgId) {
+    triggerHaptic('medium');
+    const modal = document.getElementById('card-modal');
+    const previewImg = document.getElementById('card-preview-img');
+    const loading = document.getElementById('card-loading');
+    if (!modal || !previewImg) return;
+
+    previewImg.style.opacity = '0';
+    loading.style.display = 'flex';
+    modal.classList.add('show');
+
+    const msgDiv = document.querySelector(`.msg.bot[data-id="${msgId}"]`);
+    let text = '';
+    if (msgDiv) {
+      text = msgDiv.getAttribute('data-raw') || msgDiv.querySelector('.bubble').innerText;
+    }
+
+    let topic = '物理治療實證衛教';
+    if (msgDiv) {
+      let prev = msgDiv.previousElementSibling;
+      while (prev && !prev.classList.contains('user')) {
+        prev = prev.previousElementSibling;
+      }
+      if (prev) {
+        const userText = prev.innerText.trim();
+        if (userText) topic = userText.substring(0, 24);
+      }
+    }
+
+    currentCardFilename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
+
+    try {
+      const blob = await generateApple1080x1920CardBlob(topic, text);
+      currentCardBlob = blob;
+      const url = URL.createObjectURL(blob);
+      previewImg.src = url;
+      previewImg.onload = () => {
+        loading.style.display = 'none';
+        previewImg.style.opacity = '1';
+      };
+    } catch (err) {
+      console.error('[Generate card error]', err);
+      loading.innerHTML = '<span>圖卡生成失敗，請重試</span>';
+    }
+  }
+
+  function closeCardModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('card-modal');
+    if (modal) modal.classList.remove('show');
+  }
+
+  async function shareCardImage() {
+    triggerHaptic('medium');
+    if (!currentCardBlob) return;
+    const file = new File([currentCardBlob], currentCardFilename, { type: 'image/png' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: '臺灣物理治療實證衛教圖卡',
+          text: '我在「臺灣物理治療實證助手」生成的專業實證衛教圖卡！'
+        });
+      } catch (e) {
+        if (e.name !== 'AbortError') downloadCardImage();
+      }
+    } else {
+      downloadCardImage();
+    }
+  }
+
+  function downloadCardImage() {
+    triggerHaptic('light');
+    if (!currentCardBlob) return;
+    const url = URL.createObjectURL(currentCardBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentCardFilename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── 剪貼簿跨裝置相容複製工具 ──────────────────────────────
+  function copyToClipboard(text, onSuccess) {
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        if (onSuccess) onSuccess();
+      }).catch(() => {
+        fallbackCopy(text, onSuccess);
+      });
+    } else {
+      fallbackCopy(text, onSuccess);
+    }
+  }
+
+  function fallbackCopy(text, onSuccess) {
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-9999px';
+      textArea.style.top = '0';
+      textArea.setAttribute('readonly', '');
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      if (successful && onSuccess) {
+        onSuccess();
+      }
+    } catch (err) {
+      console.log('[Copy fallback error]', err);
+    }
+  }
+
+  // ── 臺灣在地化用語轉換庫 ──────────────────────────────────────
+  function localizeTaiwanese(str) {
+    if (!str) return '';
+    return str
+      .replace(/康復/g, '復健')
+      .replace(/鍛[煉鍊]/g, '訓練')
+      .replace(/激活/g, '啟動')
+      .replace(/牽拉/g, '伸展')
+      .replace(/頸椎病/g, '頸椎退化壓迫')
+      .replace(/腰突/g, '椎間盤突出')
+      .replace(/泡沫軸/g, '滾筒')
+      .replace(/骨質增生/g, '骨刺')
+      .replace(/韌帶拉傷/g, '韌帶扭傷')
+      .replace(/正骨/g, '徒手整復')
+      .replace(/膏藥/g, '痠痛貼布')
+      .replace(/視頻/g, '影片')
+      .replace(/信息/g, '資訊')
+      .replace(/軟件/g, '軟體')
+      .replace(/交互/g, '互動')
+      .replace(/屏幕/g, '螢幕')
+      .replace(/動態質量/g, '動作品質')
+      .replace(/動作質量/g, '動作品質')
+      .replace(/質量良好/g, '品質良好')
+      .replace(/旋轉肌袖/g, '旋轉肌群');
+  }
+
+  // ── 訊息氣泡生成與插入 ──────────────────────────────────────
+  function appendMsg(role, html, rawText = '', msgId = '') {
+    const isBot = role === 'bot';
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    
+    let actionsHtml = '';
+    if (isBot) {
+      if (!msgId) {
+        msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+      }
+      div.setAttribute('data-id', msgId);
+      if (rawText) div.setAttribute('data-raw', rawText);
+
+      actionsHtml = `
+        <div class="followup-container"></div>
+        <div class="bubble-actions">
+          <button class="action-pill-btn" onclick="sendVote(this, 'up', '${msgId}')" title="這則回答有幫助">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+            </svg>
+            <span>有幫助</span>
+          </button>
+          <button class="action-pill-btn" onclick="sendVote(this, 'down', '${msgId}')" title="回答需要改進">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/>
+            </svg>
+            <span>需改進</span>
+          </button>
+          <button class="action-pill-btn" onclick="copyMsgText(this, '${msgId}')" title="複製純文字內容">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span>複製文字</span>
+          </button>
+          <button class="action-pill-btn" onclick="openShareCardModal(this, '${msgId}')" title="生成 1080×1920 Apple 風格衛教美圖 (可分享至 IG / Threads / LINE)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>生成衛教圖卡</span>
+          </button>
+        </div>
+      `;
+    }
+
+    div.innerHTML = `
+      <div class="bubble-wrapper">
+        <div class="bubble">${html}</div>
+        ${actionsHtml}
+      </div>
+    `;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  function parseBotResponse(raw) {
+    if (!raw) return { body: '', followups: [] };
+    raw = localizeTaiwanese(raw);
+
+    const followupRegex = /【(?:💡\s*)?延伸探索】([\s\S]*?)(?=(?:---|💡 尋求專業|⚖️ 免責聲明|$))/i;
+    const match = raw.match(followupRegex);
+
+    if (!match) return { body: raw, followups: [] };
+
+    const fullBlock = match[0];
+    const content = match[1];
+
+    // 從對話氣泡內文中移除延伸探索，保持氣泡內部純淨
+    const body = raw.replace(fullBlock, '').trim();
+
+    const followups = [];
+    const lines = content.split('\n');
+    lines.forEach(l => {
+      const qMatch = l.match(/👉\s*(.+)/);
+      if (qMatch) {
+        const q = qMatch[1].replace(/<[^>]+>/g, '').trim();
+        if (q) followups.push(q);
+      }
+    });
+
+    return { body, followups };
+  }
+
+  function escapeAttr(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  let searchTimer = null;
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg bot';
+    div.id = 'typing-indicator';
+    div.innerHTML = `
+      <div class="bubble-wrapper">
+        <div class="bubble">
+          <div class="search-status">
+            <div class="search-spinner"></div>
+            <span id="search-status-text">🔍 正在檢索國際醫學實證研究與物理治療指引…</span>
+          </div>
+        </div>
+      </div>
+    `;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    const steps = [
+      '🔍 正在檢索國際醫學實證研究與物理治療指引…',
+      '🧹 正在過濾排除低證據力農場文與未驗證論述…',
+      '⚖️ 正在比對高品質臨床研究與運動治療指南…',
+      '🦴 正在分析動作姿勢與身體不適原因…',
+      '🛡️ 正在篩檢安全運動界限與紅旗就醫警訊…',
+      '📋 正在統整分期運動處方與白話衛教建議…'
+    ];
+    let stepIndex = 0;
+    if (searchTimer) clearInterval(searchTimer);
+    searchTimer = setInterval(() => {
+      stepIndex = (stepIndex + 1) % steps.length;
+      const textEl = document.getElementById('search-status-text');
+      if (textEl) {
+        textEl.style.opacity = '0';
+        setTimeout(() => {
+          textEl.textContent = steps[stepIndex];
+          textEl.style.opacity = '1';
+        }, 180);
+      }
+    }, 1900);
+  }
+
+  function removeTyping() {
+    if (searchTimer) {
+      clearInterval(searchTimer);
+      searchTimer = null;
+    }
+    document.getElementById('typing-indicator')?.remove();
+  }
+
+  // Enhanced Markdown → HTML（支援中文標題、智慧延伸追問、清單、粗體、引用、分隔線、超連結）
+  function md(text) {
+    if (!text) return '';
+    text = localizeTaiwanese(text);
+    let html = text
+      // 跳脫 HTML 特殊字元
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      // 分隔線 ---
+      .replace(/^\s*---\s*$/gm, '<hr class="md-hr" />')
+      // 引用區塊 >
+      .replace(/^>\s*(.+)$/gm, '<blockquote class="md-quote">$1</blockquote>')
+      // 智慧延伸追問項目 (👉 轉為可直接點選的追問按鈕)
+      .replace(/^\s*[\*\-\d\.\s•]*👉\s*(.+)$/gm, (m, q) => {
+        const cleanQ = q.trim();
+        return `<button class="followup-chip" data-raw="${escapeAttr(cleanQ)}" onclick="sendChip(this)"><span>👉</span> <span>${cleanQ}</span></button>`;
+      })
+      // 中文標題 【💡 延伸探索】 轉為追問容器標題
+      .replace(/^\s*【(?:💡\s*)?延伸探索】\s*$/gm, '<div class="followup-title"><span>💡</span> 延伸探索推薦</div>')
+      // 🚨 醫療紅旗警訊與就醫指引視覺卡片
+      .replace(/^\s*【(?:🚨\s*|⚠️\s*)?(安全篩檢(?:與就醫指引)?|何時需立即就醫|就醫指引|紅旗警訊)】\s*(.*)$/gm, (m, title, rest) => {
+        const restText = rest && rest.trim() ? `\n${rest.trim()}` : '';
+        return `<div class="alert-heading alert-safety"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>【安全篩檢與就醫指引】</span></div>${restText}`;
+      })
+      // 🚫 應避免的動作與禁忌標記
+      .replace(/^\s*【(?:🚫\s*|❌\s*)?(應避免的動作|禁忌動作|注意事項)】\s*(.*)$/gm, (m, title, rest) => {
+        const restText = rest && rest.trim() ? `\n${rest.trim()}` : '';
+        return `<div class="alert-heading alert-avoid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><span>【應避免的動作】</span></div>${restText}`;
+      })
+      // 其他中文標題 【1. ...】 或 【...】
+      .replace(/^\s*(【\d+\..+?】)\s*$/gm, '<strong class="md-heading">$1</strong>')
+      .replace(/^\s*(【.+?】)\s*$/gm, '<strong class="md-heading">$1</strong>')
+      // Markdown 標題（1 到 6 個 #，並自動轉為 heading）
+      .replace(/^\s*#{1,6}\s*(.+)$/gm, '<strong class="md-heading">$1</strong>')
+      // 項目清單 * 或 -
+      .replace(/^\s*[\*\-]\s+(.+)$/gm, '<div class="md-li"><span class="bullet">•</span><span>$1</span></div>')
+      // 數字清單 1. 2.
+      .replace(/^\s*(\d+)\.\s+(.+)$/gm, '<div class="md-oli"><span class="num">$1.</span><span>$2</span></div>')
+      // 粗體、斜體、行內程式碼
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      // Markdown 連結 [text](url)
+      .replace(/\[(.+?)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      // 裸露 URL
+      .replace(/(^|[\s])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>')
+      // 清理任何殘留的孤立 # 字符
+      .replace(/#{2,}/g, '');
+
+    // 將非標籤間的換行轉為 <br>
+    html = html.replace(/\n/g, '<br>');
+    // 清理清單、按鈕與分隔線前後多餘的 <br>
+    html = html.replace(/<\/div><br>/g, '</div>');
+    html = html.replace(/<\/blockquote><br>/g, '</blockquote>');
+    html = html.replace(/<hr class="md-hr" \/><br>/g, '<hr class="md-hr" />');
+    html = html.replace(/<\/strong><br>/g, '</strong>');
+    html = html.replace(/<\/button><br>/g, '</button>');
+    return html;
+  }
+
+
+  // ── 對話控制與重置 ──────────────────────────────────────
+  function resetChat() {
+    if (isLoading) return;
+    currentSessionId = 'session_' + Date.now();
+    history = [];
+    renderWelcome();
+    inputEl.value = '';
+    inputEl.style.height = '';
+    updateActionButtonState();
+    inputEl.focus();
+  }
+
+  let lastChipClickTime = 0;
+  function sendChip(el) {
+    triggerHaptic('light');
+    if (!el) return;
+    const now = Date.now();
+    if (now - lastChipClickTime < 600) return; // 防連點與雙重觸發
+    lastChipClickTime = now;
+
+    if (isLoading) return;
+    const raw = el.getAttribute('data-raw');
+    const textToSend = raw ? raw : el.textContent.trim();
+    if (!textToSend) return;
+
+    inputEl.value = textToSend;
+    updateActionButtonState();
+    sendMessage();
+  }
+
+  // 自動伸縮輸入框
+  inputEl.addEventListener('input', () => {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+    updateActionButtonState();
+  });
+
+  // 追蹤中文輸入法組字狀態（避免按 Enter 選字時誤送）
+  let isComposing = false;
+  inputEl.addEventListener('compositionstart', () => { isComposing = true; });
+  inputEl.addEventListener('compositionend',   () => { isComposing = false; });
+  inputEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey && !isComposing && !e.isComposing) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  async function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text || isLoading) return;
+
+    // 清除歡迎卡片並隱藏熱門藥丸列
+    document.querySelector('.welcome')?.remove();
+    const strip = document.getElementById('suggestions-strip');
+    if (strip) strip.style.display = 'none';
+
+    inputEl.value = '';
+    inputEl.style.height = '';
+    isLoading = true;
+    const actBtn = document.getElementById('action-btn');
+    if (actBtn) actBtn.disabled = true;
+
+    // 立即顯示使用者的問題氣泡
+    const userMsgDiv = appendMsg('user', md(text), text);
+    // 立即顯示醫學實證檢索管道動畫
+    showTyping();
+
+    const startTime = Date.now();
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history }),
+      });
+
+      const elapsed = Date.now() - startTime;
+      if (elapsed < 500) {
+        await new Promise(r => setTimeout(r, 500 - elapsed));
+      }
+
+      if (!res.ok) {
+        removeTyping();
+        let errMsg = '檢索服務暫時繁忙，請稍後再試。';
+        try {
+          const errData = await res.json();
+          if (errData.error) errMsg = errData.error;
+        } catch {}
+        appendMsg('bot', `<span style="color:#ef4444">⚠️ ${errMsg}</span>`, `⚠️ ${errMsg}`);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let accumulatedText = '';
+      let botMsgDiv = null;
+      let bubbleEl = null;
+      let followupContainerEl = null;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        accumulatedText += chunk;
+
+        // 當接收到第一個資料塊時，移除檢索動畫並創建回答氣泡
+        if (!botMsgDiv) {
+          removeTyping();
+          botMsgDiv = appendMsg('bot', '', '');
+          bubbleEl = botMsgDiv.querySelector('.bubble');
+          followupContainerEl = botMsgDiv.querySelector('.followup-container');
+        }
+
+        const { body, followups } = parseBotResponse(accumulatedText);
+        if (bubbleEl) bubbleEl.innerHTML = md(body);
+
+        if (followupContainerEl) {
+          if (followups && followups.length > 0) {
+            let fHtml = `
+              <div class="followup-box">
+                <div class="followup-title"><span>💡</span> 延伸探索推薦</div>
+                <div class="followup-list">
+            `;
+            followups.forEach(q => {
+              fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
+            });
+            fHtml += `</div></div>`;
+            followupContainerEl.innerHTML = fHtml;
+          } else {
+            followupContainerEl.innerHTML = '';
+          }
+        }
+
+        // 串流生成中平滑跟隨滾動
+        const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 180;
+        if (isNearBottom) {
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+      }
+
+      removeTyping();
+
+      // ✨ 生成完畢：自動平滑定錨至使用者問題與回答開頭
+      setTimeout(() => {
+        if (userMsgDiv) userMsgDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+
+      if (botMsgDiv) botMsgDiv.setAttribute('data-raw', accumulatedText);
+      history.push({ role: 'user', content: text });
+      history.push({ role: 'model', content: accumulatedText });
+      if (history.length > 20) history = history.slice(-20);
+
+      // 安全保存本輪對話至手機 LocalStorage
+      let sessions = getHistorySessions();
+      const existingSessionIdx = sessions.findIndex(s => s.id === currentSessionId);
+      const sessionTitle = text.length > 25 ? text.substring(0, 25) + '…' : text;
+
+      const sessionObj = {
+        id: currentSessionId,
+        title: existingSessionIdx >= 0 ? sessions[existingSessionIdx].title : sessionTitle,
+        time: Date.now(),
+        history: [...history]
+      };
+
+      if (existingSessionIdx >= 0) {
+        sessions[existingSessionIdx] = sessionObj;
+      } else {
+        sessions.unshift(sessionObj);
+      }
+      if (sessions.length > 25) sessions = sessions.slice(0, 25);
+      saveHistorySessions(sessions);
+      checkAndShowPwaBanner();
+
+    } catch (err) {
+      console.error('[sendMessage error]', err);
+      removeTyping();
+      appendMsg('bot', '<span style="color:#ef4444">⚠️ 網路連線中斷，請稍後再試。</span>', '⚠️ 網路連線中斷，請稍後再試。');
+    } finally {
+      isLoading = false;
+      const actBtn = document.getElementById('action-btn');
+      if (actBtn) actBtn.disabled = false;
+      updateActionButtonState();
+    }
+  }
+
+  // ── 歷史紀錄側邊欄控制（OpenEvidence Style）─────────────────
+  function openHistoryDrawer() {
+    triggerHaptic('light');
+    updateBadgeCounts();
+    renderDrawerContent();
+    document.getElementById('drawer-backdrop').classList.add('show');
+    document.getElementById('drawer-content').classList.add('show');
+  }
+
+  function closeHistoryDrawer() {
+    triggerHaptic('light');
+    document.getElementById('drawer-backdrop').classList.remove('show');
+    document.getElementById('drawer-content').classList.remove('show');
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return `${d.getMonth() + 1}/${d.getDate()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+  }
+
+  function renderDrawerContent() {
+    const bodyEl = document.getElementById('drawer-body');
+    if (!bodyEl) return;
+
+    const sessions = getHistorySessions();
+    const histCountEl = document.getElementById('history-count');
+    if (histCountEl) histCountEl.textContent = sessions.length;
+
+    if (sessions.length === 0) {
+      bodyEl.innerHTML = `
+        <div class="drawer-empty">
+          <div style="font-size:1.6rem;margin-bottom:0.4rem;">💬</div>
+          <div style="font-weight:600;color:var(--gray-900);">尚無諮詢紀錄</div>
+          <div style="font-size:0.75rem;color:#8E8E93;margin-top:0.35rem;line-height:1.5;">
+            你向實證助手諮詢的對話<br>會自動安全保存在本裝置中
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    sessions.forEach(s => {
+      const qCount = s.history ? Math.max(1, Math.round(s.history.length / 2)) : 1;
+      html += `
+        <div class="drawer-item" onclick="loadHistorySession('${s.id}')">
+          <div class="drawer-item-title">${escapeHtml(s.title)}</div>
+          <div class="drawer-item-meta">
+            <span>${qCount} 則問答</span>
+            <span>${formatDate(s.time)}</span>
+          </div>
+        </div>
+      `;
+    });
+    bodyEl.innerHTML = html;
+  }
+
+  function loadHistorySession(sessionId) {
+    const session = getHistorySessions().find(s => s.id === sessionId);
+    if (!session) return;
+    closeHistoryDrawer();
+
+    currentSessionId = session.id;
+    history = session.history ? [...session.history] : [];
+
+    messagesEl.innerHTML = '';
+    document.querySelector('.welcome')?.remove();
+    const strip = document.getElementById('suggestions-strip');
+    if (strip) strip.style.display = 'none';
+
+    history.forEach(item => {
+      if (item.role === 'user') {
+        appendMsg('user', md(item.content), item.content);
+      } else if (item.role === 'model' || item.role === 'bot') {
+        const { body, followups } = parseBotResponse(item.content);
+        const botDiv = appendMsg('bot', md(body), item.content);
+        if (followups && followups.length > 0) {
+          const fc = botDiv.querySelector('.followup-container');
+          if (fc) {
+            let fHtml = `<div class="followup-box"><div class="followup-title"><span>💡</span> 延伸探索推薦</div><div class="followup-list">`;
+            followups.forEach(q => {
+              fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
+            });
+            fHtml += `</div></div>`;
+            fc.innerHTML = fHtml;
+          }
+        }
+      }
+    });
+
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function clearAllHistory() {
+    const sessions = getHistorySessions();
+    if (sessions.length === 0) return;
+    if (confirm('確定要清除本機的所有歷史諮詢紀錄嗎？\n（此動作無法復原）')) {
+      localStorage.removeItem('tw_pt_history_sessions');
+      localStorage.removeItem('tw_pt_favorites');
+      updateBadgeCounts();
+      renderDrawerContent();
+      resetChat();
+      closeHistoryDrawer();
+    }
+  }
+
+  // ── 🎙️ / ✈️ 動態切換與語音模組 (LINE & OpenEvidence 體驗) ───────
+  let recognition = null;
+  let isListening = false;
+
+  function updateActionButtonState() {
+    const btn = document.getElementById('action-btn');
+    if (!btn) return;
+
+    if (isLoading) {
+      btn.disabled = true;
+      return;
+    }
+    btn.disabled = false;
+
+    if (isListening) {
+      btn.className = 'action-btn recording-mode';
+      btn.setAttribute('title', '正在聆聽中…點擊結束');
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>
+        </svg>
+      `;
+      return;
+    }
+
+    const hasText = inputEl.value.trim().length > 0;
+    const hasSpeech = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+
+    if (hasText || !hasSpeech) {
+      btn.className = 'action-btn send-mode';
+      btn.setAttribute('title', '送出問題');
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      `;
+    } else {
+      btn.className = 'action-btn mic-mode';
+      btn.setAttribute('title', '語音輸入 (繁體中文)');
+      btn.innerHTML = `
+        <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      `;
+    }
+  }
+
+  function handleActionButton() {
+    if (isLoading) return;
+    const hasText = inputEl.value.trim().length > 0;
+    const hasSpeech = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+
+    if (hasText || !hasSpeech) {
+      sendMessage();
+    } else {
+      toggleVoiceInput();
+    }
+  }
+
+  function initVoiceInput() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      updateActionButtonState();
+      return;
+    }
+
+    try {
+      recognition = new SpeechRecognition();
+      recognition.lang = 'zh-TW';
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        isListening = true;
+        updateActionButtonState();
+        inputEl.placeholder = '🎙️ 正在聆聽，請說出身體狀況…';
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+          inputEl.value = transcript;
+          inputEl.style.height = 'auto';
+          inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+          updateActionButtonState();
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.log('[Voice error]', event.error);
+        stopVoiceInput();
+      };
+
+      recognition.onend = () => {
+        stopVoiceInput();
+      };
+    } catch (e) {
+      console.log('[Voice init exception]', e);
+    }
+    updateActionButtonState();
+  }
+
+  function toggleVoiceInput() {
+    if (!recognition) {
+      initVoiceInput();
+      if (!recognition) return;
+    }
+    if (isListening) {
+      recognition.stop();
+      stopVoiceInput();
+    } else {
+      try {
+        recognition.start();
+      } catch (e) {
+        recognition.stop();
+        stopVoiceInput();
+      }
+    }
+  }
+
+  function stopVoiceInput() {
+    isListening = false;
+    inputEl.placeholder = '請在此輸入或說出身體狀況…';
+    updateActionButtonState();
+  }
+
+  inputEl.addEventListener('input', () => {
+    updateActionButtonState();
+  });
+
+  // 初始更新徽章數量
+  updateBadgeCounts();
+  initVoiceInput();
+  initMarqueeScroller();
+
+  // Register PWA Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => {
+        console.log('[SW] Registration failed:', err);
+      });
+    });
+  }
+
+  // ── 👆 左邊緣向右滑開啟 Drawer ───────────────────────────────────────
+  (function() {
+    const appEl = document.querySelector('.app');
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isSwiping = false;
+
+    appEl.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX - appEl.getBoundingClientRect().left;
+      touchStartY = e.touches[0].clientY;
+      isSwiping = touchStartX < 28; // only trigger from left 28px edge
+    }, { passive: true });
+
+    appEl.addEventListener('touchmove', (e) => {
+      if (!isSwiping) return;
+      const dx = e.touches[0].clientX - appEl.getBoundingClientRect().left - touchStartX;
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (dx > 40 && dy < 60) {
+        openHistoryDrawer();
+        isSwiping = false;
+      }
+
+    }, { passive: true });
+
+    appEl.addEventListener('touchend', () => { isSwiping = false; }, { passive: true });
+  })();
+
+  // ── 📳 跨裝置行動端微觸覺反饋（支援 iOS Web Audio 微震感 ＋ Android Taptic）──────
+  let audioCtx = null;
+  function triggerHaptic(type = 'light') {
+    // 1. Android / Chrome 硬體振動
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        if (type === 'light') navigator.vibrate(10);
+        else if (type === 'medium') navigator.vibrate(18);
+        else if (type === 'success') navigator.vibrate([12, 35, 18]);
+      } catch (e) {}
+    }
+
+    // 2. iOS Safari / WebKit 觸覺微脈衝（透過瞬態超短音頻脈衝模擬 Taptic Engine）
+    try {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      if (audioCtx) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        
+        const now = audioCtx.currentTime;
+        if (type === 'light') {
+          osc.frequency.setValueAtTime(140, now);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.015);
+        } else if (type === 'medium') {
+          osc.frequency.setValueAtTime(120, now);
+          gain.gain.setValueAtTime(0.07, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.025);
+        } else if (type === 'success') {
+          osc.frequency.setValueAtTime(180, now);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.035);
+        }
+      }
+    } catch (e) {}
+  }
+
+  // ── 📲 PWA「加入主畫面」智慧引導 ───────────────────────────
+  let deferredPrompt = null;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.textContent = '一鍵加入';
+  });
+
+  function checkAndShowPwaBanner() {
+    if (isStandalone) return;
+    if (localStorage.getItem('tw_pt_pwa_dismissed')) return;
+
+    const banner = document.getElementById('pwa-install-banner');
+    const desc = document.getElementById('pwa-desc-text');
+    const btn = document.getElementById('pwa-install-btn');
+    if (!banner) return;
+
+    if (btn) btn.textContent = '一鍵加入';
+    if (isIOS) {
+      if (desc) desc.textContent = '一鍵開啟，享受全螢幕極速實證諮詢';
+    } else {
+      if (desc) desc.textContent = '點擊一鍵安裝，享受全螢幕極速體驗';
+    }
+
+    setTimeout(() => {
+      banner.classList.add('show');
+    }, 1200);
+  }
+
+  function handlePwaInstall() {
+    triggerHaptic('medium');
+    if (deferredPrompt) {
+      // Android / Chrome / Edge: 一鍵觸發原生系統安裝
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => {
+        deferredPrompt = null;
+        dismissPwaBanner();
+      });
+    } else if (isIOS) {
+      // iOS: 彈出精緻動態引導小卡
+      openIosGuide();
+      dismissPwaBanner();
+    } else {
+      dismissPwaBanner();
+    }
+  }
+
+  function openIosGuide() {
+    triggerHaptic('light');
+    const guide = document.getElementById('ios-pwa-guide');
+    if (guide) guide.classList.add('show');
+  }
+
+  function closeIosGuide() {
+    triggerHaptic('light');
+    const guide = document.getElementById('ios-pwa-guide');
+    if (guide) guide.classList.remove('show');
+    localStorage.setItem('tw_pt_pwa_dismissed', '1');
+  }
+
+  function dismissPwaBanner() {
+    triggerHaptic('light');
+    const banner = document.getElementById('pwa-install-banner');
+    if (banner) banner.classList.remove('show');
+    localStorage.setItem('tw_pt_pwa_dismissed', '1');
+  }
+
+</script>
+</body>
+</html>
+
