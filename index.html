@@ -327,6 +327,17 @@
       cursor: grabbing;
       user-select: none;
     }
+    /* Bot 訊息改為縱向排列，action bar 獨立一行可佔滿寬度 */
+    .msg.bot {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .msg.bot .bubble-actions {
+      width: 100%;
+      box-sizing: border-box;
+      padding-right: 0.5rem;
+    }
     .action-pill-btn {
       background: transparent;
       border: 1px solid #d1d1d6;
@@ -2670,6 +2681,7 @@
     div.className = `msg ${role}`;
     
     let actionsHtml = '';
+    let followupHtml = '';
     if (isBot) {
       if (!msgId) {
         msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
@@ -2677,8 +2689,8 @@
       div.setAttribute('data-id', msgId);
       if (rawText) div.setAttribute('data-raw', rawText);
 
+      followupHtml = `<div class="followup-container"></div>`;
       actionsHtml = `
-        <div class="followup-container"></div>
         <div class="bubble-actions">
           <button class="action-pill-btn" onclick="sendVote(this, 'up', '${msgId}')" title="這則回答有幫助">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2711,12 +2723,24 @@
       `;
     }
 
-    div.innerHTML = `
-      <div class="bubble-wrapper">
-        <div class="bubble">${html}</div>
+    if (isBot) {
+      // Bot: column layout — bubble-wrapper(max-width) on top, action bar full width below
+      div.style.flexDirection = 'column';
+      div.style.alignItems = 'flex-start';
+      div.innerHTML = `
+        <div class="bubble-wrapper">
+          <div class="bubble">${html}</div>
+          ${followupHtml}
+        </div>
         ${actionsHtml}
-      </div>
-    `;
+      `;
+    } else {
+      div.innerHTML = `
+        <div class="bubble-wrapper">
+          <div class="bubble">${html}</div>
+        </div>
+      `;
+    }
     messagesEl.appendChild(div);
     messagesEl.scrollTop = messagesEl.scrollHeight;
     // 桌面端拖曳滑動
