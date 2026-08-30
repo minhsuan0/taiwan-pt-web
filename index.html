@@ -311,7 +311,21 @@
       gap: 0.32rem;
       padding-left: 0.15rem;
       margin-top: 0.35rem;
-      flex-wrap: wrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;          /* Firefox */
+      -ms-overflow-style: none;       /* IE / Edge */
+      cursor: grab;
+    }
+    .bubble-actions::-webkit-scrollbar {
+      display: none;                  /* Chrome / Safari */
+    }
+    .bubble-actions.is-dragging {
+      cursor: grabbing;
+      user-select: none;
     }
     .action-pill-btn {
       background: transparent;
@@ -2528,6 +2542,35 @@
     if (modal) modal.classList.remove('show');
   }
 
+  // ── 🖱️ 桌面拖曳滑動：Action Bar 左右滑動支援 ──────────────
+  function enableActionBarDrag(el) {
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    el.addEventListener('mousedown', (e) => {
+      isDown = true;
+      el.classList.add('is-dragging');
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    });
+    el.addEventListener('mouseleave', () => {
+      isDown = false;
+      el.classList.remove('is-dragging');
+    });
+    el.addEventListener('mouseup', () => {
+      isDown = false;
+      el.classList.remove('is-dragging');
+    });
+    el.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.2;
+      el.scrollLeft = scrollLeft - walk;
+    });
+  }
+
   async function shareCardImage() {
     triggerHaptic('medium');
     if (!currentCardBlob) return;
@@ -2676,6 +2719,9 @@
     `;
     messagesEl.appendChild(div);
     messagesEl.scrollTop = messagesEl.scrollHeight;
+    // 桌面端拖曳滑動
+    const actionsBar = div.querySelector('.bubble-actions');
+    if (actionsBar) enableActionBarDrag(actionsBar);
     return div;
   }
 
