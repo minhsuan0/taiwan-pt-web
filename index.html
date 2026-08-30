@@ -310,18 +310,20 @@
       align-items: center;
       gap: 0.32rem;
       padding-left: 0.15rem;
+      padding-right: 0.5rem;
       margin-top: 0.35rem;
       overflow-x: auto;
       overflow-y: hidden;
       flex-wrap: nowrap;
+      /* 允許水平滑動，阻止垂直滾動接管 */
+      touch-action: pan-x;
       -webkit-overflow-scrolling: touch;
-      scroll-snap-type: x proximity;
-      scrollbar-width: none;          /* Firefox */
-      -ms-overflow-style: none;       /* IE / Edge */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       cursor: grab;
     }
     .bubble-actions::-webkit-scrollbar {
-      display: none;                  /* Chrome / Safari */
+      display: none;
     }
     .bubble-actions.is-dragging {
       cursor: grabbing;
@@ -336,10 +338,9 @@
     .msg.bot .bubble-actions {
       width: 100%;
       box-sizing: border-box;
-      padding-right: 0.5rem;
     }
     .action-pill-btn {
-      background: transparent;
+      background: #ffffff;
       border: 1px solid #d1d1d6;
       color: #6e6e73;
       font-size: 0.73rem;
@@ -351,9 +352,10 @@
       display: inline-flex;
       align-items: center;
       gap: 0.28rem;
-      touch-action: manipulation;
-      background: #ffffff;
+      flex-shrink: 0;           /* 絕不被壓縮，確保可以橫向滑到 */
+      touch-action: pan-x;      /* 同上，允許橫滑 */
       box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      white-space: nowrap;      /* 文字不換行 */
     }
     .action-pill-btn:hover {
       background: #f2f2f7;
