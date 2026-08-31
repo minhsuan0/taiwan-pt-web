@@ -443,20 +443,21 @@
       margin-bottom: 0.15rem;
     }
     .followup-box {
-      padding: 0.55rem 0.75rem;
-      background: rgba(0, 122, 255, 0.04);
-      border: 1px solid rgba(0, 122, 255, 0.2);
-      border-radius: var(--radius-md);
+      padding: 0.65rem 0.85rem;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 0.75rem;
       animation: fadeUp 0.25s ease;
     }
     .followup-title {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
-      font-size: 0.78rem;
+      gap: 0.35rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: #007AFF;
-      margin-bottom: 0.4rem;
+      color: #334155;
+      margin-bottom: 0.45rem;
+      letter-spacing: -0.01em;
     }
     .followup-list {
       display: flex;
@@ -464,29 +465,46 @@
       gap: 0.35rem;
     }
     .followup-chip {
-      background: var(--white);
-      border: 1px solid rgba(0, 122, 255, 0.25);
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
       color: #007AFF;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      padding: 0.38rem 0.68rem;
-      border-radius: 0.5rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 0.6rem;
       cursor: pointer;
       text-align: left;
       transition: all 0.15s ease;
       font-family: var(--font-zh);
       display: flex;
       align-items: center;
-      gap: 0.35rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      justify-content: space-between;
+      gap: 0.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
       touch-action: manipulation;
       width: 100%;
+      box-sizing: border-box;
+    }
+    .followup-chip .chip-text {
+      flex: 1;
+      line-height: 1.4;
+    }
+    .followup-chip .chip-arrow {
+      color: #94A3B8;
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, color 0.15s ease;
     }
     .followup-chip:hover, .followup-chip:active {
-      background: rgba(0, 122, 255, 0.06);
+      background: #F0F7FF;
       border-color: #007AFF;
-      color: #007AFF;
+      color: #0062CC;
       transform: translateX(2px);
+    }
+    .followup-chip:hover .chip-arrow, .followup-chip:active .chip-arrow {
+      color: #007AFF;
+      transform: translate(1px, -1px);
     }
 
     .md-heading {
@@ -2760,7 +2778,7 @@
     // 移除氣泡內部可能殘留的免責聲明段落（保持氣泡內部純淨）
     raw = raw.replace(/---+\s*(?:⚖️\s*)?免責聲明[\s\S]*$/i, '').trim();
 
-    const followupRegex = /【(?:💡\s*)?延伸探索】([\s\S]*?)(?=(?:---|💡 尋求專業|⚖️ 免責聲明|$))/i;
+    const followupRegex = /【(?:💡\s*)?(?:相關探索|延伸探索)】([\s\S]*?)(?=(?:---|需要運動物理治療師|💡 尋求專業|⚖️ 免責聲明|$))/i;
     const match = raw.match(followupRegex);
 
     if (!match) return { body: raw, followups: [] };
@@ -2861,12 +2879,12 @@
       // 引用區塊 >
       .replace(/^>\s*(.+)$/gm, '<blockquote class="md-quote">$1</blockquote>')
       // 智慧延伸追問項目 (👉 轉為可直接點選的追問按鈕)
-      .replace(/^\s*[\*\-\d\.\s•]*👉\s*(.+)$/gm, (m, q) => {
+      .replace(/^\s*[\*\-\d\.\s•]*(?:👉\s*)?(.+)$/gm, (m, q) => {
         const cleanQ = q.trim();
-        return `<button class="followup-chip" data-raw="${escapeAttr(cleanQ)}" onclick="sendChip(this)"><span>👉</span> <span>${cleanQ}</span></button>`;
+        return `<button type="button" class="followup-chip" data-raw="${escapeAttr(cleanQ)}" onclick="sendChip(this)"><span class="chip-text">${cleanQ}</span><span class="chip-arrow">↗</span></button>`;
       })
       // 中文標題 【💡 延伸探索】 轉為追問容器標題
-      .replace(/^\s*【(?:💡\s*)?延伸探索】\s*$/gm, '<div class="followup-title"><span>💡</span> 延伸探索推薦</div>')
+      .replace(/^\s*【(?:💡\s*)?延伸探索】\s*$/gm, '<div class="followup-title">相關探索</div>')
       // 🚨 醫療紅旗警訊與就醫指引視覺卡片
       .replace(/^\s*【(?:🚨\s*|⚠️\s*)?(安全篩檢(?:與就醫指引)?|何時需立即就醫|就醫指引|紅旗警訊)】\s*(.*)$/gm, (m, title, rest) => {
         const restText = rest && rest.trim() ? `\n${rest.trim()}` : '';
@@ -3051,11 +3069,11 @@
                 if (followups && followups.length > 0) {
                   let fHtml = `
                     <div class="followup-box">
-                      <div class="followup-title"><span>💡</span> 延伸探索推薦</div>
+                      <div class="followup-title">相關探索</div>
                       <div class="followup-list">
                   `;
                   followups.forEach(q => {
-                    fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
+                    fHtml += `<button type="button" class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span class="chip-text">${escapeHtml(q)}</span><span class="chip-arrow">↗</span></button>`;
                   });
                   fHtml += `</div></div>`;
                   followupContainerEl.innerHTML = fHtml;
@@ -3258,9 +3276,9 @@
         if (followups && followups.length > 0) {
           const fc = botDiv.querySelector('.followup-container');
           if (fc) {
-            let fHtml = `<div class="followup-box"><div class="followup-title"><span>💡</span> 延伸探索推薦</div><div class="followup-list">`;
+            let fHtml = `<div class="followup-box"><div class="followup-title">相關探索</div><div class="followup-list">`;
             followups.forEach(q => {
-              fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
+              fHtml += `<button type="button" class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span class="chip-text">${escapeHtml(q)}</span><span class="chip-arrow">↗</span></button>`;
             });
             fHtml += `</div></div>`;
             fc.innerHTML = fHtml;
