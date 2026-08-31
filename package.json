@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vercel dev",
     "test": "node scripts/verify-all.cjs",
-    "deploy": "node scripts/verify-all.cjs && vercel --prod"
+    "preview": "node scripts/verify-all.cjs && vercel",
+    "deploy": "node scripts/verify-all.cjs && vercel --prod",
+    "promote": "node scripts/verify-all.cjs && vercel --prod"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
