@@ -690,12 +690,120 @@
     /* Disclaimer */
     .disclaimer {
       text-align: center;
-      font-size: 0.68rem;
-      color: var(--gray-500);
-      padding: 0.15rem 1rem 0.5rem;
+      font-size: 0.72rem;
+      color: #8E8E93;
+      padding: 0.25rem 1rem 0.55rem;
       line-height: 1.4;
       width: 100%;
       box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.15rem;
+      flex-wrap: wrap;
+    }
+    .disclaimer-link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: #007AFF;
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-decoration: underline;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .disclaimer-link:hover, .disclaimer-link:active {
+      color: #0056b3;
+    }
+
+    /* Disclaimer Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      padding: 1.2rem;
+      box-sizing: border-box;
+    }
+    .modal-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-card {
+      background: #ffffff;
+      border-radius: 1.25rem;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px) scale(0.96); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.3rem 0.8rem;
+      border-bottom: 1px solid #f2f2f7;
+    }
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1c1c1e;
+    }
+    .modal-close-btn {
+      background: #f2f2f7;
+      border: none;
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8e8e93;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .modal-close-btn:hover {
+      background: #e5e5ea;
+      color: #1c1c1e;
+    }
+    .modal-body {
+      padding: 1.1rem 1.3rem 1.4rem;
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: #3a3a3c;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .modal-body p {
+      margin-bottom: 0.85rem;
+    }
+    .modal-body p:last-child {
+      margin-bottom: 0;
+    }
+    .modal-body strong {
+      color: #1c1c1e;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 0.15rem;
     }
 
     /* ── History Drawer / Modal ──────────────────────────── */
@@ -1620,7 +1728,7 @@
         </svg>
       </button>
     </div>
-    <p class="disclaimer">⚠️ AI 生成內容僅供衛教參考，可能存在錯誤，無法取代專業醫療診斷。若有身體不適，請務必諮詢合格醫師或物理治療師進行實體評估。</p>
+    <div class="disclaimer"><span>AI 衛教內容僅供參考，無法替代實體醫療診斷 · </span><button type="button" class="disclaimer-link" onclick="openDisclaimerModal()">免責聲明</button></div>
   </div>
 </div>
 
@@ -2649,6 +2757,8 @@
   function parseBotResponse(raw) {
     if (!raw) return { body: '', followups: [] };
     raw = localizeTaiwanese(raw);
+    // 移除氣泡內部可能殘留的免責聲明段落（保持氣泡內部純淨）
+    raw = raw.replace(/---+\s*(?:⚖️\s*)?免責聲明[\s\S]*$/i, '').trim();
 
     const followupRegex = /【(?:💡\s*)?延伸探索】([\s\S]*?)(?=(?:---|💡 尋求專業|⚖️ 免責聲明|$))/i;
     const match = raw.match(followupRegex);
@@ -3045,6 +3155,26 @@
       const actBtn = document.getElementById('action-btn');
       if (actBtn) actBtn.disabled = false;
       updateActionButtonState();
+    }
+  }
+
+
+  // ── 免責聲明彈窗控制 ────────────────────────────────────
+  function openDisclaimerModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('disclaimer-modal');
+    if (modal) modal.classList.add('show');
+  }
+
+  function closeDisclaimerModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('disclaimer-modal');
+    if (modal) modal.classList.remove('show');
+  }
+
+  function handleDisclaimerBackdropClick(e) {
+    if (e.target.id === 'disclaimer-modal') {
+      closeDisclaimerModal();
     }
   }
 
@@ -3468,6 +3598,22 @@
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- Disclaimer Modal -->
+  <div id="disclaimer-modal" class="modal-backdrop" onclick="handleDisclaimerBackdropClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">免責聲明與使用條款</span>
+        <button type="button" class="modal-close-btn" onclick="closeDisclaimerModal()" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>1. 衛教性質說明</strong><br>本系統由 AI 實證模型生成，所有內容僅作為日常動作教育與運動衛教參考，可能存在資訊落差，無法取代醫師或物理治療師之專業臨床評估與診斷。</p>
+        <p><strong>2. 法規遵循說明</strong><br>依《物理治療師法》第 12 條規定，實際物理治療處置應依醫師診斷或醫囑執行。</p>
+        <p><strong>3. 就醫諮詢叮嚀</strong><br>若您有急性劇痛、夜間痛醒、神經壓迫或任何身體不適，請務必至醫療院所諮詢專科醫師或物理治療師進行評估。</p>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
 
