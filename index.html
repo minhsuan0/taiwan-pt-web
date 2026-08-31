@@ -2223,46 +2223,83 @@
   }
 
   function getCleanMessageText(msgEl, bubbleEl) {
-    let raw = msgEl ? msgEl.getAttribute('data-raw') : '';
-    if (raw) {
+    let raw = msgEl ? (msgEl.getAttribute('data-raw') || '') : '';
+    let bubbleText = '';
+
+    if (bubbleEl) {
+      let clone = bubbleEl.cloneNode(true);
+      // 移除操作列與按鈕
+      clone.querySelectorAll('.bubble-actions, .followup-container, button, script, style').forEach(el => el.remove());
+      // 確保卡片大標前後換行
+      clone.querySelectorAll('.alert-heading, .md-heading').forEach(h => {
+        h.textContent = '\n\n' + h.textContent.trim() + '\n';
+      });
+      // 確保清單項目格式化
+      clone.querySelectorAll('.md-li').forEach(li => {
+        const bullet = li.querySelector('.bullet')?.textContent.trim() || '•';
+        const textSpan = li.querySelector('span:last-child')?.textContent.trim() || li.textContent.trim();
+        li.textContent = '\n' + bullet + ' ' + textSpan;
+      });
+      clone.querySelectorAll('.md-oli').forEach(oli => {
+        const num = oli.querySelector('.num')?.textContent.trim() || '';
+        const textSpan = oli.querySelector('span:last-child')?.textContent.trim() || oli.textContent.trim();
+        oli.textContent = '\n' + num + ' ' + textSpan;
+      });
+      bubbleText = clone.innerText || clone.textContent || '';
+    }
+
+    if (raw && raw.length >= bubbleText.length) {
+      const parsed = parseBotResponse(raw);
+      return cleanMarkdownForClipboard(parsed.body);
+    } else if (bubbleText) {
+      return cleanMarkdownForClipboard(bubbleText);
+    } else if (raw) {
       const parsed = parseBotResponse(raw);
       return cleanMarkdownForClipboard(parsed.body);
     }
-    if (!bubbleEl) return '';
-    let clone = bubbleEl.cloneNode(true);
-    clone.querySelectorAll('.md-heading').forEach(h => {
-      h.textContent = '\n' + h.textContent.trim() + '\n';
+    return '';
+  }
+
+  function enableActionBarDrag(el) {
+    if (!el) return;
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    el.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
     });
-    clone.querySelectorAll('.md-li').forEach(li => {
-      const bullet = li.querySelector('.bullet')?.textContent.trim() || '•';
-      const textSpan = li.querySelector('span:last-child')?.textContent.trim() || '';
-      li.textContent = bullet + ' ' + textSpan + '\n';
+    el.addEventListener('mouseleave', () => { isDown = false; });
+    el.addEventListener('mouseup', () => { isDown = false; });
+    el.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      el.scrollLeft = scrollLeft - walk;
     });
-    clone.querySelectorAll('.md-oli').forEach(oli => {
-      const num = oli.querySelector('.num')?.textContent.trim() || '';
-      const textSpan = oli.querySelector('span:last-child')?.textContent.trim() || '';
-      li.textContent = num + ' ' + textSpan + '\n';
-    });
-    let txt = clone.innerText || clone.textContent;
-    return cleanMarkdownForClipboard(txt);
   }
 
   function copyMsgText(btn, msgId) {
-    const msgEl = document.querySelector(`[data-id="${msgId}"]`) || btn.closest('.msg');
-    const bubbleEl = msgEl ? msgEl.querySelector('.bubble') : null;
-    if (!bubbleEl) return;
+    try {
+      const msgEl = (msgId ? document.querySelector(`[data-id="${msgId}"]`) : null) || (btn ? btn.closest('.msg') : null);
+      const bubbleEl = msgEl ? msgEl.querySelector('.bubble') : null;
+      const textToCopy = getCleanMessageText(msgEl, bubbleEl) || (bubbleEl ? bubbleEl.innerText : '');
+      if (!textToCopy) return;
 
-    const textToCopy = getCleanMessageText(msgEl, bubbleEl);
-    copyToClipboard(textToCopy, () => {
-      const originalHtml = btn.innerHTML;
-      btn.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <span>已複製文字</span>
-      `;
-      setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
-    });
+      copyToClipboard(textToCopy, () => {
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>已複製文字</span>
+        `;
+        setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+      });
+    } catch (e) {
+      console.error('[Copy error]', e);
+    }
   }
 
   // ── 🎨 1080×1920 Apple 質感實證衛教圖卡生成引擎 ───────────────────
@@ -2391,208 +2428,200 @@
 
         // 3. Top Header: Brand Pill & Topic Title
         const pillX = 104;
-        const pillY = 100;
+        const pillY = 96;
         const pillW = 350;
-        const pillH = 54;
-        drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 27, 'rgba(0, 122, 255, 0.06)', 'rgba(0, 122, 255, 0.20)', 1.5);
+        const pillH = 50;
+        drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 25, 'rgba(0, 122, 255, 0.06)', 'rgba(0, 122, 255, 0.20)', 1.5);
         
-        // Mini Spine Icon inside pill
-        drawSpineIcon(ctx, pillX + 30, pillY + 27, 36);
+        drawSpineIcon(ctx, pillX + 28, pillY + 25, 32);
 
         ctx.fillStyle = '#007AFF';
-        ctx.font = 'bold 23px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('臺灣物理治療實證助手', pillX + 58, pillY + 35);
+        ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('臺灣物理治療實證助手', pillX + 54, pillY + 33);
 
-        // Verified Clinical Tag (No PubMed)
         ctx.fillStyle = '#8E8E93';
-        ctx.font = '600 21px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.font = '600 20px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText('✓ 國際臨床實證指引', cardX + cardW - 50, pillY + 35);
+        ctx.fillText('✓ 國際臨床實證指引', cardX + cardW - 50, pillY + 33);
         ctx.textAlign = 'left';
 
         // Main Topic Title
         let cleanTopic = cleanStringNoEmoji(topic) || '物理治療實證衛教指南';
-        if (cleanTopic.length > 22) cleanTopic = cleanTopic.substring(0, 22) + '…';
+        if (cleanTopic.length > 20) cleanTopic = cleanTopic.substring(0, 20) + '…';
         ctx.fillStyle = '#1C1C1E';
-        ctx.font = 'bold 44px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText(cleanTopic, 104, 212);
+        ctx.font = 'bold 40px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText(cleanTopic, 104, 196);
 
         // Gradient Accent Line (#007AFF -> #00C7BE)
         const lineGrad = ctx.createLinearGradient(104, 0, 284, 0);
         lineGrad.addColorStop(0, '#007AFF');
         lineGrad.addColorStop(1, '#00C7BE');
-        drawRoundedRect(ctx, 104, 234, 180, 6, 3, lineGrad);
+        drawRoundedRect(ctx, 104, 216, 180, 5, 2.5, lineGrad);
 
         // Principle Tag Pill
         const subPillX = 104;
-        const subPillY = 256;
-        const subPillW = 460;
-        const subPillH = 40;
-        drawRoundedRect(ctx, subPillX, subPillY, subPillW, subPillH, 20, '#F2F4F7', null);
+        const subPillY = 236;
+        const subPillW = 440;
+        const subPillH = 38;
+        drawRoundedRect(ctx, subPillX, subPillY, subPillW, subPillH, 19, '#F2F4F7', null);
         ctx.fillStyle = '#6E6E73';
-        ctx.font = '500 20px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('循序漸進 · 無痛原則 · 建議每日 2–3 次', subPillX + 22, subPillY + 27);
+        ctx.font = '500 19px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('循序漸進 · 無痛原則 · 建議每日 2–3 次', subPillX + 20, subPillY + 25);
 
-        // 4. Content Parsing & Dynamic Section Card Generation
+        // 4. Content Parsing & Dynamic Multi-Section Layout
         let cleanText = cleanStringNoEmoji(fullRawText);
-
         const sections = [];
         const rawLines = cleanText.split('\n');
         let curSec = null;
 
         rawLines.forEach(l => {
           const t = l.trim();
-          if (!t || t.startsWith('---')) return;
+          if (!t || t.startsWith('---') || t.startsWith('【相關探索】') || t.startsWith('【延伸探索】')) return;
           if (t.startsWith('【') && t.includes('】')) {
             if (curSec && curSec.items.length > 0) sections.push(curSec);
             const title = t.replace(/[【】]/g, '').trim();
             curSec = { title, items: [] };
           } else if (curSec) {
-            const item = t.replace(/^[•\*\-\d\.]+\s*/, '').trim();
-            if (item && !item.startsWith('AI 生成內容') && !item.startsWith('延伸探索')) {
+            if (t.startsWith('【相關探索】') || t.startsWith('【延伸探索】')) return;
+            const item = t.replace(/^[•\*\-\d\.]+\s*/, '').replace(/\[(.*?)\]\(https?:\/\/[^\)]+\)/g, '$1').trim();
+            if (item && !item.startsWith('AI 生成內容') && !item.startsWith('相關探索') && !item.startsWith('延伸探索') && !item.startsWith('───')) {
               curSec.items.push(item);
             }
           }
         });
         if (curSec && curSec.items.length > 0) sections.push(curSec);
 
-        // Fallback standard structure if not parsed into sections
+        // Fallback standard structure if no sections detected
         if (sections.length === 0) {
           const nonEmpties = rawLines.map(r => r.trim()).filter(r => r.length > 3 && !r.startsWith('---'));
-          sections.push({ title: '成因與動作機轉', items: nonEmpties.slice(0, 3) });
-          sections.push({ title: '建議運動與居家指引', items: nonEmpties.slice(3, 6) });
-          sections.push({ title: '安全防護與就醫評估', items: nonEmpties.slice(6, 8) });
+          sections.push({ title: '成因與動作機轉', items: nonEmpties.slice(0, 2) });
+          sections.push({ title: '建議運動與居家指引', items: nonEmpties.slice(2, 5) });
+          sections.push({ title: '安全防護與就醫評估', items: nonEmpties.slice(5, 7) });
         }
 
-        // Standardize section titles (Zero Emoji, Zero 處方)
+        // Standardize Titles & Colors
         sections.forEach(s => {
-          if (s.title.includes('痠痛') || s.title.includes('原因') || s.title.includes('機轉')) s.standardTitle = '成因與動作機轉';
-          else if (s.title.includes('這樣做') || s.title.includes('運動') || s.title.includes('建議') || s.title.includes('指引')) s.standardTitle = '建議運動與居家指引';
-          else if (s.title.includes('避免') || s.title.includes('警訊') || s.title.includes('就醫') || s.title.includes('注意')) s.standardTitle = '安全防護與就醫評估';
-          else s.standardTitle = s.title;
+          if (s.title.includes('治療師') || s.title.includes('諮詢')) {
+            s.standardTitle = '物理治療師專業諮詢';
+            s.color = '#007AFF';
+            s.bg = '#F8FAFC';
+            s.border = '#E2E8F0';
+          } else if (s.title.includes('安全') || s.title.includes('就醫') || s.title.includes('警訊')) {
+            s.standardTitle = '安全篩檢與就醫評估';
+            s.color = '#D97706';
+            s.bg = '#FFFBEB';
+            s.border = '#FDE68A';
+          } else if (s.title.includes('避免') || s.title.includes('禁忌') || s.title.includes('注意')) {
+            s.standardTitle = '應避免的動作';
+            s.color = '#DC2626';
+            s.bg = '#FEF2F2';
+            s.border = '#FECACA';
+          } else if (s.title.includes('痠痛') || s.title.includes('原因') || s.title.includes('機轉')) {
+            s.standardTitle = '成因與動作機轉';
+            s.color = '#1C1C1E';
+            s.bg = '#F8F9FB';
+            s.border = '#E5E7EB';
+          } else if (s.title.includes('這樣做') || s.title.includes('運動') || s.title.includes('建議') || s.title.includes('指引')) {
+            s.standardTitle = '建議運動與居家指引';
+            s.color = '#007AFF';
+            s.bg = '#F0F7FF';
+            s.border = '#BAE6FD';
+          } else {
+            s.standardTitle = s.title;
+            s.color = '#1C1C1E';
+            s.bg = '#F8F9FB';
+            s.border = '#E5E7EB';
+          }
         });
 
-        // Render Cards (Max 3 Cards)
-        let curY = 320;
-        const maxContentY = 1690;
-        const availableHeight = maxContentY - curY;
-        const sectionCount = Math.min(sections.length, 3);
-        const cardGap = 20;
-        const singleCardMaxH = (availableHeight - (sectionCount - 1) * cardGap) / sectionCount;
+        // Dynamic Layout Calculation with Adaptive Font Scaling
+        let curY = 285;
+        const maxContentY = 1715;
+        const secCardW = cardW - 100;
+        const innerW = secCardW - 56;
 
-        for (let sIdx = 0; sIdx < sectionCount; sIdx++) {
-          const sec = sections[sIdx];
-          const isAlert = sec.standardTitle.includes('安全') || sec.standardTitle.includes('避免') || sec.standardTitle.includes('警訊') || sec.standardTitle.includes('就醫');
-          const isAction = sec.standardTitle.includes('運動') || sec.standardTitle.includes('這樣做') || sec.standardTitle.includes('建議') || sec.standardTitle.includes('指引');
+        // Count total text length to prevent overflow
+        let totalItemsCount = 0;
+        sections.forEach(s => totalItemsCount += s.items.length);
 
-          const secCardW = cardW - 100;
-          const innerW = secCardW - 60;
-          
-          let cardH = 80;
+        const isVeryDense = totalItemsCount >= 10 || sections.length >= 5;
+        const titleFontSize = isVeryDense ? 22 : 25;
+        const bodyFontSize = isVeryDense ? 18 : 21;
+        const lineSpacing = isVeryDense ? 27 : 32;
+        const cardGap = isVeryDense ? 10 : 14;
+
+        sections.forEach((sec, sIdx) => {
+          if (curY >= maxContentY - 60) return;
+
+          ctx.font = `normal ${bodyFontSize}px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif`;
           const itemLinesArr = [];
-          sec.items.slice(0, 3).forEach(it => {
-            ctx.font = 'normal 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-            const wrapped = wrapText(ctx, it, isAction ? innerW - 55 : innerW - 35);
+          sec.items.forEach(it => {
+            const wrapped = wrapText(ctx, it, innerW - 30);
             itemLinesArr.push(wrapped);
-            cardH += wrapped.length * 36 + 16;
           });
 
-          if (cardH > singleCardMaxH) cardH = singleCardMaxH;
+          const totalTextLines = itemLinesArr.reduce((sum, lines) => sum + lines.length, 0);
+          const cardH = 50 + totalTextLines * lineSpacing + itemLinesArr.length * 6;
 
-          if (isAlert) {
-            drawRoundedRect(ctx, 104, curY, secCardW, cardH, 22, 'rgba(255, 149, 0, 0.06)', 'rgba(255, 149, 0, 0.28)', 1.5);
-          } else if (isAction) {
-            drawRoundedRect(ctx, 104, curY, secCardW, cardH, 22, '#FFFFFF', 'rgba(0, 122, 255, 0.24)', 1.5);
-          } else {
-            drawRoundedRect(ctx, 104, curY, secCardW, cardH, 22, '#F8F9FB', 'rgba(0, 0, 0, 0.05)', 1);
-          }
+          // Draw Section Card Container
+          drawRoundedRect(ctx, 104, curY, secCardW, cardH, 18, sec.bg, sec.border, 1.5);
 
-          // Section Title (Clean text, Zero emoji)
-          ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-          if (isAlert) ctx.fillStyle = '#D97706';
-          else if (isAction) ctx.fillStyle = '#007AFF';
-          else ctx.fillStyle = '#1C1C1E';
+          // Draw Section Title
+          ctx.font = `bold ${titleFontSize}px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif`;
+          ctx.fillStyle = sec.color;
+          ctx.fillText(sec.standardTitle, 134, curY + 36);
 
-          ctx.fillText(sec.standardTitle, 134, curY + 48);
+          // Draw Section Items
+          let itemY = curY + 68;
+          ctx.font = `normal ${bodyFontSize}px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif`;
 
-          let itemY = curY + 90;
-          for (let i = 0; i < itemLinesArr.length; i++) {
-            if (itemY + 36 > curY + cardH) break;
-            const itemLines = itemLinesArr[i];
+          itemLinesArr.forEach((lines, iIdx) => {
+            // Bullet dot
+            ctx.fillStyle = sec.color;
+            ctx.beginPath();
+            ctx.arc(140, itemY - 6, 4.5, 0, Math.PI * 2);
+            ctx.fill();
 
-            if (isAction) {
-              const badgeX = 134;
-              const badgeY = itemY - 20;
-              const bGrad = ctx.createLinearGradient(badgeX, badgeY, badgeX + 36, badgeY + 36);
-              bGrad.addColorStop(0, '#007AFF');
-              bGrad.addColorStop(1, '#00C7BE');
-              drawRoundedRect(ctx, badgeX, badgeY, 36, 36, 18, bGrad);
-              ctx.fillStyle = '#FFFFFF';
-              ctx.font = 'bold 21px -apple-system, BlinkMacSystemFont, sans-serif';
-              ctx.textAlign = 'center';
-              ctx.fillText((i + 1).toString(), badgeX + 18, badgeY + 25);
-              ctx.textAlign = 'left';
-
-              ctx.fillStyle = '#1C1C1E';
-              ctx.font = 'normal 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-              itemLines.forEach(l => {
-                if (itemY + 8 <= curY + cardH) {
-                  ctx.fillText(l, 184, itemY + 6);
-                  itemY += 36;
-                }
-              });
-              itemY += 12;
-            } else {
-              ctx.fillStyle = isAlert ? '#FF9500' : '#00C7BE';
-              ctx.beginPath();
-              ctx.arc(142, itemY - 6, 5.5, 0, Math.PI * 2);
-              ctx.fill();
-
-              ctx.fillStyle = '#3C3C43';
-              ctx.font = 'normal 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-              itemLines.forEach(l => {
-                if (itemY + 8 <= curY + cardH) {
-                  ctx.fillText(l, 162, itemY);
-                  itemY += 36;
-                }
-              });
-              itemY += 10;
-            }
-          }
+            ctx.fillStyle = '#334155';
+            lines.forEach(lineText => {
+              ctx.fillText(lineText, 158, itemY);
+              itemY += lineSpacing;
+            });
+            itemY += 6;
+          });
 
           curY += cardH + cardGap;
-        }
+        });
 
-        // 5. Bottom Brand Footer (NO PubMed text, clean disclaimer)
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.07)';
+        // 5. Bottom Brand Footer
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(104, 1715);
-        ctx.lineTo(cardX + cardW - 50, 1715);
+        ctx.moveTo(104, 1725);
+        ctx.lineTo(cardX + cardW - 50, 1725);
         ctx.stroke();
 
-        drawSpineIcon(ctx, 134, 1756, 44);
+        drawSpineIcon(ctx, 134, 1762, 40);
 
         ctx.fillStyle = '#1C1C1E';
-        ctx.font = 'bold 23px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('臺灣物理治療實證助手', 168, 1752);
+        ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('臺灣物理治療實證助手', 166, 1758);
 
         ctx.fillStyle = '#8E8E93';
-        ctx.font = 'normal 19px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('本圖卡依據國際醫學實證指引統整，僅供衛教與健康促進參考。若有身體不適，請尋求物理治療師實體評估。', 104, 1800);
+        ctx.font = '500 17px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('AI 衛教內容僅供參考，無法替代實體醫療診斷 · 依物理治療師法執行', 166, 1785);
 
         canvas.toBlob(blob => {
           if (blob) resolve(blob);
-          else reject(new Error('Canvas toBlob returned null'));
+          else reject(new Error('Canvas toBlob failed'));
         }, 'image/png');
-
       } catch (e) {
         reject(e);
       }
     });
   }
 
-  // ── 📤 分享衛教圖卡至其他軟體（LINE / IG / Threads / 原生分享）────
+    // ── 📤 分享衛教圖卡至其他軟體（LINE / IG / Threads / 原生分享）────
   async function directShareImage(btn, msgId) {
     triggerHaptic('medium');
     const origHtml = btn.innerHTML;
@@ -2603,9 +2632,10 @@
 
     try {
       const msgDiv = (msgId ? document.querySelector(`.msg.bot[data-id="${msgId}"]`) : null) || (btn ? btn.closest('.msg') : null);
-      let text = '';
-      if (msgDiv) {
-        text = msgDiv.getAttribute('data-raw') || msgDiv.querySelector('.bubble')?.innerText || '';
+      const bubbleEl = msgDiv ? msgDiv.querySelector('.bubble') : null;
+      let text = getCleanMessageText(msgDiv, bubbleEl);
+      if (!text && msgDiv) {
+        text = msgDiv.getAttribute('data-raw') || bubbleEl?.innerText || '';
       }
 
       let topic = '物理治療實證衛教';
@@ -3102,6 +3132,7 @@
                 followupContainerEl = botMsgDiv.querySelector('.followup-container');
               } else if (bubbleEl) {
                 bubbleEl.innerHTML = md(body);
+                botMsgDiv.setAttribute('data-raw', accumulatedText);
               }
 
               if (followupContainerEl) {
