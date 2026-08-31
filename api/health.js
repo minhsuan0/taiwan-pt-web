@@ -38,25 +38,40 @@ export default async function handler(req) {
     report.services.gemini_ai = { status: "missing_api_key" };
   } else {
     const gStart = Date.now();
-    try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
-        generationConfig: { maxOutputTokens: 10 },
-      });
-      const res = await Promise.race([
-        model.generateContent("ping"),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 4000))
-      ]);
-      report.services.gemini_ai = {
-        status: res?.response?.text() ? "ok" : "unexpected_response",
-        latencyMs: Date.now() - gStart,
-      };
-    } catch (gErr) {
+    const TEST_MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-3.5-flash-lite'];
+    let geminiOk = false;
+    let lastErr = null;
+    const genAI = new GoogleGenerativeAI(apiKey);
+
+    for (const mName of TEST_MODELS) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: mName,
+          generationConfig: { maxOutputTokens: 10 },
+        });
+        const res = await Promise.race([
+          model.generateContent("ping"),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 3500))
+        ]);
+        if (res?.response?.text()) {
+          geminiOk = true;
+          report.services.gemini_ai = {
+            status: "ok",
+            activeModel: mName,
+            latencyMs: Date.now() - gStart,
+          };
+          break;
+        }
+      } catch (err) {
+        lastErr = err;
+      }
+    }
+
+    if (!geminiOk) {
       report.status = "degraded";
       report.services.gemini_ai = {
         status: "error",
-        message: gErr?.message || "unknown",
+        message: lastErr?.message || "All models unavailable",
         latencyMs: Date.now() - gStart,
       };
     }
