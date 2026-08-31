@@ -2502,56 +2502,6 @@
     }
   }
 
-  // ── 📥 下載高畫質圖片檔（1080×1920 PNG 一鍵直達）──────────────────
-  async function directDownloadImage(btn, msgId) {
-    triggerHaptic('light');
-    const origHtml = btn.innerHTML;
-    btn.innerHTML = `
-      <div class="search-spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:4px;"></div>
-      <span>產圖中…</span>
-    `;
-
-    try {
-      const msgDiv = (msgId ? document.querySelector(`.msg.bot[data-id="${msgId}"]`) : null) || (btn ? btn.closest('.msg') : null);
-      let text = '';
-      if (msgDiv) {
-        text = msgDiv.getAttribute('data-raw') || msgDiv.querySelector('.bubble')?.innerText || '';
-      }
-
-      let topic = '物理治療實證衛教';
-      if (msgDiv) {
-        let prev = msgDiv.previousElementSibling;
-        while (prev && !prev.classList.contains('user')) {
-          prev = prev.previousElementSibling;
-        }
-        if (prev) {
-          const userText = prev.innerText.trim();
-          if (userText) topic = userText.substring(0, 24);
-        }
-      }
-
-      const filename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
-      const blob = await generateApple1080x1920CardBlob(topic, text);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
-
-      btn.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <span>已下載圖片檔</span>
-      `;
-      setTimeout(() => { btn.innerHTML = origHtml; }, 2000);
-    } catch (err) {
-      console.error('[Download image error]', err);
-      btn.innerHTML = origHtml;
-    }
-  }
-
   // ── 剪貼簿跨裝置相容複製工具 ──────────────────────────────
   function copyToClipboard(text, onSuccess) {
     if (!text) return;
@@ -2656,15 +2606,7 @@
               <polyline points="16 6 12 2 8 6"/>
               <line x1="12" y1="2" x2="12" y2="15"/>
             </svg>
-            <span>分享至其他軟體</span>
-          </button>
-          <button class="action-pill-btn" onclick="directDownloadImage(this, '${msgId}')" title="下載 1080×1920 高畫質衛教圖片檔">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            <span>下載高畫質圖片檔</span>
+            <span>分享</span>
           </button>
         </div>
       `;
