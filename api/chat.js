@@ -210,14 +210,14 @@ async function searchPubmedDirect(query) {
     }
 
     const esearchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(englishTerms)}&retmode=json&retmax=2&sort=relevance`;
-    const esearchRes = await fetch(esearchUrl);
+    const esearchRes = await fetch(esearchUrl, { signal: AbortSignal.timeout(2000) });
     if (!esearchRes.ok) return null;
     const esearchData = await esearchRes.json();
     const idList = esearchData.esearchresult?.idlist || [];
     if (idList.length === 0) return null;
 
     const esummaryUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${idList.join(',')}&retmode=json`;
-    const esummaryRes = await fetch(esummaryUrl);
+    const esummaryRes = await fetch(esummaryUrl, { signal: AbortSignal.timeout(2000) });
     if (!esummaryRes.ok) return null;
     const esummaryData = await esummaryRes.json();
     const result = esummaryData.result || {};
@@ -365,7 +365,7 @@ export default async function handler(req) {
   let toolContext = '';
   try {
     const toolPromise = searchPubmedDirect(message);
-    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 3500));
+    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 2200));
     const result = await Promise.race([toolPromise, timeoutPromise]);
     if (result) {
       toolContext = "\n\n--- 即時查詢結果（請根據以下真實論文資料回答與引用，嚴禁編造不存在的 PMID）---\n" + JSON.stringify(result, null, 2);
@@ -373,7 +373,7 @@ export default async function handler(req) {
   } catch {}
 
   // ② Edge 全串流傳輸（零超時、邊緣毫秒響應）
-  const MODELS = ['gemini-3.6-flash', 'gemini-3.0-flash', 'gemini-2.5-flash', 'gemini-3.5-flash-lite'];
+  const MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash-lite'];
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const chatHistory = sanitizedHistory.map(m => ({
