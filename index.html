@@ -2561,7 +2561,7 @@
   }
 
   // ── 訊息氣泡生成與插入 ──────────────────────────────────────
-  function appendMsg(role, html, rawText = '', msgId = '') {
+  function appendMsg(role, html, rawText = '', msgId = '', showActions = true) {
     const isBot = role === 'bot';
     const div = document.createElement('div');
     div.className = `msg ${role}`;
@@ -2577,7 +2577,7 @@
 
       followupHtml = `<div class="followup-container"></div>`;
       actionsHtml = `
-        <div class="bubble-actions">
+        <div class="bubble-actions"${showActions ? '' : ' style="display:none"'}>
           <button class="action-pill-btn" onclick="sendVote(this, 'up', '${msgId}')" title="這則回答有幫助">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
@@ -2631,7 +2631,7 @@
     messagesEl.scrollTop = messagesEl.scrollHeight;
     // 桌面端拖曳滑動
     const actionsBar = div.querySelector('.bubble-actions');
-    if (actionsBar) enableActionBarDrag(actionsBar);
+    if (actionsBar && showActions) enableActionBarDrag(actionsBar);
     return div;
   }
 
@@ -2894,68 +2894,95 @@
         return;
       }
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder('utf-8');
+      let reader = null;
+      try {
+        if (res.body && res.body.getReader) {
+          reader = res.body.getReader();
+        }
+      } catch {}
+
       let accumulatedText = '';
       let botMsgDiv = null;
       let bubbleEl = null;
       let followupContainerEl = null;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      if (reader) {
+        const decoder = new TextDecoder('utf-8');
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        accumulatedText += chunk;
+          const chunk = decoder.decode(value, { stream: true });
+          if (chunk) {
+            accumulatedText += chunk;
+            const { body, followups } = parseBotResponse(accumulatedText);
+            if (body && body.trim().length > 0) {
+              if (!botMsgDiv) {
+                removeTyping();
+                botMsgDiv = appendMsg('bot', md(body), accumulatedText, '', false);
+                bubbleEl = botMsgDiv.querySelector('.bubble');
+                followupContainerEl = botMsgDiv.querySelector('.followup-container');
+              } else if (bubbleEl) {
+                bubbleEl.innerHTML = md(body);
+              }
 
-        // 僅當真正接收到非空白文字時才移除檢索動畫並建立回答氣泡（防止空白色塊/空白氣泡）
-        if (accumulatedText.trim().length > 0) {
-          if (!botMsgDiv) {
-            removeTyping();
-            botMsgDiv = appendMsg('bot', '', '');
-            bubbleEl = botMsgDiv.querySelector('.bubble');
-            followupContainerEl = botMsgDiv.querySelector('.followup-container');
-          }
-
-          const { body, followups } = parseBotResponse(accumulatedText);
-          if (bubbleEl && body) bubbleEl.innerHTML = md(body);
-
-          if (followupContainerEl) {
-            if (followups && followups.length > 0) {
-              let fHtml = `
-                <div class="followup-box">
-                  <div class="followup-title"><span>💡</span> 延伸探索推薦</div>
-                  <div class="followup-list">
-              `;
-              followups.forEach(q => {
-                fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
-              });
-              fHtml += `</div></div>`;
-              followupContainerEl.innerHTML = fHtml;
-            } else {
-              followupContainerEl.innerHTML = '';
+              if (followupContainerEl) {
+                if (followups && followups.length > 0) {
+                  let fHtml = `
+                    <div class="followup-box">
+                      <div class="followup-title"><span>💡</span> 延伸探索推薦</div>
+                      <div class="followup-list">
+                  `;
+                  followups.forEach(q => {
+                    fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
+                  });
+                  fHtml += `</div></div>`;
+                  followupContainerEl.innerHTML = fHtml;
+                } else {
+                  followupContainerEl.innerHTML = '';
+                }
+              }
             }
           }
-        }
 
-        // 串流生成中平滑跟隨滾動
-        const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 180;
-        if (isNearBottom) {
-          messagesEl.scrollTop = messagesEl.scrollHeight;
+          // 串流生成中平滑跟隨滾動
+          const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 180;
+          if (isNearBottom) {
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
         }
+      } else {
+        // 不支援串流 reader 的瀏覽器降級回傳全文字
+        const fullText = await res.text();
+        accumulatedText = fullText;
+        removeTyping();
+        const { body, followups } = parseBotResponse(accumulatedText);
+        botMsgDiv = appendMsg('bot', md(body || accumulatedText), accumulatedText, '', false);
+        bubbleEl = botMsgDiv.querySelector('.bubble');
+        followupContainerEl = botMsgDiv.querySelector('.followup-container');
       }
 
       removeTyping();
 
       // 極端防護：若串流完成後累積文字仍為空，自動填入實證自癒衛教，杜絕空白框
       if (!accumulatedText || !accumulatedText.trim()) {
-        const fallbackText = "針對您的問題，建議先進行基礎動作評估並注意危險警訊（如劇烈劇痛、手腳發麻或無力）。若有持續不適，請及早尋求合格物理治療師或醫師評估。";
+        const fallbackText = "【安全篩檢與就醫指引】\n若您目前的不適伴隨危險警訊（如劇烈劇痛、夜間痛醒、手腳持續發麻無力），請立即至醫院骨科或復健科進行專業評估。\n\n【建議運動與日常調整】\n1. 溫和活動與伸展：每維持同一姿勢 30 至 40 分鐘請起身走動。\n2. 無痛原則：進行任何日常動作以不引起刺痛為原則。\n\n---\n💡 需要真人物理治療師為您深入評估嗎？\nAI 提供普遍實證指引，若想進一步確認個人動作細節，歡迎透過本站專屬窗口與執業物理治療師聯繫：👉 [點此聯繫駐站物理治療師諮詢窗口](https://lin.ee/y6VBRuh)";
         accumulatedText = fallbackText;
         if (!botMsgDiv) {
-          botMsgDiv = appendMsg('bot', md(fallbackText), fallbackText);
+          botMsgDiv = appendMsg('bot', md(fallbackText), fallbackText, '', false);
         } else if (bubbleEl) {
           bubbleEl.innerHTML = md(fallbackText);
         }
+      }
+
+      // ✨ 生成完畢：顯示動作按鈕列並綁定拖曳滑動
+      if (botMsgDiv) {
+        const actionsBar = botMsgDiv.querySelector('.bubble-actions');
+        if (actionsBar) {
+          actionsBar.style.display = 'flex';
+          enableActionBarDrag(actionsBar);
+        }
+        botMsgDiv.setAttribute('data-raw', accumulatedText);
       }
 
       // ✨ 生成完畢：自動平滑定錨至使用者問題與回答開頭
@@ -2963,7 +2990,6 @@
         if (userMsgDiv) userMsgDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
 
-      if (botMsgDiv) botMsgDiv.setAttribute('data-raw', accumulatedText);
       history.push({ role: 'user', content: text });
       history.push({ role: 'model', content: accumulatedText });
       if (history.length > 20) history = history.slice(-20);
@@ -2992,8 +3018,16 @@
     } catch (err) {
       console.error('[sendMessage error]', err);
       removeTyping();
-      if (!botMsgDiv || !accumulatedText) {
-        appendMsg('bot', '<span style="color:#ef4444">⚠️ 連線暫時不穩定，請稍後再試。</span>', '⚠️ 連線暫時不穩定，請稍後再試。');
+      if (!botMsgDiv || !accumulatedText || !accumulatedText.trim()) {
+        if (botMsgDiv) botMsgDiv.remove();
+        const fallbackText = "【安全篩檢與就醫指引】\n若您目前的不適伴隨危險警訊（如劇烈劇痛、手腳持續發麻無力），請立即至醫院骨科或復健科進行專業評估。\n\n【建議運動與日常調整】\n1. 溫和活動：避免長時間維持固定姿勢。\n2. 無痛原則：日常活動請維持在舒適無痛的活動範圍內。\n\n---\n💡 需要真人物理治療師為您深入評估嗎？\nAI 提供普遍實證指引，若想進一步確認個人動作細節，歡迎透過本站專屬窗口與執業物理治療師聯繫：👉 [點此聯繫駐站物理治療師諮詢窗口](https://lin.ee/y6VBRuh)";
+        appendMsg('bot', md(fallbackText), fallbackText, '', true);
+      } else {
+        const actionsBar = botMsgDiv.querySelector('.bubble-actions');
+        if (actionsBar) {
+          actionsBar.style.display = 'flex';
+          enableActionBarDrag(actionsBar);
+        }
       }
     } finally {
       isLoading = false;
@@ -3264,6 +3298,7 @@
   // ── 👆 左邊緣向右滑開啟 Drawer ───────────────────────────────────────
   (function() {
     const appEl = document.querySelector('.app');
+    if (!appEl) return;
     let touchStartX = 0;
     let touchStartY = 0;
     let isSwiping = false;
