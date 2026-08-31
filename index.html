@@ -1044,6 +1044,11 @@
       border: 1px solid rgba(255, 149, 0, 0.28);
       color: #C93400;
     }
+    .alert-consult {
+      background: rgba(0, 122, 255, 0.08);
+      border: 1px solid rgba(0, 122, 255, 0.28);
+      color: #0062CC;
+    }
 
     /* ── 🏃‍♂️ 建議運動「分步步驟卡片」 ──────────────────────── */
     .md-oli {
@@ -2694,7 +2699,11 @@
       .replace(/動態質量/g, '動作品質')
       .replace(/動作質量/g, '動作品質')
       .replace(/質量良好/g, '品質良好')
-      .replace(/旋轉肌袖/g, '旋轉肌群');
+      .replace(/旋轉肌袖/g, '旋轉肌群')
+      .replace(/運動劑量/g, '建議組數與次數')
+      .replace(/劑量建議/g, '建議組數與次數')
+      .replace(/建議劑量/g, '建議組數與次數')
+      .replace(/劑量/g, '建議組數與次數');
   }
 
   // ── 訊息氣泡生成與插入 ──────────────────────────────────────
@@ -2778,7 +2787,7 @@
     // 移除氣泡內部可能殘留的免責聲明段落（保持氣泡內部純淨）
     raw = raw.replace(/---+\s*(?:⚖️\s*)?免責聲明[\s\S]*$/i, '').trim();
 
-    const followupRegex = /【(?:💡\s*)?(?:相關探索|延伸探索)】([\s\S]*?)(?=(?:---|需要運動物理治療師|💡 尋求專業|⚖️ 免責聲明|$))/i;
+    const followupRegex = /【(?:💡\s*)?(?:相關探索|延伸探索)】([\s\S]*?)(?=(?:---|【?需要運動物理治療師|💡 尋求專業|⚖️ 免責聲明|$))/i;
     const match = raw.match(followupRegex);
 
     if (!match) return { body: raw, followups: [] };
@@ -2888,6 +2897,11 @@
       .replace(/^\s*【(?:🚫\s*|❌\s*)?(應避免的動作|禁忌動作|注意事項)】\s*(.*)$/gm, (m, title, rest) => {
         const restText = rest && rest.trim() ? `\n${rest.trim()}` : '';
         return `<div class="alert-heading alert-avoid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><span>【應避免的動作】</span></div>${restText}`;
+      })
+      // 💬 運動物理治療師諮詢大標卡片
+      .replace(/^\s*【?需要運動物理治療師為您詳細評估嗎[？?]?】?\s*(.*)$/gm, (m, rest) => {
+        const restText = rest && rest.trim() ? `\n${rest.trim()}` : '';
+        return `<div class="alert-heading alert-consult"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>【需要運動物理治療師為您詳細評估嗎？】</span></div>${restText}`;
       })
       // 其他中文標題 【1. ...】 或 【...】
       .replace(/^\s*(【\d+\..+?】)\s*$/gm, '<strong class="md-heading">$1</strong>')

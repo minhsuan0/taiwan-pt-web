@@ -35,6 +35,9 @@ const rawCleanHtml = htmlCode.replace(/replace\([^)]+\)/g, '');
 assert(!rawCleanChat.includes('運動處方'), 'api/chat.js 絕無「運動處方」');
 assert(!rawCleanHtml.includes('運動處方'), 'index.html 絕無「運動處方」');
 assert(!cacheCode.includes('運動處方'), 'lib/cache.js 絕無「運動處方」');
+assert(!rawCleanChat.includes('運動劑量'), 'api/chat.js 絕無「運動劑量」');
+assert(!rawCleanHtml.includes('運動劑量'), 'index.html 絕無「運動劑量」');
+assert(!cacheCode.includes('運動劑量'), 'lib/cache.js 絕無「運動劑量」');
 
 // 檢查未授權 Emoji（排除清洗正則表達式）
 assert(!rawCleanChat.includes('👉'), 'api/chat.js 絕無「👉」卡通手手');
@@ -98,6 +101,7 @@ assert(renderedHtml.includes('alert-safety'), '包含安全篩檢警告卡片');
 assert(renderedHtml.includes('md-li'), '包含標準項目清單 (•)');
 assert(renderedHtml.includes('md-oli'), '包含標準數字清單 (1.)');
 assert(renderedHtml.includes('alert-avoid'), '包含應避免動作卡片');
+assert(renderedHtml.includes('alert-consult'), '包含運動物理治療師諮詢大標卡片');
 assert(renderedHtml.includes('md-hr'), '包含標準分隔線');
 
 // 斷言 3：追問清單正確抽離
@@ -107,6 +111,10 @@ assert(!parsed.body.includes('【相關探索】'), '對話氣泡主體內文中
 
 // 斷言 4：免責聲明不殘留於氣泡主體
 assert(!parsed.body.includes('免責聲明：'), '對話氣泡主體內文中不包含免責聲明長文');
+
+// 斷言 5：劑量在地化替換測試
+const testDosage = localizeTaiwanese('此動作的運動劑量為每天 3 組。');
+assert(testDosage.includes('建議組數與次數') && !testDosage.includes('劑量'), 'localizeTaiwanese 成功將「運動劑量」轉為「建議組數與次數」');
 
 
 // ── 測試 3：底層常駐免責聲明與 Modal 結構檢查 ─────────────────────
