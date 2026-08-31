@@ -209,17 +209,31 @@
     /* OpenEvidence Style: Docked Suggestions Strip above Input */
     .suggestions-strip {
       display: flex;
-      overflow: hidden; /* hide scrollbar, use CSS transform marquee */
-      white-space: nowrap;
-      padding: 0.5rem 0 0.25rem;
-      position: relative;
-    }
-    .marquee-content {
-      display: inline-flex;
-      gap: 0.45rem;
-      flex-shrink: 0;
       align-items: center;
-      padding: 0 0.85rem;
+      gap: 0.48rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      padding: 0.45rem 0.85rem 0.35rem;
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
+      scrollbar-width: none;          /* Firefox */
+      -ms-overflow-style: none;       /* IE / Edge */
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      scroll-behavior: smooth;
+    }
+    .suggestions-strip::-webkit-scrollbar {
+      display: none;                  /* Chrome / Safari */
+    }
+    .suggestions-strip.is-dragging {
+      cursor: grabbing;
+      scroll-behavior: auto;
+    }
+    .suggestions-strip.is-dragging .chip {
+      pointer-events: none;
     }
 
     .chip {
@@ -231,18 +245,23 @@
       font-size: 0.76rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
       font-family: var(--font-zh);
       white-space: nowrap;
       flex-shrink: 0;
-      touch-action: manipulation;
+      touch-action: pan-x;
       box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
-    .chip:hover, .chip:active {
+    .chip:hover {
+      background: rgba(0, 122, 255, 0.08);
+      border-color: #007aff;
+      color: #007aff;
+    }
+    .chip:active {
       background: #007aff;
       border-color: #007aff;
       color: #ffffff;
-      transform: translateY(-1px);
+      transform: scale(0.96);
     }
 
 
@@ -1969,95 +1988,118 @@
     "健保復健做很久沒好該看自費嗎？"
   ];
 
-  let marqueeReqId = null;
-  let isUserPausedMarquee = false;
-
   function renderSuggestions() {
     const strip = document.getElementById('suggestions-strip');
     if (!strip) return;
 
-    // 雙重複製生成兩組完全相同的項目，達成 100% 無縫無感循環滾動
-    let singleGroupHtml = '';
+    let chipsHtml = '';
     TRENDING_TOPICS.forEach(t => {
       const cleanText = t.trim();
-      singleGroupHtml += `<button class="chip" data-raw="${escapeAttr(cleanText)}" onclick="sendChip(this)">${escapeHtml(cleanText)}</button>`;
+      chipsHtml += `<button class="chip" data-raw="${escapeAttr(cleanText)}">${escapeHtml(cleanText)}</button>`;
     });
 
-    strip.innerHTML = `
-      <div class="marquee-content" id="marquee-content">
-        ${singleGroupHtml}
-        ${singleGroupHtml}
-      </div>
-    `;
+    strip.innerHTML = chipsHtml;
     strip.scrollLeft = 0;
 
-    initMarqueeScroller();
+    initSuggestionsSlider(strip);
   }
 
-  function initMarqueeScroller() {
-    const strip = document.getElementById('suggestions-strip');
-    const content = document.getElementById('marquee-content');
-    if (!strip || !content) return;
+  function initSuggestionsSlider(strip) {
+    if (!strip || strip._sliderInitialized) return;
+    strip._sliderInitialized = true;
 
-    if (marqueeReqId) cancelAnimationFrame(marqueeReqId);
+    // 1. 桌面端滑鼠拖曳滑動 (Desktop Grab & Drag)
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let hasMoved = false;
 
-    // Wait one frame for layout so scrollWidth is accurate
-    requestAnimationFrame(() => {
-      const halfWidth = content.scrollWidth / 2;
-      if (halfWidth <= 0) return;
+    strip.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return; // 僅響應滑鼠左鍵
+      isDown = true;
+      hasMoved = false;
+      strip.classList.add('is-dragging');
+      startX = e.pageX - strip.offsetLeft;
+      scrollLeft = strip.scrollLeft;
+    });
 
-      // Use CSS animation for buttery smooth cross-device marquee
-      content.style.willChange = 'transform';
-      content.style.animation = 'none';
-      // Force reflow before re-applying animation
-      void content.offsetWidth;
-      content.style.animation = '';
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      strip.classList.remove('is-dragging');
+      setTimeout(() => { hasMoved = false; }, 60);
+    });
 
-      // Inject keyframe dynamically if not already there
-      if (!document.getElementById('marquee-keyframe')) {
-        const style = document.createElement('style');
-        style.id = 'marquee-keyframe';
-        style.textContent = `
-          @keyframes marqueeSlide {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-        `;
-        document.head.appendChild(style);
+    strip.addEventListener('mouseleave', () => {
+      if (!isDown) return;
+      isDown = false;
+      strip.classList.remove('is-dragging');
+      setTimeout(() => { hasMoved = false; }, 60);
+    });
+
+    strip.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - strip.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      if (Math.abs(walk) > 4) {
+        hasMoved = true;
       }
+      strip.scrollLeft = scrollLeft - walk;
+    });
 
-      const duration = Math.max(20, halfWidth / 50); // speed: ~50px/s
-      content.style.animation = `marqueeSlide ${duration}s linear infinite`;
+    // 2. 桌面滑鼠滾輪水平滑動 (Mouse Wheel to Horizontal Scroll)
+    strip.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        strip.scrollLeft += e.deltaY * 0.9;
+      }
+    }, { passive: false });
 
-      // 滑鼠懸停暫停
-      strip.onmouseenter = () => { content.style.animationPlayState = 'paused'; };
-      strip.onmouseleave = () => { content.style.animationPlayState = 'running'; };
+    // 3. 點擊防誤觸發（滑鼠拖曳放開時不誤送出）
+    strip.addEventListener('click', (e) => {
+      if (hasMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      const chip = e.target.closest('.chip');
+      if (chip) {
+        sendChip(chip);
+      }
+    });
 
-      // 行動端觸控微暫停 + 100% 精準點擊偵測（解決移動動畫中點擊掉幀問題）
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let touchedChip = null;
+    // 4. 手機端觸控事件（Touch Swipe & Tap）
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
 
-      strip.ontouchstart = (e) => {
-        if (e.touches.length === 1) {
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-          touchedChip = e.target.closest('.chip');
+    strip.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchMoved = false;
+      }
+    }, { passive: true });
+
+    strip.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1) {
+        const dx = Math.abs(e.touches[0].clientX - touchStartX);
+        const dy = Math.abs(e.touches[0].clientY - touchStartY);
+        if (dx > 5 || dy > 5) {
+          touchMoved = true;
         }
-      };
+      }
+    }, { passive: true });
 
-      strip.ontouchend = (e) => {
-        if (touchedChip && e.changedTouches.length > 0) {
-          const touch = e.changedTouches[0];
-          const dx = Math.abs(touch.clientX - touchStartX);
-          const dy = Math.abs(touch.clientY - touchStartY);
-          // 手指位移小於 12px 視為精準點擊，立即送出
-          if (dx < 12 && dy < 12) {
-            sendChip(touchedChip);
-          }
+    strip.addEventListener('touchend', (e) => {
+      if (!touchMoved) {
+        const chip = e.target.closest('.chip');
+        if (chip) {
+          sendChip(chip);
         }
-        touchedChip = null;
-      };
+      }
+      touchMoved = false;
     });
   }
 
@@ -3337,7 +3379,6 @@
   // 初始更新徽章數量
   updateBadgeCounts();
   initVoiceInput();
-  initMarqueeScroller();
 
   // Register PWA Service Worker
   if ('serviceWorker' in navigator) {
