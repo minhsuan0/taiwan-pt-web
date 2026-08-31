@@ -35,7 +35,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://taiwan-pt-web.vercel.app/" />
   <meta property="og:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
-  <meta property="og:description" content="即時查詢 PubMed 實證文獻、臨床指南與臺灣《物理治療師法》，提供專業實證衛教資訊與運動處方建議。" />
+  <meta property="og:description" content="即時查詢實證文獻、臨床指南與臺灣《物理治療師法》，提供專業實證衛教資訊與居家運動指引。" />
   <meta property="og:image" content="https://taiwan-pt-web.vercel.app/og-image.png?v=3" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -919,7 +919,7 @@
       color: #C93400;
     }
 
-    /* ── 🏃‍♂️ 運動處方「分步步驟卡片」 ──────────────────────── */
+    /* ── 🏃‍♂️ 建議運動「分步步驟卡片」 ──────────────────────── */
     .md-oli {
       display: flex;
       align-items: flex-start;
@@ -1196,146 +1196,6 @@
     }
     .ios-guide-ok-btn:active {
       opacity: 0.88;
-    }
-
-    /* ── 🎨 1080×1920 Apple InfoCard Modal ────────────── */
-    .card-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .card-modal.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .card-modal-sheet {
-      background: #FFFFFF;
-      width: 100%;
-      max-width: 420px;
-      max-height: 92vh;
-      border-radius: 1.45rem;
-      padding: 1.15rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
-      display: flex;
-      flex-direction: column;
-      transform: scale(0.93);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow: hidden;
-    }
-    .card-modal.show .card-modal-sheet {
-      transform: scale(1);
-    }
-    .card-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-    .card-modal-title {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: #1C1C1E;
-      line-height: 1.25;
-    }
-    .card-modal-sub {
-      font-size: 0.72rem;
-      color: #8E8E93;
-      margin-top: 0.1rem;
-    }
-    .card-modal-close {
-      background: #F2F2F7;
-      border: none;
-      color: #8E8E93;
-      width: 1.85rem;
-      height: 1.85rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-    .card-preview-area {
-      flex: 1;
-      min-height: 260px;
-      max-height: 52vh;
-      background: #F2F2F7;
-      border-radius: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-      border: 0.5px solid rgba(0, 0, 0, 0.08);
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
-      padding: 0.4rem;
-    }
-    .card-loading {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-      color: #8E8E93;
-      font-size: 0.82rem;
-    }
-    .card-preview-img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 0.65rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      transition: opacity 0.2s;
-    }
-    .card-modal-actions {
-      display: flex;
-      gap: 0.55rem;
-      margin-top: 0.85rem;
-    }
-    .card-action-btn {
-      flex: 1;
-      border: none;
-      padding: 0.72rem 0.5rem;
-      border-radius: 0.85rem;
-      font-size: 0.84rem;
-      font-weight: 600;
-      font-family: var(--font-zh);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .card-action-btn svg {
-      width: 1.05rem;
-      height: 1.05rem;
-      flex-shrink: 0;
-    }
-    .card-action-btn.primary {
-      background: linear-gradient(135deg, #007AFF 0%, #00C7BE 100%);
-      color: #FFFFFF;
-      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
-    }
-    .card-action-btn.secondary {
-      background: #F2F2F7;
-      color: #1C1C1E;
-      border: 0.5px solid #D1D1D6;
-    }
-    .card-action-btn:active {
-      transform: scale(0.97);
-      opacity: 0.9;
     }
 
     /* ── Dark Mode (Apple HIG Medical Dark System) ──────────── */
@@ -1710,29 +1570,6 @@
         border-color: #48484A;
         color: #63E6E2;
       }
-
-      /* Card Modal Dark Mode */
-      .card-modal-sheet {
-        background: #1C1C1E;
-        border: 0.5px solid #38383A;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-      }
-      .card-modal-title {
-        color: #FFFFFF;
-      }
-      .card-modal-close {
-        background: #2C2C2E;
-        color: #8E8E93;
-      }
-      .card-preview-area {
-        background: #000000;
-        border-color: #38383A;
-      }
-      .card-action-btn.secondary {
-        background: #2C2C2E;
-        color: #FFFFFF;
-        border-color: #38383A;
-      }
     }
   </style>
 </head>
@@ -1851,46 +1688,6 @@
     </div>
   </div>
 
-  <!-- 1080x1920 Apple 風格衛教圖卡 Modal -->
-  <div id="card-modal" class="card-modal" onclick="closeCardModal()">
-    <div class="card-modal-sheet" onclick="event.stopPropagation()">
-      <div class="card-modal-header">
-        <div class="card-modal-title-box">
-          <div class="card-modal-title">物理治療實證衛教圖卡</div>
-          <div class="card-modal-sub">1080×1920 高解析度 · 專為 IG 限動 / Threads / LINE 打造</div>
-        </div>
-        <button class="card-modal-close" onclick="closeCardModal()" aria-label="關閉">✕</button>
-      </div>
-
-      <div class="card-preview-area">
-        <div id="card-loading" class="card-loading">
-          <div class="search-spinner" style="width:28px;height:28px;border-width:2.5px;"></div>
-          <span>正在排版實證衛教圖卡…</span>
-        </div>
-        <img id="card-preview-img" class="card-preview-img" alt="衛教卡片預覽" />
-      </div>
-
-      <div class="card-modal-actions">
-        <button class="card-action-btn primary" id="card-share-btn" onclick="handleCardShareOrCopy()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-            <polyline points="16 6 12 2 8 6"/>
-            <line x1="12" y1="2" x2="12" y2="15"/>
-          </svg>
-          <span id="card-share-text">一鍵分享 / 存至相簿</span>
-        </button>
-        <button class="card-action-btn secondary" onclick="downloadCardImage()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          <span>下載高畫質 PNG</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
 <!-- Sidebar Drawer: Left Slide-in (OpenEvidence Pure History Style) -->
 <div id="drawer-backdrop" class="drawer-backdrop" onclick="closeHistoryDrawer()"></div>
 <div id="drawer-content" class="drawer-content">
@@ -1976,7 +1773,7 @@
     "腰椎滑脫核心穩定運動指引",
     "媽媽手手腕橈骨側邊刺痛改善",
     "閃到腰急性期可以拉筋嗎？",
-    "無醫師處方能直接看物理治療嗎？",
+    "無醫師診斷證明能直接看自費物理治療嗎？",
     "自費物理治療所評估流程與收費",
     "脊椎紅旗危險警訊自我篩檢",
     "徒手治療、健保電療、整復師差異",
@@ -2495,14 +2292,14 @@
         if (sections.length === 0) {
           const nonEmpties = rawLines.map(r => r.trim()).filter(r => r.length > 3 && !r.startsWith('---'));
           sections.push({ title: '成因與動作機轉', items: nonEmpties.slice(0, 3) });
-          sections.push({ title: '建議處方與居家動作', items: nonEmpties.slice(3, 6) });
+          sections.push({ title: '建議運動與居家指引', items: nonEmpties.slice(3, 6) });
           sections.push({ title: '安全防護與就醫評估', items: nonEmpties.slice(6, 8) });
         }
 
-        // Standardize section titles (Zero Emoji)
+        // Standardize section titles (Zero Emoji, Zero 處方)
         sections.forEach(s => {
           if (s.title.includes('痠痛') || s.title.includes('原因') || s.title.includes('機轉')) s.standardTitle = '成因與動作機轉';
-          else if (s.title.includes('這樣做') || s.title.includes('運動') || s.title.includes('建議') || s.title.includes('處方')) s.standardTitle = '建議處方與居家動作';
+          else if (s.title.includes('這樣做') || s.title.includes('運動') || s.title.includes('建議') || s.title.includes('指引')) s.standardTitle = '建議運動與居家指引';
           else if (s.title.includes('避免') || s.title.includes('警訊') || s.title.includes('就醫') || s.title.includes('注意')) s.standardTitle = '安全防護與就醫評估';
           else s.standardTitle = s.title;
         });
@@ -2518,7 +2315,7 @@
         for (let sIdx = 0; sIdx < sectionCount; sIdx++) {
           const sec = sections[sIdx];
           const isAlert = sec.standardTitle.includes('安全') || sec.standardTitle.includes('避免') || sec.standardTitle.includes('警訊') || sec.standardTitle.includes('就醫');
-          const isAction = sec.standardTitle.includes('處方') || sec.standardTitle.includes('這樣做') || sec.standardTitle.includes('運動') || sec.standardTitle.includes('建議');
+          const isAction = sec.standardTitle.includes('運動') || sec.standardTitle.includes('這樣做') || sec.standardTitle.includes('建議') || sec.standardTitle.includes('指引');
 
           const secCardW = cardW - 100;
           const innerW = secCardW - 60;
@@ -2627,153 +2424,132 @@
     });
   }
 
-  async function openShareCardModal(btn, msgId) {
+  // ── 📤 分享衛教圖卡至其他軟體（LINE / IG / Threads / 原生分享）────
+  async function directShareImage(btn, msgId) {
     triggerHaptic('medium');
-    const modal = document.getElementById('card-modal');
-    const previewImg = document.getElementById('card-preview-img');
-    const loading = document.getElementById('card-loading');
-    if (!modal || !previewImg) return;
-
-    previewImg.style.opacity = '0';
-    loading.style.display = 'flex';
-    modal.classList.add('show');
-
-    const msgDiv = (msgId ? document.querySelector(`.msg.bot[data-id="${msgId}"]`) : null) || (btn ? btn.closest('.msg') : null);
-    let text = '';
-    if (msgDiv) {
-      text = msgDiv.getAttribute('data-raw') || msgDiv.querySelector('.bubble')?.innerText || '';
-    }
-
-    let topic = '物理治療實證衛教';
-    if (msgDiv) {
-      let prev = msgDiv.previousElementSibling;
-      while (prev && !prev.classList.contains('user')) {
-        prev = prev.previousElementSibling;
-      }
-      if (prev) {
-        const userText = prev.innerText.trim();
-        if (userText) topic = userText.substring(0, 24);
-      }
-    }
-
-    currentCardFilename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = `
+      <div class="search-spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:4px;"></div>
+      <span>處理中…</span>
+    `;
 
     try {
-      const blob = await generateApple1080x1920CardBlob(topic, text);
-      currentCardBlob = blob;
-      const url = URL.createObjectURL(blob);
-      
-      previewImg.onload = () => {
-        loading.style.display = 'none';
-        previewImg.style.opacity = '1';
-      };
-      previewImg.src = url;
-      if (previewImg.complete) {
-        loading.style.display = 'none';
-        previewImg.style.opacity = '1';
+      const msgDiv = (msgId ? document.querySelector(`.msg.bot[data-id="${msgId}"]`) : null) || (btn ? btn.closest('.msg') : null);
+      let text = '';
+      if (msgDiv) {
+        text = msgDiv.getAttribute('data-raw') || msgDiv.querySelector('.bubble')?.innerText || '';
       }
 
-      // 依裝置環境智慧更新主要按鈕文案
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const shareText = document.getElementById('card-share-text');
-      if (shareText) {
-        shareText.textContent = isMobile ? '一鍵分享 / 存至相簿' : '複製圖卡至剪貼簿';
-      }
-
-    } catch (err) {
-      console.error('[Generate card error]', err);
-      loading.innerHTML = '<span>圖卡生成失敗，請重試</span>';
-    }
-  }
-
-  function closeCardModal() {
-    triggerHaptic('light');
-    const modal = document.getElementById('card-modal');
-    if (modal) modal.classList.remove('show');
-  }
-
-  // ── 🖱️ 桌面拖曳滑動：Action Bar 左右滑動支援 ──────────────
-  function enableActionBarDrag(el) {
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
-
-    el.addEventListener('mousedown', (e) => {
-      isDown = true;
-      el.classList.add('is-dragging');
-      startX = e.pageX - el.offsetLeft;
-      scrollLeft = el.scrollLeft;
-    });
-    el.addEventListener('mouseleave', () => {
-      isDown = false;
-      el.classList.remove('is-dragging');
-    });
-    el.addEventListener('mouseup', () => {
-      isDown = false;
-      el.classList.remove('is-dragging');
-    });
-    el.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - el.offsetLeft;
-      const walk = (x - startX) * 1.2;
-      el.scrollLeft = scrollLeft - walk;
-    });
-  }
-
-  async function handleCardShareOrCopy() {
-    triggerHaptic('medium');
-    if (!currentCardBlob) return;
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const file = new File([currentCardBlob], currentCardFilename, { type: 'image/png' });
-
-    if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: '臺灣物理治療實證衛教圖卡',
-          text: '物理治療實證衛教圖卡'
-        });
-      } catch (e) {
-        if (e.name !== 'AbortError') downloadCardImage();
-      }
-    } else {
-      // 桌面版：直接複製圖片 Blob 至剪貼簿，可直接 Ctrl+V 貼入 LINE / 記事本
-      const shareText = document.getElementById('card-share-text');
-      const origText = shareText ? shareText.textContent : '複製圖卡至剪貼簿';
-
-      let copied = false;
-      if (navigator.clipboard && navigator.clipboard.write) {
-        try {
-          await navigator.clipboard.write([
-            new ClipboardItem({ 'image/png': currentCardBlob })
-          ]);
-          copied = true;
-        } catch (err) {
-          console.log('[Clipboard image write failed]', err);
+      let topic = '物理治療實證衛教';
+      if (msgDiv) {
+        let prev = msgDiv.previousElementSibling;
+        while (prev && !prev.classList.contains('user')) {
+          prev = prev.previousElementSibling;
+        }
+        if (prev) {
+          const userText = prev.innerText.trim();
+          if (userText) topic = userText.substring(0, 24);
         }
       }
 
-      if (copied) {
-        if (shareText) shareText.textContent = '✓ 已複製圖卡！可直接貼上 (Ctrl+V)';
-        setTimeout(() => {
-          if (shareText) shareText.textContent = origText;
-        }, 2200);
+      const filename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
+      const blob = await generateApple1080x1920CardBlob(topic, text);
+      const file = new File([blob], filename, { type: 'image/png' });
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: '臺灣物理治療實證衛教',
+          text: '臺灣物理治療實證衛教指引'
+        });
+        btn.innerHTML = origHtml;
       } else {
-        downloadCardImage();
+        // 電腦版或不支援 Web Share Sheet：複製圖片至剪貼簿
+        let copied = false;
+        if (navigator.clipboard && navigator.clipboard.write) {
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            copied = true;
+          } catch (e) {}
+        }
+        if (copied) {
+          btn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>已複製圖卡！可直接貼上分享</span>
+          `;
+          setTimeout(() => { btn.innerHTML = origHtml; }, 2200);
+        } else {
+          // 直接下載
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+          btn.innerHTML = origHtml;
+        }
       }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.error('[Share image error]', err);
+      }
+      btn.innerHTML = origHtml;
     }
   }
 
-  function downloadCardImage() {
+  // ── 📥 下載高畫質圖片檔（1080×1920 PNG 一鍵直達）──────────────────
+  async function directDownloadImage(btn, msgId) {
     triggerHaptic('light');
-    if (!currentCardBlob) return;
-    const url = URL.createObjectURL(currentCardBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = currentCardFilename;
-    a.click();
-    URL.revokeObjectURL(url);
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = `
+      <div class="search-spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:4px;"></div>
+      <span>產圖中…</span>
+    `;
+
+    try {
+      const msgDiv = (msgId ? document.querySelector(`.msg.bot[data-id="${msgId}"]`) : null) || (btn ? btn.closest('.msg') : null);
+      let text = '';
+      if (msgDiv) {
+        text = msgDiv.getAttribute('data-raw') || msgDiv.querySelector('.bubble')?.innerText || '';
+      }
+
+      let topic = '物理治療實證衛教';
+      if (msgDiv) {
+        let prev = msgDiv.previousElementSibling;
+        while (prev && !prev.classList.contains('user')) {
+          prev = prev.previousElementSibling;
+        }
+        if (prev) {
+          const userText = prev.innerText.trim();
+          if (userText) topic = userText.substring(0, 24);
+        }
+      }
+
+      const filename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
+      const blob = await generateApple1080x1920CardBlob(topic, text);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>已下載圖片檔</span>
+      `;
+      setTimeout(() => { btn.innerHTML = origHtml; }, 2000);
+    } catch (err) {
+      console.error('[Download image error]', err);
+      btn.innerHTML = origHtml;
+    }
   }
 
   // ── 剪貼簿跨裝置相容複製工具 ──────────────────────────────
@@ -2874,13 +2650,21 @@
             </svg>
             <span>複製文字</span>
           </button>
-          <button class="action-pill-btn" onclick="openShareCardModal(this, '${msgId}')" title="生成 1080×1920 Apple 風格衛教美圖 (可分享至 IG / Threads / LINE)">
+          <button class="action-pill-btn" onclick="directShareImage(this, '${msgId}')" title="分享衛教圖卡至 LINE / IG / 其他軟體">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <polyline points="21 15 16 10 5 21"/>
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
             </svg>
-            <span>生成衛教圖卡</span>
+            <span>分享至其他軟體</span>
+          </button>
+          <button class="action-pill-btn" onclick="directDownloadImage(this, '${msgId}')" title="下載 1080×1920 高畫質衛教圖片檔">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span>下載高畫質圖片檔</span>
           </button>
         </div>
       `;
@@ -2980,7 +2764,7 @@
       '正在比對高品質臨床研究與運動治療指南…',
       '正在分析動作姿勢與身體不適原因…',
       '正在篩檢安全運動界限與就醫警訊…',
-      '正在統整分期運動處方與衛教建議…'
+      '正在統整分期運動指引與衛教建議…'
     ];
     let stepIndex = 0;
     if (searchTimer) clearInterval(searchTimer);

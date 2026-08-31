@@ -31,6 +31,7 @@ function checkRateLimit(ip) {
 function localizeTaiwanese(text) {
   if (!text) return '';
   return text
+    .replace(/處方/g, '運動指引')
     .replace(/康復/g, '復健')
     .replace(/鍛[煉鍊]/g, '訓練')
     .replace(/激活/g, '啟動')
@@ -57,17 +58,19 @@ const SYSTEM_PROMPT = `# Role Definition
 你是「台灣物理治療實證小助手」，專為台灣一般大眾與民眾設計的實證動作與物理治療衛教諮詢系統。
 
 # 核心執行原則 (Core Rules)
-1. 【依據使用者意圖，極致白話親民回覆】：
+1. 【依據一般大眾需求，極致白話親民回覆（以民眾實際情境優先）】：
    - 全篇必須以「一般民眾、長輩、上班族都能輕鬆看懂」的台灣白話口語表達，嚴格禁止堆砌生硬晦澀的醫學解剖名詞或八股學術腔。
    - 若必須解釋身體機制，請務必搭配生活化比喻（例如：解釋「代償」請比喻為「原本該出力的肌肉偷懶，其他肌肉跑來加班代班結果累壞了」；解釋「核心」請比喻為「身體自帶的天然護腰」；解釋「腹內壓」請比喻為「肚子像吹氣球一樣向四周均勻撐開」）。
    - 動作步驟請用直覺的生活感官引導（例如：「想像屁股往後找椅子坐」、「肩膀自然放鬆下沉，不要縮脖子聳肩」）。
    - 根據使用者的具體問法給予合適切題的回覆：
-     * 若諮詢【症狀/動作不適/傷後復健】（例如：「久坐腰痛」、「深蹲膝蓋卡卡」）：請依序提供：① 何時需就醫的危險警訊 ➔ ② 為什麼會痠痛（白話原因分析） ➔ ③ 你可以這樣做（日常調整與安全運動） ➔ ④ 應避免的動作 ➔ ⑤ 相關特定實證文獻。
-     * 若詢問【特定文獻推薦/研究探討】：請直接切入推薦該篇文獻名稱、期刊結論與直達連結。切勿硬塞無關的安全篩檢或運動處方。
+     * 若諮詢【症狀/動作不適/傷後復健】（例如：「久坐腰痛」、「深蹲膝蓋卡卡」）：請依序提供：① 何時需就醫的危險警訊 ➔ ② 為什麼會痠痛（白話原因分析） ➔ ③ 你可以這樣做（建議運動與日常調整） ➔ ④ 應避免的動作 ➔ ⑤ 相關特定實證文獻。
+     * 若詢問【法規、收費制度、健保自費差異、評估流程、一般觀念釋疑】：請以台灣現行醫療體制與《物理治療師法》實務，白話清楚說明，切勿硬塞臨床醫學論文。
+     * 若詢問【特定文獻推薦/研究探討】：請直接切入推薦該篇文獻名稱、期刊結論與直達連結。
      * 若詢問【名詞概念/動作原理】：請以生活化白話解釋定義、日常實例與正確操作要點。
-2. 【100% 台灣在地化繁中，嚴格杜絕中國大陸用語與英文摩擦】：
+2. 【100% 台灣在地化繁中，嚴格杜絕「處方」與中國大陸用語】：
    - 全篇必須使用台灣繁體中文（正體中文）與台灣物理治療專業/生活習慣用語。
    - 【強制詞彙對照表（嚴格執行，違者重罰）】：
+     * 處方 / 運動處方 ➔ 【最高禁用詞：全篇嚴格禁止出現「處方」二字！】一律改用「建議運動」、「運動指引」或「居家動作」。
      * 旋轉肌袖 ➔ 一律使用「旋轉肌群」
      * 康復 ➔ 一律使用「復健」或「恢復/復原」
      * 鍛煉 / 鍛鍊 ➔ 一律使用「訓練」或「運動 / 練習」
@@ -89,11 +92,12 @@ const SYSTEM_PROMPT = `# Role Definition
      * 動作質量 / 質量 ➔ 一律使用「動作品質 / 品質」
    - 嚴格禁止在內文中夾帶不必要的英文醫學單字或縮寫。
 3. 【嚴謹俐落排版，白話清晰標題】：標題一律使用乾淨的中文方括號（如【安全篩檢與就醫指引】、【為什麼會痠痛？常見原因分析】、【你可以這樣做（建議運動與日常調整）】、【應避免的動作】、【參考實證研究】），【嚴禁在標題前加任何 # 井字號或堆砌過多 Emoji】以維護醫療專業權威感。
-4. 【大眾化高品質實證依據（嚴格把關相關性，杜絕無關文獻）】：
+4. 【大眾化高品質實證依據（臨床指引 Guideline / 系統性回顧優先，嚴格把關相關性）】：
    - 【文獻相關性絕對優先（嚴格執行）】：
      * 只有當下方「即時查詢結果」中的論文主題，與使用者提問的【特定身體部位 / 具體受傷病症】「高度吻合切題」時，才能引用！
      * 若使用者詢問的是【法規、收費制度、健保自費差異、評估流程、一般觀念釋疑】：【絕對嚴格禁止引用任何臨床論文】！
      * 若即時查詢結果的主題與提問病症不符，【必須直接捨棄，不要輸出【參考實證研究】區塊】！
+   - 【證據等級依序】：優先採用「臨床執業指引（Guideline）」與「系統性文獻回顧（Systematic Review / Meta-analysis）」，其次為隨機對照試驗（RCT）。
    - 【杜絕 PubMed 艱澀專有名詞】：引用時統稱為「國際醫學實證研究」或「物理治療臨床實證指引」。
    - 【文獻標題必須與該論文實際內容 1:1 精準對應】：將英文論文實際主題白話翻譯為繁體中文，清楚標註證據類型。
    - 【若無高度切題文獻或查無結果】：嚴格禁止自行編造任何 PMID 網址或偽造論文連結！直接不要輸出【參考實證研究】區塊，維持高品質與專業度。
@@ -112,46 +116,45 @@ const SYSTEM_PROMPT = `# Role Definition
 ---
 
 💡 尋求專業一對一線上諮詢／線下評估預約
-每個人身體的骨骼結構、生活習慣與不適原因皆不相同。若需要針對個人動作進行深入評估、專屬運動處方調整或一對一諮詢，歡迎加入官方 LINE 預約：👉 [點擊直接加入好友並預約諮詢](https://lin.ee/y6VBRuh)
+每個人身體的骨骼結構、生活習慣與不適原因皆不相同。若需要針對個人動作進行深入評估、專屬運動指引調整或一對一諮詢，歡迎加入官方 LINE 預約：👉 [點擊直接加入好友並預約諮詢](https://lin.ee/y6VBRuh)
 
 ---
 ⚖️ 免責聲明：本內容由 AI 實證小助手生成，僅供日常衛教參考，可能存在錯誤，無法替代真人專業醫療診斷。依《物理治療師法》第12條，實際處置應依醫師診斷或醫囑執行。若有身體不適，請務必諮詢合格醫師或物理治療師進行面對面臨床評估。`;
 
 // ── 非臨床行政與制度問題排除清單（此類問題絕不檢索論文，避免帶入無關文獻）──────────────
 const PURE_ADMIN_KEYWORDS = [
-  '收費', '費用', '多少錢', '價格', '價目', '健保卡', '健保給付', '無處方', '無醫師處方', '需要處方嗎', '處方箋',
-  '法規', '法律', '修法', '密醫', '資格', '執照', '整復師差異', '國術館', '保險理賠', '掛號流程'
+  '收費', '費用', '多少錢', '價格', '價目', '健保', '自費', '健保卡', '健保給付', '無處方', '無醫師處方', '需要處方嗎', '處方箋', '診斷證明', '醫囑',
+  '流程', '法規', '法律', '修法', '密醫', '資格', '執照', '物理治療所', '診所',
+  '掛號', '差別', '差異', '整復', '推拿', '國術館', '保險', '理賠', '看診'
 ];
 
-// ── 物理治療專業 MeSH 與臨床英文關鍵字對照庫 ──────────────────────
+// ── 物理治療專業 MeSH 與臨床英文關鍵字對照庫（優先檢索 Guideline / Systematic Review）──
 const CLINICAL_ME_SH_MAP = [
-  [['下背', '腰痛', '腰痠', '久坐腰', '腰椎', '閃到腰', '閃腰'], 'low back pain lumbar core stabilization physical therapy exercise guideline'],
-  [['椎間盤', '椎間盤突出', '坐骨神經', '腳麻', '梨狀肌', '梨狀肌症候群'], 'lumbar disc herniation sciatica piriformis syndrome physical therapy exercise'],
-  [['骨盆前傾', '下交叉', '骨盆歪斜', '長短腳'], 'anterior pelvic tilt lower crossed syndrome physical therapy corrective exercise'],
-  [['骨盆後傾', '平背', '駝背', '圓肩', '上交叉', '烏龜頸', '富貴包'], 'upper crossed syndrome thoracic kyphosis forward head posture physical therapy exercise'],
-  [['落枕', '頸椎', '脖子痛', '脖子轉不過去', '膏盲', '膏盲痛'], 'cervical neck pain stiffness physical therapy exercise mobilization'],
-  [['骨刺', '退化性脊椎', '脊椎滑脫', '脊椎狹窄'], 'lumbar spondylolisthesis spinal stenosis physical therapy exercise'],
-  [['內扣', '內夾', '深蹲膝蓋', '膝蓋內', 'X型腿', '膝外翻'], 'knee valgus dynamic squat hip abductor gluteus medius biomechanics exercise'],
-  [['跑者膝', '跑步膝蓋', '膝蓋外側', '髂脛束', 'ITB', 'ITBS'], 'iliotibial band syndrome ITBS runner knee physical therapy exercise'],
-  [['髕骨', '髕骨軟化', '髕骨股骨', '膝蓋痛', '膝蓋卡卡', '退化性膝關節炎', '退化性關節炎'], 'patellofemoral pain syndrome PFPS knee osteoarthritis physical therapy exercise'],
-  [['跳躍膝', '髕骨肌腱', '髕骨帶'], 'patellar tendinopathy jumper knee eccentric loading physical therapy exercise'],
-  [['十字韌帶', 'ACL', '前十字', '後十字', '韌帶斷裂', '韌帶開刀'], 'anterior cruciate ligament ACL reconstruction rehabilitation exercise guideline'],
-  [['半月板', '半月軟骨', '半月板撕裂'], 'meniscus tear conservative physical therapy exercise rehabilitation guideline'],
-  [['足底', '足底筋膜', '足底筋膜炎', '足跟痛', '腳底痛', '起床第一步', '腳跟刺痛'], 'plantar fasciitis physical therapy stretching loading exercise guideline'],
-  [['翻船', '腳踝', '踝關節', '腳踝扭傷', '扭到腳', '腳踝痛'], 'ankle sprain inversion physical therapy rehabilitation exercise guideline'],
-  [['扁平足', '足弓', '內側足弓塌陷', '高足弓'], 'pes planus flatfoot arch intrinsic foot muscle physical therapy exercise'],
-  [['阿基里斯', '跟腱', '跟腱炎', '阿基里斯腱'], 'Achilles tendinopathy eccentric loading exercise physical therapy'],
-  [['五十肩', '沾黏', '肩膀卡', '凍結肩', '手舉不高', '肩關節囊', '沾黏性肩關節囊炎'], 'adhesive capsulitis frozen shoulder physical therapy exercise mobilization guideline'],
-  [['肩夾擠', '旋轉肌', '旋轉肌群', '旋轉肌袖', '肩膀痛', '夾擠'], 'subacromial impingement rotator cuff tendinopathy physical therapy exercise guideline'],
-  [['媽媽手', '手腕痛', '橈骨莖突', '大拇指痛'], 'De Quervain tenosynovitis physical therapy conservative exercise splint'],
-  [['網球肘', '高爾夫球肘', '手肘痛', '手肘外側'], 'lateral epicondylitis tennis elbow physical therapy eccentric exercise'],
-  [['手麻', '腕隧道', '正中神經', '腕隧道症候群'], 'carpal tunnel syndrome nerve gliding physical therapy exercise'],
-  [['三角纖維軟骨', 'TFCC', '手腕小指側'], 'triangular fibrocartilage complex TFCC wrist physical therapy conservative rehabilitation'],
-  [['離心收縮', '離心訓練', '離心運動'], 'eccentric exercise physical therapy tendinopathy rehabilitation'],
-  [['等長收縮', '等長訓練'], 'isometric exercise pain relief physical therapy tendon'],
-  [['向心收縮', '阻力訓練', '肌力訓練'], 'resistance strength training progressive overload physical therapy'],
-  [['本體感覺', '平衡訓練', '神經肌肉'], 'proprioception neuromuscular control balance training rehabilitation'],
-  [['筋膜放鬆', '滾筒', '筋膜槍', '按摩球'], 'myofascial release foam rolling physical therapy range of motion'],
+  [['下背', '腰痛', '腰痠', '久坐腰', '腰椎', '閃到腰', '閃腰'], '(low back pain OR lumbar spine) (clinical practice guideline OR systematic review) physical therapy exercise'],
+  [['椎間盤', '椎間盤突出', '坐骨神經', '腳麻', '梨狀肌', '梨狀肌症候群'], '(lumbar disc herniation OR sciatica OR piriformis syndrome) (clinical practice guideline OR systematic review) physical therapy'],
+  [['骨盆前傾', '下交叉', '骨盆歪斜', '長短腳'], '(anterior pelvic tilt OR lower crossed syndrome) (exercise OR physical therapy) corrective'],
+  [['骨盆後傾', '平背', '駝背', '圓肩', '上交叉', '烏龜頸', '富貴包'], '(forward head posture OR thoracic kyphosis OR upper crossed syndrome) (exercise OR physical therapy)'],
+  [['落枕', '頸椎', '脖子痛', '脖子轉不過去', '膏盲', '膏盲痛'], '(cervical neck pain OR neck stiffness) (clinical practice guideline OR systematic review) physical therapy'],
+  [['骨刺', '退化性脊椎', '脊椎滑脫', '脊椎狹窄'], '(lumbar spondylolisthesis OR lumbar spinal stenosis) (guideline OR systematic review) physical therapy'],
+  [['內扣', '內夾', '深蹲膝蓋', '膝蓋內', 'X型腿', '膝外翻'], '(dynamic knee valgus OR squat) gluteus medius biomechanics exercise'],
+  [['跑者膝', '跑步膝蓋', '膝蓋外側', '髂脛束', 'ITB', 'ITBS'], '(iliotibial band syndrome OR ITBS OR runner knee) (clinical practice guideline OR systematic review) physical therapy'],
+  [['髕骨', '髕骨軟化', '髕骨股骨', '膝蓋痛', '膝蓋卡卡', '退化性膝關節炎', '退化性關節炎'], '(patellofemoral pain syndrome OR knee osteoarthritis) (clinical practice guideline OR systematic review) physical therapy exercise'],
+  [['跳躍膝', '髕骨肌腱', '髕骨帶'], '(patellar tendinopathy OR jumper knee) (eccentric loading OR exercise) physical therapy'],
+  [['十字韌帶', 'ACL', '前十字', '後十字', '韌帶斷裂', '韌帶開刀'], '(anterior cruciate ligament ACL reconstruction) (clinical practice guideline OR systematic review) rehabilitation'],
+  [['半月板', '半月軟骨', '半月板撕裂'], '(meniscus tear) (conservative management OR physical therapy OR rehabilitation) guideline'],
+  [['足底', '足底筋膜', '足底筋膜炎', '足跟痛', '腳底痛', '起床第一步', '腳跟刺痛'], '(plantar fasciitis) (clinical practice guideline OR systematic review) physical therapy stretching'],
+  [['翻船', '腳踝', '踝關節', '腳踝扭傷', '扭到腳', '腳踝痛'], '(ankle sprain) (clinical practice guideline OR systematic review) physical therapy rehabilitation'],
+  [['扁平足', '足弓', '內側足弓塌陷', '高足弓'], '(pes planus OR flatfoot) foot exercise physical therapy'],
+  [['阿基里斯', '跟腱', '跟腱炎', '阿基里斯腱'], '(Achilles tendinopathy) (eccentric exercise OR physical therapy) systematic review'],
+  [['五十肩', '沾黏', '肩膀卡', '凍結肩', '手舉不高', '肩關節囊', '沾黏性肩關節囊炎'], '(adhesive capsulitis OR frozen shoulder) (clinical practice guideline OR systematic review) physical therapy'],
+  [['肩夾擠', '旋轉肌', '旋轉肌群', '旋轉肌袖', '肩膀痛', '夾擠'], '(subacromial shoulder impingement OR rotator cuff tendinopathy) (clinical practice guideline OR systematic review) physical therapy'],
+  [['媽媽手', '手腕痛', '橈骨莖突', '大拇指痛'], '(De Quervain tenosynovitis) (conservative management OR physical therapy) guideline'],
+  [['網球肘', '高爾夫球肘', '手肘痛', '手肘外側'], '(lateral epicondylitis OR tennis elbow) (physical therapy OR eccentric exercise) systematic review'],
+  [['手麻', '腕隧道', '正中神經', '腕隧道症候群'], '(carpal tunnel syndrome) (clinical practice guideline OR systematic review) physical therapy'],
+  [['三角纖維軟骨', 'TFCC', '手腕小指側'], '(triangular fibrocartilage complex TFCC wrist) physical therapy conservative rehabilitation'],
+  [['離心收縮', '離心訓練', '離心運動'], '(eccentric exercise tendinopathy rehabilitation) systematic review'],
+  [['等長收縮', '等長訓練'], '(isometric exercise pain relief tendon) systematic review'],
+  [['筋膜放鬆', '滾筒', '筋膜槍', '按摩球'], '(myofascial release OR foam rolling) range of motion systematic review'],
 ];
 
 // ── 執行期動態快取（Edge instance 級，TTL: 1 小時）────────────────
@@ -179,7 +182,7 @@ function setDynamicCache(key, value) {
 // ── 即時 NCBI/PubMed 檢索函式 ─────────────
 async function searchPubmedDirect(query) {
   try {
-    // 1. 若為法規、收費、健保自費、流程等非臨床問題，直接跳過檢索，杜絕無關文獻
+    // 1. 若為法規、收費、健保自費、流程等大眾制度與行政問題，直接跳過檢索，杜絕無關文獻
     if (PURE_ADMIN_KEYWORDS.some(k => query.includes(k))) {
       return null;
     }
@@ -357,7 +360,7 @@ export default async function handler(req) {
     const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 3500));
     const result = await Promise.race([toolPromise, timeoutPromise]);
     if (result) {
-      toolContext = '\n\n--- 即時查詢結果（請根據以下真實論文資料回答與引用，嚴禁編造不存在的 PMID）---\n' + JSON.stringify(result, null, 2);
+      toolContext = "\n\n--- 即時查詢結果（請根據以下真實論文資料回答與引用，嚴禁編造不存在的 PMID）---\n" + JSON.stringify(result, null, 2);
     }
   } catch {}
 
@@ -370,60 +373,55 @@ export default async function handler(req) {
     parts: [{ text: m.content }],
   }));
 
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream({
-    async start(controller) {
-      let fullText = '';
-      let success = false;
-      let lastErrCode = 'UNKNOWN';
+  const userContent = message + toolContext;
 
-      for (const modelName of MODELS) {
-        try {
-          const model = genAI.getGenerativeModel({
-            model: modelName,
-            systemInstruction: SYSTEM_PROMPT,
-          });
-          const chat = model.startChat({ history: chatHistory });
-          const resultStream = await chat.sendMessageStream(message + toolContext);
+  for (const modelName of MODELS) {
+    try {
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        systemInstruction: SYSTEM_PROMPT,
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 2048,
+        },
+      });
 
-          for await (const chunk of resultStream.stream) {
-            const chunkText = chunk.text();
-            if (chunkText) {
-              const localizedChunk = localizeTaiwanese(chunkText);
-              fullText += localizedChunk;
-              controller.enqueue(encoder.encode(localizedChunk));
+      const chat = model.startChat({ history: chatHistory });
+      const result = await chat.sendMessageStream(userContent);
+
+      const encoder = new TextEncoder();
+      let fullResponseText = '';
+
+      const readableStream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of result.stream) {
+              const text = chunk.text();
+              if (text) {
+                const localized = localizeTaiwanese(text);
+                fullResponseText += localized;
+                controller.enqueue(encoder.encode(localized));
+              }
             }
+            if (sanitizedHistory.length === 0 && fullResponseText.length > 50) {
+              setDynamicCache(cacheKey, fullResponseText);
+            }
+            controller.close();
+          } catch (streamErr) {
+            console.error(`[Stream Error - ${modelName}]`, streamErr?.message);
+            controller.error(streamErr);
           }
+        },
+      });
 
-          if (fullText) {
-            setDynamicCache(cacheKey, fullText);
-          }
-          success = true;
-          break;
-        } catch (err) {
-          // [Security] 完整錯誤僅記錄至 server log，不洩漏至 client
-          console.error('[chat stream error]', modelName, err?.message);
-          const msg = err?.message ?? '';
-          if (msg.includes('API key not valid') || msg.includes('API_KEY_INVALID') || msg.includes('PERMISSION_DENIED')) {
-            lastErrCode = 'AUTH';
-            break;
-          }
-          lastErrCode = 'MODEL';
-          continue;
-        }
-      }
+      return new Response(readableStream, { headers: streamHeaders });
+    } catch (modelErr) {
+      console.warn(`[Model ${modelName} Failed, Trying Fallback]`, modelErr?.message);
+    }
+  }
 
-      if (!success) {
-        // [Security] 對用戶僅顯示友善訊息，不洩漏 SDK 錯誤細節
-        const userMsg = lastErrCode === 'AUTH'
-          ? '\n\n⚠️ 服務驗證失敗，請聯絡管理員。'
-          : '\n\n⚠️ 檢索服務暫時繁忙，請稍後再試。';
-        controller.enqueue(encoder.encode(userMsg));
-      }
-
-      controller.close();
-    },
+  return new Response(JSON.stringify({ error: 'AI 服務連線忙碌中，請稍後再試。' }), {
+    status: 503,
+    headers: secHeaders,
   });
-
-  return new Response(stream, { headers: streamHeaders });
 }
