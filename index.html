@@ -2536,6 +2536,8 @@
   function localizeTaiwanese(str) {
     if (!str) return '';
     return str
+      .replace(/運動處方/g, '運動指引')
+      .replace(/處方/g, '運動指引')
       .replace(/康復/g, '復健')
       .replace(/鍛[煉鍊]/g, '訓練')
       .replace(/激活/g, '啟動')
