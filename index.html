@@ -2862,23 +2862,38 @@
     const startTime = Date.now();
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, history }),
-      });
+      let res = null;
+      let lastErr = null;
+
+      // ── 自動自癒重試機制（遇短暫連線波動自動重試，對使用者完全無感）──
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text, history }),
+          });
+          if (res.ok) break;
+          if (res.status === 429 || res.status === 400) break;
+        } catch (fetchErr) {
+          lastErr = fetchErr;
+        }
+        if (attempt < 2) {
+          await new Promise(r => setTimeout(r, 800));
+        }
+      }
 
       const elapsed = Date.now() - startTime;
       if (elapsed < 500) {
         await new Promise(r => setTimeout(r, 500 - elapsed));
       }
 
-      if (!res.ok) {
+      if (!res || !res.ok) {
         removeTyping();
         let errMsg = '檢索服務暫時繁忙，請稍後再試。';
         try {
-          const errData = await res.json();
-          if (errData.error) errMsg = errData.error;
+          const errData = await res?.json();
+          if (errData?.error) errMsg = errData.error;
         } catch {}
         appendMsg('bot', `<span style="color:#ef4444">⚠️ ${errMsg}</span>`, `⚠️ ${errMsg}`);
         return;
