@@ -2792,10 +2792,11 @@
     const followups = [];
     const lines = content.split('\n');
     lines.forEach(l => {
-      const qMatch = l.match(/👉\s*(.+)/);
-      if (qMatch) {
-        const q = qMatch[1].replace(/<[^>]+>/g, '').trim();
-        if (q) followups.push(q);
+      const t = l.trim();
+      if (!t || t.startsWith('【') || t.startsWith('---')) return;
+      let q = t.replace(/^[•\*\-\d\.]+\s*/, '').replace(/^(?:👉\s*)+/, '').replace(/<[^>]+>/g, '').trim();
+      if (q && q.length >= 3) {
+        followups.push(q);
       }
     });
 
@@ -2878,13 +2879,6 @@
       .replace(/^\s*---\s*$/gm, '<hr class="md-hr" />')
       // 引用區塊 >
       .replace(/^>\s*(.+)$/gm, '<blockquote class="md-quote">$1</blockquote>')
-      // 智慧延伸追問項目 (👉 轉為可直接點選的追問按鈕)
-      .replace(/^\s*[\*\-\d\.\s•]*(?:👉\s*)?(.+)$/gm, (m, q) => {
-        const cleanQ = q.trim();
-        return `<button type="button" class="followup-chip" data-raw="${escapeAttr(cleanQ)}" onclick="sendChip(this)"><span class="chip-text">${cleanQ}</span><span class="chip-arrow">↗</span></button>`;
-      })
-      // 中文標題 【💡 延伸探索】 轉為追問容器標題
-      .replace(/^\s*【(?:💡\s*)?延伸探索】\s*$/gm, '<div class="followup-title">相關探索</div>')
       // 🚨 醫療紅旗警訊與就醫指引視覺卡片
       .replace(/^\s*【(?:🚨\s*|⚠️\s*)?(安全篩檢(?:與就醫指引)?|何時需立即就醫|就醫指引|紅旗警訊)】\s*(.*)$/gm, (m, title, rest) => {
         const restText = rest && rest.trim() ? `\n${rest.trim()}` : '';
