@@ -86,7 +86,7 @@ const sampleResponse = `【安全篩檢與就醫指引】
 
 ---
 
-需要運動物理治療師為您詳細評估嗎？
+【需要運動物理治療師為您詳細評估嗎？】
 AI 提供的是普遍實證指引，但每個人身體受力模式與代償機制皆具個別性。本系統由台灣執業物理治療師團隊建立與維護，若想進一步確認個人問題或預約實體一對一評估，歡迎透過本站專屬窗口與物理治療師聯繫：[點此加入駐站物理治療師諮詢窗口 ↗](https://lin.ee/y6VBRuh)`;
 
 const parsed = parseBotResponse(sampleResponse);
@@ -115,6 +115,13 @@ assert(!parsed.body.includes('免責聲明：'), '對話氣泡主體內文中不
 // 斷言 5：劑量在地化替換測試
 const testDosage = localizeTaiwanese('此動作的運動劑量為每天 3 組。');
 assert(testDosage.includes('建議組數與次數') && !testDosage.includes('劑量'), 'localizeTaiwanese 成功將「運動劑量」轉為「建議組數與次數」');
+
+// 斷言 6：複製純文字清洗測試（絕無 #、* 殘留）
+const rawSampleWithMd = '### 【安全篩檢與就醫指引】\n如果你久坐時屁股痛，請檢視**危險警訊**：\n* 疼痛像觸電一樣。\n* 腳部麻木。';
+const cleanCopied = cleanMarkdownForClipboard(rawSampleWithMd);
+assert(!cleanCopied.includes('#'), '複製純文字中 100% 移除 # 標題符號');
+assert(!cleanCopied.includes('*'), '複製純文字中 100% 移除 * 符號');
+assert(cleanCopied.includes('• 疼痛像觸電一樣。'), '複製純文字中清單轉為標準圓點 •');
 
 
 // ── 測試 3：底層常駐免責聲明與 Modal 結構檢查 ─────────────────────

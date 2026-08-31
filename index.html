@@ -2185,17 +2185,48 @@
   }
 
     // ── OpenEvidence 動作與純文字/圖片生成模組 ──────────────────────
+    // ── 乾淨純文字清洗器（徹底去除 Markdown 語法符號 # * ** ` ---）────
+  function cleanMarkdownForClipboard(raw) {
+    if (!raw) return '';
+    let text = raw;
+
+    // 1. 移除程式碼區塊標記
+    text = text.replace(/```[\w]*\n([\s\S]*?)```/g, '$1');
+    text = text.replace(/`([^`]+)`/g, '$1');
+
+    // 2. 移除 Markdown 標題符號 (# ## ###)
+    text = text.replace(/^\s*#{1,6}\s*(.+)$/gm, '$1');
+    text = text.replace(/#{1,}/g, '');
+
+    // 3. 處理粗體與斜體 (**bold** / __bold__ / *italic*)
+    text = text.replace(/\*\*(.*?)\*\*/g, '$1');
+    text = text.replace(/__(.*?)__/g, '$1');
+    text = text.replace(/_([^_]+)_/g, '$1');
+
+    // 4. 轉換項目清單 (* 或 -) 為乾淨的圓點 (•)
+    text = text.replace(/^\s*[\*\-]\s+(.+)$/gm, '• $1');
+    text = text.replace(/^\s*\*\s*/gm, '• ');
+
+    // 5. 處理 Markdown 連結 [文字](網址) ➔ 文字 (網址)
+    text = text.replace(/\[(.*?)\]\((https?:\/\/[^\)]+)\)/g, '$1 ($2)');
+
+    // 6. 整理分隔線
+    text = text.replace(/^\s*---+\s*$/gm, '───────────────');
+
+    // 7. 清除所有殘留孤立的 * 符號
+    text = text.replace(/\*/g, '');
+
+    // 8. 壓縮多餘換行
+    text = text.replace(/\n{3,}/g, '\n\n');
+
+    return text.trim();
+  }
+
   function getCleanMessageText(msgEl, bubbleEl) {
     let raw = msgEl ? msgEl.getAttribute('data-raw') : '';
     if (raw) {
       const parsed = parseBotResponse(raw);
-      let body = parsed.body.trim();
-      body = body.replace(/\[(.*?)\]\(https?:\/\/[^\)]+\)/g, '$1');
-      body = body.replace(/\*\*(.*?)\*\*/g, '$1');
-      body = body.replace(/\*(.*?)\*/g, '$1');
-      body = body.replace(/`([^`]+)`/g, '$1');
-      body = body.replace(/\n{3,}/g, '\n\n');
-      return body.trim();
+      return cleanMarkdownForClipboard(parsed.body);
     }
     if (!bubbleEl) return '';
     let clone = bubbleEl.cloneNode(true);
@@ -2210,10 +2241,10 @@
     clone.querySelectorAll('.md-oli').forEach(oli => {
       const num = oli.querySelector('.num')?.textContent.trim() || '';
       const textSpan = oli.querySelector('span:last-child')?.textContent.trim() || '';
-      oli.textContent = num + ' ' + textSpan + '\n';
+      li.textContent = num + ' ' + textSpan + '\n';
     });
     let txt = clone.innerText || clone.textContent;
-    return txt.replace(/\n{3,}/g, '\n\n').trim();
+    return cleanMarkdownForClipboard(txt);
   }
 
   function copyMsgText(btn, msgId) {
