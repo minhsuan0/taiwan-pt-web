@@ -373,7 +373,7 @@ export default async function handler(req) {
   } catch {}
 
   // ② Edge 全串流傳輸（零超時、邊緣毫秒響應）
-  const MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-3.5-flash-lite'];
+  const MODELS = ['gemini-3.5-flash-lite', 'gemini-2.5-flash', 'gemini-3.6-flash'];
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const chatHistory = sanitizedHistory.map(m => ({
