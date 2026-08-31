@@ -14,6 +14,14 @@ const rateLimitMap = new Map();
 const RATE_LIMIT = 100;
 const RATE_WINDOW = 60 * 60 * 1000;
 
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (origin === ALLOWED_ORIGIN) return true;
+  if (origin.endsWith('.vercel.app') && origin.includes('taiwan-pt')) return true;
+  if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) return true;
+  return false;
+}
+
 function checkRateLimit(ip) {
   if (!ip || ip === 'unknown' || ip === '127.0.0.1') return true;
   const now = Date.now();
@@ -249,11 +257,11 @@ export default async function handler(req) {
   // ── CORS：僅允許自家網域（鎖定同源，防 CSRF / 未授權 API 盜用）─
   const origin = req.headers.get('origin') || '';
   if (req.method === 'OPTIONS') {
-    if (origin === ALLOWED_ORIGIN) {
+    if (isAllowedOrigin(origin)) {
       return new Response(null, {
         status: 204,
         headers: {
-          'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+          'Access-Control-Allow-Origin': origin || ALLOWED_ORIGIN,
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Max-Age': '86400',
@@ -340,8 +348,8 @@ export default async function handler(req) {
     'X-Frame-Options': 'DENY',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
   };
-  if (origin === ALLOWED_ORIGIN) {
-    streamHeaders['Access-Control-Allow-Origin'] = ALLOWED_ORIGIN;
+  if (isAllowedOrigin(origin) && origin) {
+    streamHeaders['Access-Control-Allow-Origin'] = origin;
   }
 
   // ── 快取查詢（僅無歷史對話時啟用）────────────────────────────
@@ -365,7 +373,7 @@ export default async function handler(req) {
   } catch {}
 
   // ② Edge 全串流傳輸（零超時、邊緣毫秒響應）
-  const MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash-lite', 'gemini-2.0-flash'];
+  const MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const chatHistory = sanitizedHistory.map(m => ({

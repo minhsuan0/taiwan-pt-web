@@ -2969,7 +2969,9 @@
     } catch (err) {
       console.error('[sendMessage error]', err);
       removeTyping();
-      appendMsg('bot', '<span style="color:#ef4444">⚠️ 網路連線中斷，請稍後再試。</span>', '⚠️ 網路連線中斷，請稍後再試。');
+      if (!botMsgDiv || !accumulatedText) {
+        appendMsg('bot', '<span style="color:#ef4444">⚠️ 連線暫時不穩定，請稍後再試。</span>', '⚠️ 連線暫時不穩定，請稍後再試。');
+      }
     } finally {
       isLoading = false;
       const actBtn = document.getElementById('action-btn');
