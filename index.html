@@ -223,14 +223,12 @@
       cursor: grab;
       user-select: none;
       -webkit-user-select: none;
-      scroll-behavior: smooth;
     }
     .suggestions-strip::-webkit-scrollbar {
       display: none;                  /* Chrome / Safari */
     }
     .suggestions-strip.is-dragging {
       cursor: grabbing;
-      scroll-behavior: auto;
     }
     .suggestions-strip.is-dragging .chip {
       pointer-events: none;
@@ -1988,34 +1986,102 @@
     "健保復健做很久沒好該看自費嗎？"
   ];
 
+  let autoScrollAnimId = null;
+  let isSliderInteracting = false;
+  let resumeSliderTimeout = null;
+
   function renderSuggestions() {
     const strip = document.getElementById('suggestions-strip');
     if (!strip) return;
 
-    let chipsHtml = '';
+    // 生成 3 組完全相同的熱門項目，達成 100% 無縫無限循環與平滑滾動
+    let singleGroupHtml = '';
     TRENDING_TOPICS.forEach(t => {
       const cleanText = t.trim();
-      chipsHtml += `<button class="chip" data-raw="${escapeAttr(cleanText)}">${escapeHtml(cleanText)}</button>`;
+      singleGroupHtml += `<button class="chip" data-raw="${escapeAttr(cleanText)}">${escapeHtml(cleanText)}</button>`;
     });
 
-    strip.innerHTML = chipsHtml;
-    strip.scrollLeft = 0;
+    strip.innerHTML = singleGroupHtml + singleGroupHtml + singleGroupHtml;
+    
+    // 初始化位置於中間一組
+    requestAnimationFrame(() => {
+      const singleSetWidth = strip.scrollWidth / 3;
+      if (singleSetWidth > 0) {
+        strip.scrollLeft = singleSetWidth;
+      }
+    });
 
     initSuggestionsSlider(strip);
   }
 
   function initSuggestionsSlider(strip) {
-    if (!strip || strip._sliderInitialized) return;
-    strip._sliderInitialized = true;
+    if (!strip) return;
 
-    // 1. 桌面端滑鼠拖曳滑動 (Desktop Grab & Drag)
+    // 啟動自動向左平滑滾動（Auto-scroll）
+    if (autoScrollAnimId) cancelAnimationFrame(autoScrollAnimId);
+    
+    const scrollSpeed = 0.55; // 每幀移動像素，優雅易讀
+
+    function autoScrollLoop() {
+      if (!isSliderInteracting && strip.offsetParent !== null) {
+        strip.scrollLeft += scrollSpeed;
+        const singleSetWidth = strip.scrollWidth / 3;
+        if (singleSetWidth > 0) {
+          if (strip.scrollLeft >= singleSetWidth * 2) {
+            strip.scrollLeft -= singleSetWidth;
+          } else if (strip.scrollLeft <= 0) {
+            strip.scrollLeft += singleSetWidth;
+          }
+        }
+      }
+      autoScrollAnimId = requestAnimationFrame(autoScrollLoop);
+    }
+    autoScrollAnimId = requestAnimationFrame(autoScrollLoop);
+
+    if (strip._sliderEventsBound) return;
+    strip._sliderEventsBound = true;
+
+    function pauseAutoScroll() {
+      isSliderInteracting = true;
+      if (resumeSliderTimeout) clearTimeout(resumeSliderTimeout);
+    }
+
+    function resumeAutoScroll(delay = 1400) {
+      if (resumeSliderTimeout) clearTimeout(resumeSliderTimeout);
+      resumeSliderTimeout = setTimeout(() => {
+        isSliderInteracting = false;
+      }, delay);
+    }
+
+    // 監聽滾動時的無縫邊界循環（手動滑動也能無限循環）
+    strip.addEventListener('scroll', () => {
+      const singleSetWidth = strip.scrollWidth / 3;
+      if (singleSetWidth > 0) {
+        if (strip.scrollLeft >= singleSetWidth * 2) {
+          strip.scrollLeft -= singleSetWidth;
+        } else if (strip.scrollLeft <= 5) {
+          strip.scrollLeft += singleSetWidth;
+        }
+      }
+    }, { passive: true });
+
+    // 1. 桌面端滑鼠懸停與拖曳 (Desktop Hover & Drag)
     let isDown = false;
     let startX = 0;
     let scrollLeft = 0;
     let hasMoved = false;
 
+    strip.addEventListener('mouseenter', () => {
+      pauseAutoScroll();
+    });
+
+    strip.addEventListener('mouseleave', () => {
+      if (!isDown) resumeAutoScroll(600);
+    });
+
     strip.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return; // 僅響應滑鼠左鍵
+      if (e.button !== 0) return;
+      pauseAutoScroll();
       isDown = true;
       hasMoved = false;
       strip.classList.add('is-dragging');
@@ -2027,13 +2093,7 @@
       if (!isDown) return;
       isDown = false;
       strip.classList.remove('is-dragging');
-      setTimeout(() => { hasMoved = false; }, 60);
-    });
-
-    strip.addEventListener('mouseleave', () => {
-      if (!isDown) return;
-      isDown = false;
-      strip.classList.remove('is-dragging');
+      resumeAutoScroll(1400);
       setTimeout(() => { hasMoved = false; }, 60);
     });
 
@@ -2041,7 +2101,7 @@
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - strip.offsetLeft;
-      const walk = (x - startX) * 1.5;
+      const walk = (x - startX) * 1.4;
       if (Math.abs(walk) > 4) {
         hasMoved = true;
       }
@@ -2050,10 +2110,12 @@
 
     // 2. 桌面滑鼠滾輪水平滑動 (Mouse Wheel to Horizontal Scroll)
     strip.addEventListener('wheel', (e) => {
+      pauseAutoScroll();
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         e.preventDefault();
         strip.scrollLeft += e.deltaY * 0.9;
       }
+      resumeAutoScroll(1400);
     }, { passive: false });
 
     // 3. 點擊防誤觸發（滑鼠拖曳放開時不誤送出）
@@ -2075,6 +2137,7 @@
     let touchMoved = false;
 
     strip.addEventListener('touchstart', (e) => {
+      pauseAutoScroll();
       if (e.touches.length === 1) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -2083,6 +2146,7 @@
     }, { passive: true });
 
     strip.addEventListener('touchmove', (e) => {
+      pauseAutoScroll();
       if (e.touches.length === 1) {
         const dx = Math.abs(e.touches[0].clientX - touchStartX);
         const dy = Math.abs(e.touches[0].clientY - touchStartY);
@@ -2100,6 +2164,12 @@
         }
       }
       touchMoved = false;
+      resumeAutoScroll(1500);
+    });
+
+    strip.addEventListener('touchcancel', () => {
+      touchMoved = false;
+      resumeAutoScroll(1500);
     });
   }
 
