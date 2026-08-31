@@ -230,9 +230,6 @@
     .suggestions-strip.is-dragging {
       cursor: grabbing;
     }
-    .suggestions-strip.is-dragging .chip {
-      pointer-events: none;
-    }
 
     .chip {
       background: #ffffff;
@@ -1989,6 +1986,21 @@
   let autoScrollAnimId = null;
   let isSliderInteracting = false;
   let resumeSliderTimeout = null;
+  let isSliderDragging = false;
+  let sliderHasDragged = false;
+  let sliderStartX = 0;
+  let sliderScrollLeft = 0;
+
+  function handleChipClick(e, chip) {
+    if (sliderHasDragged) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      return;
+    }
+    sendChip(chip);
+  }
 
   function renderSuggestions() {
     const strip = document.getElementById('suggestions-strip');
@@ -1998,7 +2010,7 @@
     let singleGroupHtml = '';
     TRENDING_TOPICS.forEach(t => {
       const cleanText = t.trim();
-      singleGroupHtml += `<button class="chip" data-raw="${escapeAttr(cleanText)}">${escapeHtml(cleanText)}</button>`;
+      singleGroupHtml += `<button type="button" class="chip" data-raw="${escapeAttr(cleanText)}" onclick="handleChipClick(event, this)">${escapeHtml(cleanText)}</button>`;
     });
 
     strip.innerHTML = singleGroupHtml + singleGroupHtml + singleGroupHtml;
@@ -2020,7 +2032,7 @@
     // 啟動自動向左平滑滾動（Auto-scroll）
     if (autoScrollAnimId) cancelAnimationFrame(autoScrollAnimId);
     
-    const scrollSpeed = 0.55; // 每幀移動像素，優雅易讀
+    const scrollSpeed = 0.55; // 每幀向左移動 0.55px
 
     function autoScrollLoop() {
       if (!isSliderInteracting && strip.offsetParent !== null) {
@@ -2053,7 +2065,7 @@
       }, delay);
     }
 
-    // 監聽滾動時的無縫邊界循環（手動滑動也能無限循環）
+    // 監聽滾動時的無縫邊界循環（手動或自動滑動都能無限循環）
     strip.addEventListener('scroll', () => {
       const singleSetWidth = strip.scrollWidth / 3;
       if (singleSetWidth > 0) {
@@ -2066,46 +2078,41 @@
     }, { passive: true });
 
     // 1. 桌面端滑鼠懸停與拖曳 (Desktop Hover & Drag)
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
-    let hasMoved = false;
-
     strip.addEventListener('mouseenter', () => {
       pauseAutoScroll();
     });
 
     strip.addEventListener('mouseleave', () => {
-      if (!isDown) resumeAutoScroll(600);
+      if (!isSliderDragging) resumeAutoScroll(600);
     });
 
     strip.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
       pauseAutoScroll();
-      isDown = true;
-      hasMoved = false;
-      strip.classList.add('is-dragging');
-      startX = e.pageX - strip.offsetLeft;
-      scrollLeft = strip.scrollLeft;
+      isSliderDragging = true;
+      sliderHasDragged = false;
+      sliderStartX = e.pageX - strip.offsetLeft;
+      sliderScrollLeft = strip.scrollLeft;
     });
 
     window.addEventListener('mouseup', () => {
-      if (!isDown) return;
-      isDown = false;
+      if (!isSliderDragging) return;
+      isSliderDragging = false;
       strip.classList.remove('is-dragging');
       resumeAutoScroll(1400);
-      setTimeout(() => { hasMoved = false; }, 60);
+      setTimeout(() => { sliderHasDragged = false; }, 80);
     });
 
     strip.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
+      if (!isSliderDragging) return;
       e.preventDefault();
       const x = e.pageX - strip.offsetLeft;
-      const walk = (x - startX) * 1.4;
-      if (Math.abs(walk) > 4) {
-        hasMoved = true;
+      const walk = (x - sliderStartX) * 1.3;
+      if (Math.abs(walk) > 6) {
+        sliderHasDragged = true;
+        strip.classList.add('is-dragging');
       }
-      strip.scrollLeft = scrollLeft - walk;
+      strip.scrollLeft = sliderScrollLeft - walk;
     });
 
     // 2. 桌面滑鼠滾輪水平滑動 (Mouse Wheel to Horizontal Scroll)
@@ -2118,30 +2125,16 @@
       resumeAutoScroll(1400);
     }, { passive: false });
 
-    // 3. 點擊防誤觸發（滑鼠拖曳放開時不誤送出）
-    strip.addEventListener('click', (e) => {
-      if (hasMoved) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      const chip = e.target.closest('.chip');
-      if (chip) {
-        sendChip(chip);
-      }
-    });
-
-    // 4. 手機端觸控事件（Touch Swipe & Tap）
+    // 3. 手機端觸控事件（Touch Swipe & Tap）
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchMoved = false;
 
     strip.addEventListener('touchstart', (e) => {
       pauseAutoScroll();
       if (e.touches.length === 1) {
+        sliderHasDragged = false;
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        touchMoved = false;
       }
     }, { passive: true });
 
@@ -2150,25 +2143,19 @@
       if (e.touches.length === 1) {
         const dx = Math.abs(e.touches[0].clientX - touchStartX);
         const dy = Math.abs(e.touches[0].clientY - touchStartY);
-        if (dx > 5 || dy > 5) {
-          touchMoved = true;
+        if (dx > 8 || dy > 8) {
+          sliderHasDragged = true;
         }
       }
     }, { passive: true });
 
-    strip.addEventListener('touchend', (e) => {
-      if (!touchMoved) {
-        const chip = e.target.closest('.chip');
-        if (chip) {
-          sendChip(chip);
-        }
-      }
-      touchMoved = false;
+    strip.addEventListener('touchend', () => {
       resumeAutoScroll(1500);
+      setTimeout(() => { sliderHasDragged = false; }, 80);
     });
 
     strip.addEventListener('touchcancel', () => {
-      touchMoved = false;
+      sliderHasDragged = false;
       resumeAutoScroll(1500);
     });
   }
