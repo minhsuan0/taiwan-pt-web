@@ -89,11 +89,14 @@ const SYSTEM_PROMPT = `# Role Definition
      * 動作質量 / 質量 ➔ 一律使用「動作品質 / 品質」
    - 嚴格禁止在內文中夾帶不必要的英文醫學單字或縮寫。
 3. 【嚴謹俐落排版，白話清晰標題】：標題一律使用乾淨的中文方括號（如【安全篩檢與就醫指引】、【為什麼會痠痛？常見原因分析】、【你可以這樣做（建議運動與日常調整）】、【應避免的動作】、【參考實證研究】），【嚴禁在標題前加任何 # 井字號或堆砌過多 Emoji】以維護醫療專業權威感。
-4. 【大眾化高品質實證依據（100% 取自下方即時檢索結果）】：
-   - 目的在於讓民眾安心得知「建議有正式醫學研究支持，非網路道聽塗說」。【嚴格禁止使用「PubMed」等艱澀學術英文專有名詞】，請轉換為大眾一看就懂的親民可信用語。
-   - 引用的超連結【必須 100% 取自下方「即時查詢結果」中的真實論文網址】。
-   - 【文獻標題必須與該論文實際內容 1:1 精準對應】：將該篇英文論文的實際研究主題白話翻譯為繁體中文，清楚標註證據類型。
-   - 【若下方即時檢索結果為空或查無文獻】：嚴格禁止自行編造任何 8 位數 PMID 網址或偽造論文連結！若查無文獻，請直接不要輸出【參考實證研究】區塊。
+4. 【大眾化高品質實證依據（嚴格把關相關性，杜絕無關文獻）】：
+   - 【文獻相關性絕對優先（嚴格執行）】：
+     * 只有當下方「即時查詢結果」中的論文主題，與使用者提問的【特定身體部位 / 具體受傷病症】「高度吻合切題」時，才能引用！
+     * 若使用者詢問的是【法規、收費制度、健保自費差異、評估流程、一般觀念釋疑】：【絕對嚴格禁止引用任何臨床論文】！
+     * 若即時查詢結果的主題與提問病症不符，【必須直接捨棄，不要輸出【參考實證研究】區塊】！
+   - 【杜絕 PubMed 艱澀專有名詞】：引用時統稱為「國際醫學實證研究」或「物理治療臨床實證指引」。
+   - 【文獻標題必須與該論文實際內容 1:1 精準對應】：將英文論文實際主題白話翻譯為繁體中文，清楚標註證據類型。
+   - 【若無高度切題文獻或查無結果】：嚴格禁止自行編造任何 PMID 網址或偽造論文連結！直接不要輸出【參考實證研究】區塊，維持高品質與專業度。
    - 引用格式一律使用親民的單行格式：
      【參考實證研究】
      * 國際醫學實證研究：[該篇論文實際主題之繁中白話翻譯]（[查看研究文獻 ↗](即時查詢結果中的真實網址)）
@@ -114,32 +117,38 @@ const SYSTEM_PROMPT = `# Role Definition
 ---
 ⚖️ 免責聲明：本內容由 AI 實證小助手生成，僅供日常衛教參考，可能存在錯誤，無法替代真人專業醫療診斷。依《物理治療師法》第12條，實際處置應依醫師診斷或醫囑執行。若有身體不適，請務必諮詢合格醫師或物理治療師進行面對面臨床評估。`;
 
+// ── 非臨床行政與制度問題排除清單（此類問題絕不檢索論文，避免帶入無關文獻）──────────────
+const PURE_ADMIN_KEYWORDS = [
+  '收費', '費用', '多少錢', '價格', '價目', '健保卡', '健保給付', '無處方', '無醫師處方', '需要處方嗎', '處方箋',
+  '法規', '法律', '修法', '密醫', '資格', '執照', '整復師差異', '國術館', '保險理賠', '掛號流程'
+];
+
 // ── 物理治療專業 MeSH 與臨床英文關鍵字對照庫 ──────────────────────
 const CLINICAL_ME_SH_MAP = [
-  [['下背', '腰痛', '腰痠', '久坐', '腰椎', '閃到腰', '閃腰'], 'low back pain lumbar core stability physical therapy exercise'],
-  [['椎間盤', '椎間盤突出', '坐骨神經', '腳麻', '梨狀肌'], 'lumbar disc herniation radiculopathy sciatica physical therapy exercise'],
-  [['骨盆前傾', '下交叉', '骨盆歪斜', '長短腳'], 'anterior pelvic tilt lower crossed syndrome physical therapy exercise'],
-  [['骨盆後傾', '平背', '駝背', '圓肩', '上交叉', '烏龜頸', '富貴包'], 'upper crossed syndrome thoracic kyphosis forward head posture exercise'],
-  [['落枕', '頸椎', '脖子痛', '脖子轉不過去', '膏盲'], 'cervical neck pain physical therapy exercise mobilization'],
-  [['骨刺', '退化性脊椎', '脊椎滑脫'], 'lumbar spondylolisthesis spinal stenosis physical therapy exercise'],
-  [['內扣', '內夾', '深蹲', '膝蓋內', 'X型腿', '膝外翻'], 'knee valgus dynamic squat hip abductor gluteus medius biomechanics'],
+  [['下背', '腰痛', '腰痠', '久坐腰', '腰椎', '閃到腰', '閃腰'], 'low back pain lumbar core stabilization physical therapy exercise guideline'],
+  [['椎間盤', '椎間盤突出', '坐骨神經', '腳麻', '梨狀肌', '梨狀肌症候群'], 'lumbar disc herniation sciatica piriformis syndrome physical therapy exercise'],
+  [['骨盆前傾', '下交叉', '骨盆歪斜', '長短腳'], 'anterior pelvic tilt lower crossed syndrome physical therapy corrective exercise'],
+  [['骨盆後傾', '平背', '駝背', '圓肩', '上交叉', '烏龜頸', '富貴包'], 'upper crossed syndrome thoracic kyphosis forward head posture physical therapy exercise'],
+  [['落枕', '頸椎', '脖子痛', '脖子轉不過去', '膏盲', '膏盲痛'], 'cervical neck pain stiffness physical therapy exercise mobilization'],
+  [['骨刺', '退化性脊椎', '脊椎滑脫', '脊椎狹窄'], 'lumbar spondylolisthesis spinal stenosis physical therapy exercise'],
+  [['內扣', '內夾', '深蹲膝蓋', '膝蓋內', 'X型腿', '膝外翻'], 'knee valgus dynamic squat hip abductor gluteus medius biomechanics exercise'],
   [['跑者膝', '跑步膝蓋', '膝蓋外側', '髂脛束', 'ITB', 'ITBS'], 'iliotibial band syndrome ITBS runner knee physical therapy exercise'],
-  [['髕骨', '髕骨軟化', '髕骨股骨', '膝蓋痛', '膝蓋卡卡', '退化性關節炎'], 'patellofemoral pain syndrome PFPS knee osteoarthritis physical therapy exercise'],
-  [['跳躍膝', '髕骨肌腱', '髕骨帶'], 'patellar tendinopathy jumper knee eccentric loading exercise'],
+  [['髕骨', '髕骨軟化', '髕骨股骨', '膝蓋痛', '膝蓋卡卡', '退化性膝關節炎', '退化性關節炎'], 'patellofemoral pain syndrome PFPS knee osteoarthritis physical therapy exercise'],
+  [['跳躍膝', '髕骨肌腱', '髕骨帶'], 'patellar tendinopathy jumper knee eccentric loading physical therapy exercise'],
   [['十字韌帶', 'ACL', '前十字', '後十字', '韌帶斷裂', '韌帶開刀'], 'anterior cruciate ligament ACL reconstruction rehabilitation exercise guideline'],
-  [['半月板', '半月軟骨', '半月板撕裂'], 'meniscus tear conservative physical therapy exercise rehabilitation'],
-  [['足底', '足底筋膜', '足跟痛', '腳底痛', '起床第一步', '腳跟刺痛'], 'plantar fasciitis physical therapy stretching loading exercise'],
-  [['翻船', '腳踝', '踝關節', '腳踝扭傷', '扭到腳'], 'ankle sprain inversion physical therapy rehabilitation exercise guideline'],
-  [['扁平足', '足弓', '內側足弓塌陷', '高足弓'], 'pes planus flatfoot arch intrinsic foot muscle exercise physical therapy'],
-  [['阿基里斯', '跟腱', '跟腱炎'], 'Achilles tendinopathy eccentric loading exercise physical therapy'],
-  [['五十肩', '沾黏', '肩膀卡', '凍結肩', '手舉不高', '肩關節囊'], 'adhesive capsulitis frozen shoulder physical therapy exercise mobilization'],
-  [['肩夾擠', '旋轉肌', '旋轉肌袖', '肩膀痛', '夾擠'], 'subacromial impingement rotator cuff tendinopathy physical therapy exercise'],
-  [['媽媽手', '手腕痛', '橈骨莖突', '大拇指痛'], 'De Quervain tenosynovitis physical therapy exercise conservative'],
+  [['半月板', '半月軟骨', '半月板撕裂'], 'meniscus tear conservative physical therapy exercise rehabilitation guideline'],
+  [['足底', '足底筋膜', '足底筋膜炎', '足跟痛', '腳底痛', '起床第一步', '腳跟刺痛'], 'plantar fasciitis physical therapy stretching loading exercise guideline'],
+  [['翻船', '腳踝', '踝關節', '腳踝扭傷', '扭到腳', '腳踝痛'], 'ankle sprain inversion physical therapy rehabilitation exercise guideline'],
+  [['扁平足', '足弓', '內側足弓塌陷', '高足弓'], 'pes planus flatfoot arch intrinsic foot muscle physical therapy exercise'],
+  [['阿基里斯', '跟腱', '跟腱炎', '阿基里斯腱'], 'Achilles tendinopathy eccentric loading exercise physical therapy'],
+  [['五十肩', '沾黏', '肩膀卡', '凍結肩', '手舉不高', '肩關節囊', '沾黏性肩關節囊炎'], 'adhesive capsulitis frozen shoulder physical therapy exercise mobilization guideline'],
+  [['肩夾擠', '旋轉肌', '旋轉肌群', '旋轉肌袖', '肩膀痛', '夾擠'], 'subacromial impingement rotator cuff tendinopathy physical therapy exercise guideline'],
+  [['媽媽手', '手腕痛', '橈骨莖突', '大拇指痛'], 'De Quervain tenosynovitis physical therapy conservative exercise splint'],
   [['網球肘', '高爾夫球肘', '手肘痛', '手肘外側'], 'lateral epicondylitis tennis elbow physical therapy eccentric exercise'],
-  [['手麻', '腕隧道', '正中神經'], 'carpal tunnel syndrome nerve gliding physical therapy exercise'],
-  [['三角纖維軟骨', 'TFCC', '手腕小指側'], 'triangular fibrocartilage complex TFCC wrist physical therapy rehabilitation'],
-  [['離心收縮', '離心訓練', '離心'], 'eccentric exercise physical therapy tendinopathy rehabilitation'],
-  [['等長收縮', '等長訓練'], 'isometric exercise pain relief physical therapy'],
+  [['手麻', '腕隧道', '正中神經', '腕隧道症候群'], 'carpal tunnel syndrome nerve gliding physical therapy exercise'],
+  [['三角纖維軟骨', 'TFCC', '手腕小指側'], 'triangular fibrocartilage complex TFCC wrist physical therapy conservative rehabilitation'],
+  [['離心收縮', '離心訓練', '離心運動'], 'eccentric exercise physical therapy tendinopathy rehabilitation'],
+  [['等長收縮', '等長訓練'], 'isometric exercise pain relief physical therapy tendon'],
   [['向心收縮', '阻力訓練', '肌力訓練'], 'resistance strength training progressive overload physical therapy'],
   [['本體感覺', '平衡訓練', '神經肌肉'], 'proprioception neuromuscular control balance training rehabilitation'],
   [['筋膜放鬆', '滾筒', '筋膜槍', '按摩球'], 'myofascial release foam rolling physical therapy range of motion'],
@@ -170,6 +179,12 @@ function setDynamicCache(key, value) {
 // ── 即時 NCBI/PubMed 檢索函式 ─────────────
 async function searchPubmedDirect(query) {
   try {
+    // 1. 若為法規、收費、健保自費、流程等非臨床問題，直接跳過檢索，杜絕無關文獻
+    if (PURE_ADMIN_KEYWORDS.some(k => query.includes(k))) {
+      return null;
+    }
+
+    // 2. 精準匹配臨床 MeSH 主題詞
     let englishTerms = '';
     for (const [keywords, engQuery] of CLINICAL_ME_SH_MAP) {
       if (keywords.some(k => query.includes(k))) {
@@ -177,15 +192,19 @@ async function searchPubmedDirect(query) {
         break;
       }
     }
+
+    // 3. 若未命中任何特定臨床主題詞，絕不進行萬用兜底檢索（避免帶入無關文獻）
     if (!englishTerms) {
-      englishTerms = 'physical therapy rehabilitation clinical practice guideline exercise';
+      return null;
     }
+
     const esearchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(englishTerms)}&retmode=json&retmax=2&sort=relevance`;
     const esearchRes = await fetch(esearchUrl);
     if (!esearchRes.ok) return null;
     const esearchData = await esearchRes.json();
     const idList = esearchData.esearchresult?.idlist || [];
     if (idList.length === 0) return null;
+
     const esummaryUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${idList.join(',')}&retmode=json`;
     const esummaryRes = await fetch(esummaryUrl);
     if (!esummaryRes.ok) return null;
