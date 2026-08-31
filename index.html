@@ -1783,19 +1783,14 @@
   let autoScrollAnimId = null;
   let isSliderInteracting = false;
   let resumeSliderTimeout = null;
-  let isSliderDragging = false;
-  let sliderHasDragged = false;
-  let sliderStartX = 0;
-  let sliderScrollLeft = 0;
+  let touchMoveDist = 0;
 
   function handleChipClick(e, chip) {
-    if (sliderHasDragged) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+    if (touchMoveDist > 18) {
+      touchMoveDist = 0;
       return;
     }
+    touchMoveDist = 0;
     sendChip(chip);
   }
 
@@ -1883,11 +1878,15 @@
       if (!isSliderDragging) resumeAutoScroll(600);
     });
 
+    let isSliderDragging = false;
+    let sliderStartX = 0;
+    let sliderScrollLeft = 0;
+
     strip.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
       pauseAutoScroll();
       isSliderDragging = true;
-      sliderHasDragged = false;
+      touchMoveDist = 0;
       sliderStartX = e.pageX - strip.offsetLeft;
       sliderScrollLeft = strip.scrollLeft;
     });
@@ -1897,7 +1896,6 @@
       isSliderDragging = false;
       strip.classList.remove('is-dragging');
       resumeAutoScroll(1400);
-      setTimeout(() => { sliderHasDragged = false; }, 80);
     });
 
     strip.addEventListener('mousemove', (e) => {
@@ -1905,8 +1903,8 @@
       e.preventDefault();
       const x = e.pageX - strip.offsetLeft;
       const walk = (x - sliderStartX) * 1.3;
-      if (Math.abs(walk) > 6) {
-        sliderHasDragged = true;
+      touchMoveDist = Math.max(touchMoveDist, Math.abs(walk));
+      if (Math.abs(walk) > 10) {
         strip.classList.add('is-dragging');
       }
       strip.scrollLeft = sliderScrollLeft - walk;
@@ -1929,7 +1927,7 @@
     strip.addEventListener('touchstart', (e) => {
       pauseAutoScroll();
       if (e.touches.length === 1) {
-        sliderHasDragged = false;
+        touchMoveDist = 0;
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
       }
@@ -1940,19 +1938,16 @@
       if (e.touches.length === 1) {
         const dx = Math.abs(e.touches[0].clientX - touchStartX);
         const dy = Math.abs(e.touches[0].clientY - touchStartY);
-        if (dx > 8 || dy > 8) {
-          sliderHasDragged = true;
-        }
+        touchMoveDist = Math.max(touchMoveDist, Math.hypot(dx, dy));
       }
     }, { passive: true });
 
     strip.addEventListener('touchend', () => {
       resumeAutoScroll(1500);
-      setTimeout(() => { sliderHasDragged = false; }, 80);
     });
 
     strip.addEventListener('touchcancel', () => {
-      sliderHasDragged = false;
+      touchMoveDist = 0;
       resumeAutoScroll(1500);
     });
   }
@@ -2843,10 +2838,8 @@
     const text = inputEl.value.trim();
     if (!text || isLoading) return;
 
-    // 清除歡迎卡片並隱藏熱門藥丸列
+    // 清除歡迎卡片
     document.querySelector('.welcome')?.remove();
-    const strip = document.getElementById('suggestions-strip');
-    if (strip) strip.style.display = 'none';
 
     inputEl.value = '';
     inputEl.style.height = '';
@@ -2913,31 +2906,33 @@
         const chunk = decoder.decode(value, { stream: true });
         accumulatedText += chunk;
 
-        // 當接收到第一個資料塊時，移除檢索動畫並創建回答氣泡
-        if (!botMsgDiv) {
-          removeTyping();
-          botMsgDiv = appendMsg('bot', '', '');
-          bubbleEl = botMsgDiv.querySelector('.bubble');
-          followupContainerEl = botMsgDiv.querySelector('.followup-container');
-        }
+        // 僅當真正接收到非空白文字時才移除檢索動畫並建立回答氣泡（防止空白色塊/空白氣泡）
+        if (accumulatedText.trim().length > 0) {
+          if (!botMsgDiv) {
+            removeTyping();
+            botMsgDiv = appendMsg('bot', '', '');
+            bubbleEl = botMsgDiv.querySelector('.bubble');
+            followupContainerEl = botMsgDiv.querySelector('.followup-container');
+          }
 
-        const { body, followups } = parseBotResponse(accumulatedText);
-        if (bubbleEl) bubbleEl.innerHTML = md(body);
+          const { body, followups } = parseBotResponse(accumulatedText);
+          if (bubbleEl && body) bubbleEl.innerHTML = md(body);
 
-        if (followupContainerEl) {
-          if (followups && followups.length > 0) {
-            let fHtml = `
-              <div class="followup-box">
-                <div class="followup-title"><span>💡</span> 延伸探索推薦</div>
-                <div class="followup-list">
-            `;
-            followups.forEach(q => {
-              fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
-            });
-            fHtml += `</div></div>`;
-            followupContainerEl.innerHTML = fHtml;
-          } else {
-            followupContainerEl.innerHTML = '';
+          if (followupContainerEl) {
+            if (followups && followups.length > 0) {
+              let fHtml = `
+                <div class="followup-box">
+                  <div class="followup-title"><span>💡</span> 延伸探索推薦</div>
+                  <div class="followup-list">
+              `;
+              followups.forEach(q => {
+                fHtml += `<button class="followup-chip" data-raw="${escapeAttr(q)}" onclick="sendChip(this)"><span>👉</span> <span>${escapeHtml(q)}</span></button>`;
+              });
+              fHtml += `</div></div>`;
+              followupContainerEl.innerHTML = fHtml;
+            } else {
+              followupContainerEl.innerHTML = '';
+            }
           }
         }
 
@@ -2949,6 +2944,17 @@
       }
 
       removeTyping();
+
+      // 極端防護：若串流完成後累積文字仍為空，自動填入實證自癒衛教，杜絕空白框
+      if (!accumulatedText || !accumulatedText.trim()) {
+        const fallbackText = "針對您的問題，建議先進行基礎動作評估並注意危險警訊（如劇烈劇痛、手腳發麻或無力）。若有持續不適，請及早尋求合格物理治療師或醫師評估。";
+        accumulatedText = fallbackText;
+        if (!botMsgDiv) {
+          botMsgDiv = appendMsg('bot', md(fallbackText), fallbackText);
+        } else if (bubbleEl) {
+          bubbleEl.innerHTML = md(fallbackText);
+        }
+      }
 
       // ✨ 生成完畢：自動平滑定錨至使用者問題與回答開頭
       setTimeout(() => {
