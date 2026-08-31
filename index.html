@@ -1821,22 +1821,26 @@
   function initSuggestionsSlider(strip) {
     if (!strip) return;
 
-    // 啟動自動向左平滑滾動（Auto-scroll）
+    // 啟動自動向左平滑滾動（Auto-scroll，採用浮點累加器解決瀏覽器整數捨入問題）
     if (autoScrollAnimId) cancelAnimationFrame(autoScrollAnimId);
     
-    const scrollSpeed = 0.55; // 每幀向左移動 0.55px
+    const scrollSpeed = 0.75; // 每幀向左平滑移動 0.75px
+    let currentScrollPos = strip.scrollLeft || 0;
 
     function autoScrollLoop() {
-      if (!isSliderInteracting && strip.offsetParent !== null) {
-        strip.scrollLeft += scrollSpeed;
+      if (!isSliderInteracting) {
+        currentScrollPos += scrollSpeed;
         const singleSetWidth = strip.scrollWidth / 3;
         if (singleSetWidth > 0) {
-          if (strip.scrollLeft >= singleSetWidth * 2) {
-            strip.scrollLeft -= singleSetWidth;
-          } else if (strip.scrollLeft <= 0) {
-            strip.scrollLeft += singleSetWidth;
+          if (currentScrollPos >= singleSetWidth * 2) {
+            currentScrollPos -= singleSetWidth;
+          } else if (currentScrollPos <= 0) {
+            currentScrollPos += singleSetWidth;
           }
         }
+        strip.scrollLeft = currentScrollPos;
+      } else {
+        currentScrollPos = strip.scrollLeft;
       }
       autoScrollAnimId = requestAnimationFrame(autoScrollLoop);
     }
@@ -1847,13 +1851,15 @@
 
     function pauseAutoScroll() {
       isSliderInteracting = true;
+      currentScrollPos = strip.scrollLeft;
       if (resumeSliderTimeout) clearTimeout(resumeSliderTimeout);
     }
 
-    function resumeAutoScroll(delay = 1400) {
+    function resumeAutoScroll(delay = 1200) {
       if (resumeSliderTimeout) clearTimeout(resumeSliderTimeout);
       resumeSliderTimeout = setTimeout(() => {
         isSliderInteracting = false;
+        currentScrollPos = strip.scrollLeft;
       }, delay);
     }
 
@@ -1863,8 +1869,10 @@
       if (singleSetWidth > 0) {
         if (strip.scrollLeft >= singleSetWidth * 2) {
           strip.scrollLeft -= singleSetWidth;
+          currentScrollPos = strip.scrollLeft;
         } else if (strip.scrollLeft <= 5) {
           strip.scrollLeft += singleSetWidth;
+          currentScrollPos = strip.scrollLeft;
         }
       }
     }, { passive: true });
@@ -1875,7 +1883,7 @@
     });
 
     strip.addEventListener('mouseleave', () => {
-      if (!isSliderDragging) resumeAutoScroll(600);
+      if (!isSliderDragging) resumeAutoScroll(500);
     });
 
     let isSliderDragging = false;
@@ -1895,7 +1903,7 @@
       if (!isSliderDragging) return;
       isSliderDragging = false;
       strip.classList.remove('is-dragging');
-      resumeAutoScroll(1400);
+      resumeAutoScroll(1200);
     });
 
     strip.addEventListener('mousemove', (e) => {
@@ -1908,6 +1916,7 @@
         strip.classList.add('is-dragging');
       }
       strip.scrollLeft = sliderScrollLeft - walk;
+      currentScrollPos = strip.scrollLeft;
     });
 
     // 2. 桌面滑鼠滾輪水平滑動 (Mouse Wheel to Horizontal Scroll)
@@ -1916,8 +1925,9 @@
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         e.preventDefault();
         strip.scrollLeft += e.deltaY * 0.9;
+        currentScrollPos = strip.scrollLeft;
       }
-      resumeAutoScroll(1400);
+      resumeAutoScroll(1200);
     }, { passive: false });
 
     // 3. 手機端觸控事件（Touch Swipe & Tap）
@@ -1939,16 +1949,17 @@
         const dx = Math.abs(e.touches[0].clientX - touchStartX);
         const dy = Math.abs(e.touches[0].clientY - touchStartY);
         touchMoveDist = Math.max(touchMoveDist, Math.hypot(dx, dy));
+        currentScrollPos = strip.scrollLeft;
       }
     }, { passive: true });
 
     strip.addEventListener('touchend', () => {
-      resumeAutoScroll(1500);
+      resumeAutoScroll(1200);
     });
 
     strip.addEventListener('touchcancel', () => {
       touchMoveDist = 0;
-      resumeAutoScroll(1500);
+      resumeAutoScroll(1200);
     });
   }
 
