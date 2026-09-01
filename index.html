@@ -1126,6 +1126,71 @@
       color: #FF3B30;
       background: rgba(255, 59, 48, 0.08);
     }
+    .drawer-footer-zone {
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      border-top: 1px solid #E5E7EB;
+      background: #FFFFFF;
+      flex-shrink: 0;
+    }
+    .drawer-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 0.85rem;
+      background: #F9FAFB;
+      border: 1px solid #E5E7EB;
+      border-radius: 0.75rem;
+      color: #111827;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .drawer-action-btn:hover, .drawer-action-btn:active {
+      background: #F3F4F6;
+      border-color: #D1D5DB;
+    }
+    .drawer-action-btn .btn-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #111827;
+      font-weight: 600;
+    }
+    .drawer-action-btn .btn-badge {
+      font-size: 0.72rem;
+      color: #0284C7;
+      background: #E0F2FE;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .drawer-action-btn .btn-line-badge {
+      font-size: 0.74rem;
+      color: #06C755;
+      font-weight: 700;
+    }
+    .drawer-sec-hint {
+      font-size: 0.68rem;
+      color: #6B7280;
+    }
+    .drawer-empty-title {
+      font-weight: 600;
+      color: #111827;
+      font-size: 0.95rem;
+    }
+    .drawer-empty-desc {
+      font-size: 0.75rem;
+      color: #8E8E93;
+      margin-top: 0.35rem;
+      line-height: 1.5;
+    }
 
     @media (max-width: 480px) {
       .input-area { padding: 0.6rem 0.75rem 0.25rem; gap: 0.5rem; }
@@ -1742,6 +1807,38 @@
         color: #ff453a;
         background: rgba(255, 69, 58, 0.12);
       }
+      .drawer-footer-zone {
+        background: #1C1C1E;
+        border-top-color: #38383A;
+      }
+      .drawer-action-btn {
+        background: #2C2C2E;
+        border-color: #3A3A3C;
+        color: #F9FAFB;
+      }
+      .drawer-action-btn:hover, .drawer-action-btn:active {
+        background: #3A3A3C;
+        border-color: #48484A;
+      }
+      .drawer-action-btn .btn-left {
+        color: #F9FAFB;
+      }
+      .drawer-action-btn .btn-badge {
+        color: #38BDF8;
+        background: rgba(56, 189, 248, 0.15);
+      }
+      .drawer-action-btn .btn-line-badge {
+        color: #06C755;
+      }
+      .drawer-sec-hint {
+        color: #8E8E93;
+      }
+      .drawer-empty-title {
+        color: #F9FAFB;
+      }
+      .drawer-empty-desc {
+        color: #9CA3AF;
+      }
 
       /* Search Status & Typing Indicator */
       .search-status {
@@ -2028,29 +2125,29 @@
   </div>
 
   <!-- 底部拇指黃金熱區 (Thumb Zone) · 溫暖支持與預約評估 -->
-  <div style="padding: 0.75rem 0.85rem; display: flex; flex-direction: column; gap: 0.45rem; border-top: 1px solid var(--border-color); background: var(--bg-primary); flex-shrink: 0;">
+  <div class="drawer-footer-zone">
     <!-- 請喝咖啡 -->
-    <button type="button" onclick="closeHistoryDrawer(); openJkoModal();" style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.75rem; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:0.75rem; color:var(--text-primary); font-weight:600; font-size:0.83rem; cursor:pointer; transition:all 0.15s ease;">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-        <span style="font-size:1rem;">☕</span>
+    <button type="button" class="drawer-action-btn" onclick="closeHistoryDrawer(); openJkoModal();">
+      <div class="btn-left">
+        <span style="font-size:1.05rem;">☕</span>
         <span>請物治團隊喝杯咖啡</span>
       </div>
-      <span style="font-size:0.72rem; color:var(--text-secondary); background:rgba(0,122,255,0.08); padding:2px 6px; border-radius:4px;">街口 / 銀行掃碼</span>
+      <span class="btn-badge">街口 / 銀行掃碼</span>
     </button>
 
     <!-- 官方 LINE 諮詢 -->
-    <a href="https://lin.ee/y6VBRuh" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.75rem; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:0.75rem; color:var(--text-primary); font-weight:600; font-size:0.83rem; text-decoration:none; transition:all 0.15s ease;">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
+    <a href="https://lin.ee/y6VBRuh" target="_blank" rel="noopener noreferrer" class="drawer-action-btn">
+      <div class="btn-left">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="#06C755">
           <path d="M24 10.3c0-4.8-5.4-8.8-12-8.8S0 5.5 0 10.3c0 4.3 3.8 8 9.3 8.7.4.1.9.3 1 .6.1.4 0 .9-.1 1.4l-.4 2.3c-.1.7-.4 2.7 1.2 1.5 1.6-1.2 8.6-5.1 11.7-8.7 1-1.6 1.3-3.6 1.3-5.5z"/>
         </svg>
         <span>預約治療師一對一評估</span>
       </div>
-      <span style="font-size:0.74rem; color:#06C755;">諮詢 ↗</span>
+      <span class="btn-line-badge">諮詢 ↗</span>
     </a>
 
     <div style="display:flex; justify-content:space-between; align-items:center; padding-top:4px;">
-      <span style="font-size:0.68rem; color:var(--text-secondary);">🔒 本地安全儲存</span>
+      <span class="drawer-sec-hint">🔒 本地安全儲存</span>
       <button class="drawer-clear-btn" onclick="clearAllHistory()" style="padding:2px 6px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.75rem;height:0.75rem;">
           <polyline points="3 6 5 6 21 6"/>
@@ -3808,8 +3905,8 @@
       bodyEl.innerHTML = `
         <div class="drawer-empty">
           <div style="font-size:1.6rem;margin-bottom:0.4rem;">💬</div>
-          <div style="font-weight:600;color:var(--gray-900);">尚無諮詢紀錄</div>
-          <div style="font-size:0.75rem;color:#8E8E93;margin-top:0.35rem;line-height:1.5;">
+          <div class="drawer-empty-title">尚無諮詢紀錄</div>
+          <div class="drawer-empty-desc">
             你向實證助手諮詢的對話<br>會自動安全保存在本裝置中
           </div>
         </div>
@@ -4290,13 +4387,14 @@
   </div>
 
   <!-- 🎨 電腦版/未支援原生分享環境專屬「分享衛教內容」Modal -->
+  <!-- 分享對話彈窗 Modal (純靜態/原生分享/Web Share API) -->
   <div id="share-modal" class="modal-backdrop" onclick="if(event.target===this)closeShareModal()">
-    <div class="modal-card" style="max-width:380px; padding: 22px 20px; box-sizing:border-box; text-align:center; background:var(--card-bg, #ffffff);">
-      <div class="modal-header" style="margin-bottom:12px; padding:0 0 10px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0; font-size:1.15rem; font-weight:700; color:var(--text-primary);">分享衛教內容</h3>
-        <button class="modal-close" onclick="closeShareModal()" aria-label="關閉" style="font-size:1.4rem; background:none; border:none; color:var(--text-secondary); cursor:pointer;">&times;</button>
+    <div class="modal-card" style="max-width:380px; padding:20px; box-sizing:border-box; text-align:center;">
+      <div class="modal-header" style="margin-bottom:12px; padding:0 0 10px; display:flex; justify-content:space-between; align-items:center;">
+        <span class="modal-title" style="font-size:1.15rem; font-weight:700;">分享衛教內容</span>
+        <button type="button" class="modal-close-btn" onclick="closeShareModal()" aria-label="關閉">✕</button>
       </div>
-      <p id="share-modal-topic" style="margin:0 0 16px; font-size:0.9rem; color:var(--text-secondary); font-weight:600; text-align:left;"></p>
+      <p id="share-modal-topic" style="margin:0 0 16px; font-size:0.9rem; color:#6B7280; font-weight:600; text-align:left;"></p>
       
       <div style="display:flex; flex-direction:column; gap:10px;">
         <!-- 分享至 LINE -->
@@ -4308,7 +4406,7 @@
         </button>
 
         <!-- 下載衛教圖卡 -->
-        <button type="button" onclick="downloadShareCard(this)" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); font-weight:600; font-size:0.95rem; border-radius:12px; cursor:pointer; outline:none;">
+        <button type="button" class="jko-close-btn" onclick="downloadShareCard(this)" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; font-weight:600; font-size:0.95rem; border-radius:12px; cursor:pointer;">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
