@@ -1,7 +1,7 @@
 {
   "name": "taiwan-pt-web",
   "version": "1.0.0",
-  "description": "台灣物理治療助手 — 公開查詢服務",
+  "description": "\u53f0\u7063\u7269\u7406\u6cbb\u7642\u52a9\u624b \u2014 \u516c\u958b\u67e5\u8a62\u670d\u52d9",
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
@@ -17,7 +17,7 @@
     "@vercel/speed-insights": "^2.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   },
   "license": "MIT",
   "devDependencies": {
