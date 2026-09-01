@@ -3066,22 +3066,15 @@
             </svg>
             <span>需改進</span>
           </button>
-          <button class="action-pill-btn" onclick="copyMsgText(this, '${msgId}')" title="複製純文字內容">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            <span>複製文字</span>
-          </button>
           <button class="action-pill-btn" onclick="directShareImage(this, '${msgId}')" title="分享衛教圖卡至 LINE / IG / 其他軟體">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
               <polyline points="16 6 12 2 8 6"/>
               <line x1="12" y1="2" x2="12" y2="15"/>
             </svg>
-            <span>分享</span>
+            <span>分享圖卡</span>
           </button>
-          <button class="action-pill-btn" onclick="openJkoModal()" title="隨喜請物治團隊喝杯咖啡" style="color:#D97706; border-color:rgba(217,119,6,0.25); background:rgba(217,119,6,0.06);">
+          <button class="action-pill-btn" onclick="triggerCoffeeDonation()" title="隨喜請物治團隊喝杯咖啡" style="color:#D97706; border-color:rgba(217,119,6,0.25); background:rgba(217,119,6,0.06); font-weight:700;">
             <span style="font-size:0.9rem; margin-right:4px;">☕</span>
             <span>請喝咖啡</span>
           </button>
@@ -3525,7 +3518,25 @@
   }
 
 
-  // ── ☕ 街口支付支持贊助彈窗控制 ─────────────────────────
+  // ── ☕ 街口支付一鍵跳轉與贊助彈窗控制 ─────────────────────
+  function triggerCoffeeDonation() {
+    triggerHaptic('light');
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      // 手機端嘗試直接喚起街口 App
+      try {
+        window.location.href = 'jkos://';
+      } catch (e) {}
+    }
+    // 同步開啟收款資訊彈窗（提供 TWQR 掃碼與複製帳號雙重保障）
+    openJkoModal();
+  }
+
+  function openJkoApp() {
+    triggerHaptic('light');
+    window.location.href = 'jkos://';
+  }
+
   function openJkoModal() {
     triggerHaptic('light');
     const modal = document.getElementById('jko-modal');
@@ -4012,6 +4023,12 @@
       <p style="margin:0 0 14px; font-size:0.85rem; color:var(--text-secondary); line-height:1.5; text-align:left;">
         臺灣物理治療實證助手為非營利公開衛教工具。若本站解答對您的健康生活有所幫助，歡迎隨喜請團隊喝杯咖啡，支持伺服器與 AI 算力維護！
       </p>
+
+      <!-- 手機端一鍵開啟街口 App 按鈕 -->
+      <button type="button" onclick="openJkoApp()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; background:#EB2228; color:#FFFFFF; border:none; border-radius:12px; font-weight:700; font-size:0.95rem; cursor:pointer; margin-bottom:14px; box-shadow:0 3px 10px rgba(235,34,40,0.3);">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; background:#FFFFFF; color:#EB2228; border-radius:6px; font-size:0.8rem; font-weight:900;">街</span>
+        <span>直接開啟街口 App 轉帳 ↗</span>
+      </button>
 
       <!-- 街口支付 / TWQR 永久收款碼卡片 -->
       <div style="background:#FFFFFF; border:1px solid #E5E5EA; border-radius:14px; padding:14px 10px 10px; margin-bottom:14px; box-shadow:0 4px 16px rgba(0,0,0,0.06); display:inline-block; max-width:100%;">
