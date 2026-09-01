@@ -2509,72 +2509,107 @@
         // 2px Subtle Border
         drawRoundedRect(ctx, cardX, cardY, cardW, cardH, cardRadius, null, 'rgba(0, 0, 0, 0.06)', 2);
 
-        // 3. Top Header: Brand Pill & Spaced Topic Title
+        // 3. Top Header: Brand Pill & Sub-Header
         const pillX = 96;
         const pillY = 96;
-        const pillW = 400;
-        const pillH = 64;
-        drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 32, '#F0FDF4', '#BBF7D0', 1.5);
+        const pillW = 390;
+        const pillH = 60;
+        drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 30, '#F0FDF4', '#BBF7D0', 1.5);
         
-        drawSpineIcon(ctx, pillX + 32, pillY + 32, 38);
+        drawSpineIcon(ctx, pillX + 30, pillY + 30, 36);
 
         ctx.fillStyle = '#0284C7';
-        ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('臺灣物理治療實證助手', pillX + 62, pillY + 41);
+        ctx.font = 'bold 26px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('臺灣物理治療實證助手', pillX + 60, pillY + 39);
 
         ctx.fillStyle = '#64748B';
         ctx.font = '600 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText('✓ 國際臨床實證指引', cardX + cardW - 48, pillY + 41);
+        ctx.fillText('✓ 國際臨床實證指引', cardX + cardW - 48, pillY + 39);
         ctx.textAlign = 'left';
 
-        // Main Topic Title (Spaced down from pill for generous breathing room)
+        // 4. Main Topic Title (Auto-scaling & Multiline Word-wrap, Zero Overflow)
         let cleanTopic = cleanStringNoEmoji(topic) || '物理治療實證衛教指南';
-        if (cleanTopic.length > 20) cleanTopic = cleanTopic.substring(0, 20) + '…';
+        cleanTopic = cleanTopic.replace(/^主題[：:]\s*/, '').replace(/^【(.*?)】$/, '$1').trim();
+
+        const titleMaxW = 888;
+        let titleFontSize = 46;
+        let titleLineHeight = 56;
+        ctx.font = `bold ${titleFontSize}px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif`;
+        let titleLines = wrapText(ctx, cleanTopic, titleMaxW);
+
+        if (titleLines.length > 2 || cleanTopic.length > 18) {
+          titleFontSize = 38;
+          titleLineHeight = 48;
+          ctx.font = `bold ${titleFontSize}px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif`;
+          titleLines = wrapText(ctx, cleanTopic, titleMaxW);
+        }
+
+        if (titleLines.length > 2) {
+          titleLines = [titleLines[0], titleLines[1] + '…'];
+        }
+
+        let titleY = 205;
         ctx.fillStyle = '#0F172A';
-        ctx.font = 'bold 54px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText(cleanTopic, 96, 222);
+        titleLines.forEach((tLine) => {
+          ctx.fillText(tLine, 96, titleY);
+          titleY += titleLineHeight;
+        });
 
         // Principle Tag Pill
         const subPillX = 96;
-        const subPillY = 270;
-        const subPillW = 470;
-        const subPillH = 48;
-        drawRoundedRect(ctx, subPillX, subPillY, subPillW, subPillH, 24, '#F1F5F9', null);
+        const subPillY = titleY + 6;
+        const subPillW = 460;
+        const subPillH = 44;
+        drawRoundedRect(ctx, subPillX, subPillY, subPillW, subPillH, 22, '#F1F5F9', null);
         ctx.fillStyle = '#475569';
-        ctx.font = '600 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('循序漸進 · 無痛原則 · 建議每日 2–3 次', subPillX + 26, subPillY + 31);
+        ctx.font = '600 22px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('循序漸進 · 無痛原則 · 建議每日 2–3 次', subPillX + 24, subPillY + 28);
 
-        // 4. Parse & Extract 3 Core Highlights (Safety, Action, Avoid)
+        // 5. Robust Section Parser (Excluding Header Noise and Topic Echos)
         let cleanText = cleanStringNoEmoji(fullRawText);
+        cleanText = cleanText.replace(/【(?:臺灣物理治療實證衛教指引|物理治療實證衛教|實證衛教指引)】/gi, '');
+        cleanText = cleanText.replace(/^主題[：:][^\n]*\n+/gi, '');
+
         const rawLines = cleanText.split('\n');
         const sections = [];
         let curSec = null;
 
         rawLines.forEach(l => {
           const t = l.trim();
-          if (!t || t.startsWith('---') || t.startsWith('【相關探索】') || t.startsWith('【延伸探索】')) return;
-          if (t.startsWith('【') && t.includes('】')) {
+          if (!t || t.startsWith('---') || t.startsWith('【相關探索】') || t.startsWith('【延伸探索】') || t.startsWith('💡 尋求專業') || t.startsWith('⚖️ 免責聲明')) return;
+          
+          const isSectionHeader = (t.startsWith('【') && t.includes('】')) || /^#{1,4}\s+/.test(t);
+          if (isSectionHeader) {
+            const rawTitle = t.replace(/[【】#]/g, '').trim();
+            if (rawTitle.includes('臺灣物理治療') || (rawTitle.includes('衛教指引') && !rawTitle.includes('安全') && !rawTitle.includes('動作') && !rawTitle.includes('避免'))) {
+              return;
+            }
             if (curSec && curSec.items.length > 0) sections.push(curSec);
-            const title = t.replace(/[【】]/g, '').trim();
-            curSec = { title, items: [] };
+            curSec = { title: rawTitle, items: [] };
           } else if (curSec) {
-            if (t.startsWith('【相關探索】') || t.startsWith('【延伸探索】')) return;
-            const item = t.replace(/^[•\*\-\d\.]+\s*/, '').replace(/\[(.*?)\]\(https?:\/\/[^\)]+\)/g, '$1').trim();
-            if (item && !item.startsWith('AI 生成內容') && !item.startsWith('相關探索') && !item.startsWith('延伸探索') && !item.startsWith('───')) {
+            let item = t.replace(/^[•\*\-\d\.]+\s*/, '').replace(/\[(.*?)\]\(https?:\/\/[^\)]+\)/g, '$1').trim();
+            if (item.startsWith('主題：') || item === cleanTopic || item.startsWith('AI 生成內容') || item.startsWith('相關探索') || item.startsWith('延伸探索') || item.startsWith('───')) {
+              return;
+            }
+            if (item.length >= 4) {
               curSec.items.push(item);
             }
           }
         });
         if (curSec && curSec.items.length > 0) sections.push(curSec);
 
-        // Extract 3 Core Sections (Ensuring Mutually Exclusive Matching)
-        let safetySec = sections.find(s => s.title.includes('安全') || s.title.includes('就醫') || s.title.includes('警訊'));
-        let avoidSec = sections.find(s => s.title.includes('避免') || s.title.includes('禁忌') || s.title.includes('注意'));
-        let actionSec = sections.find(s => s !== safetySec && s !== avoidSec && (s.title.includes('這樣做') || s.title.includes('建議') || s.title.includes('運動') || s.title.includes('日常') || s.title.includes('動作') || s.title.includes('指引')));
+        // 6. Match 3 Distinct Clinical Highlights
+        let safetySec = sections.find(s => s.title.includes('安全') || s.title.includes('就醫') || s.title.includes('警訊') || s.title.includes('紅旗') || s.title.includes('危險'));
+        let avoidSec = sections.find(s => s.title.includes('避免') || s.title.includes('禁忌') || s.title.includes('注意') || s.title.includes('不要') || s.title.includes('代償'));
+        let actionSec = sections.find(s => s !== safetySec && s !== avoidSec && (s.title.includes('建議') || s.title.includes('動作') || s.title.includes('運動') || s.title.includes('日常') || s.title.includes('調整') || s.title.includes('這樣做') || s.title.includes('訓練') || s.title.includes('自測') || s.title.includes('自我檢測') || s.title.includes('伸展')));
+
+        if (!actionSec) {
+          actionSec = sections.find(s => s !== safetySec && s !== avoidSec && s.items.length > 0);
+        }
 
         const coreCards = [];
-        if (safetySec) {
+        if (safetySec && safetySec.items.length > 0) {
           coreCards.push({
             title: '安全篩檢與就醫警訊',
             titleColor: '#D97706',
@@ -2585,7 +2620,7 @@
             items: safetySec.items.slice(0, 2)
           });
         }
-        if (actionSec) {
+        if (actionSec && actionSec.items.length > 0) {
           coreCards.push({
             title: '建議動作與日常調整',
             titleColor: '#0284C7',
@@ -2596,7 +2631,7 @@
             items: actionSec.items.slice(0, 3)
           });
         }
-        if (avoidSec) {
+        if (avoidSec && avoidSec.items.length > 0) {
           coreCards.push({
             title: '應避免的動作',
             titleColor: '#DC2626',
@@ -2608,121 +2643,132 @@
           });
         }
 
-        // Fallback if structured sections not detected
-        if (coreCards.length === 0) {
-          const nonEmpties = rawLines.map(r => r.trim()).filter(r => r.length > 3 && !r.startsWith('---'));
-          coreCards.push({
-            title: '安全篩檢與就醫警訊',
-            titleColor: '#D97706',
-            bg: '#FFFBEB',
-            border: '#FDE68A',
-            badgeColor: '#D97706',
-            isAction: false,
-            items: nonEmpties.slice(0, 2)
-          });
-          coreCards.push({
-            title: '建議動作與日常調整',
-            titleColor: '#0284C7',
-            bg: '#F0F9FF',
-            border: '#BAE6FD',
-            badgeColor: '#0284C7',
-            isAction: true,
-            items: nonEmpties.slice(2, 5)
-          });
-          coreCards.push({
-            title: '應避免的動作',
-            titleColor: '#DC2626',
-            bg: '#FEF2F2',
-            border: '#FECACA',
-            badgeColor: '#DC2626',
-            isAction: false,
-            items: nonEmpties.slice(5, 7)
-          });
+        // Fallback if needed
+        if (coreCards.length < 2) {
+          const meaningfulLines = rawLines.map(r => r.replace(/^[•\*\-\d\.]+\s*/, '').trim()).filter(r => r.length > 6 && !r.startsWith('---') && !r.startsWith('主題：') && !r.includes('物理治療實證'));
+          if (coreCards.length === 0) {
+            coreCards.push({
+              title: '安全篩檢與就醫警訊',
+              titleColor: '#D97706',
+              bg: '#FFFBEB',
+              border: '#FDE68A',
+              badgeColor: '#D97706',
+              isAction: false,
+              items: meaningfulLines.slice(0, 2)
+            });
+            coreCards.push({
+              title: '建議動作與日常調整',
+              titleColor: '#0284C7',
+              bg: '#F0F9FF',
+              border: '#BAE6FD',
+              badgeColor: '#0284C7',
+              isAction: true,
+              items: meaningfulLines.slice(2, 5)
+            });
+            coreCards.push({
+              title: '應避免的動作',
+              titleColor: '#DC2626',
+              bg: '#FEF2F2',
+              border: '#FECACA',
+              badgeColor: '#DC2626',
+              isAction: false,
+              items: meaningfulLines.slice(5, 7)
+            });
+          }
         }
 
-        // 5. Draw 3 Large-Font High-Contrast Cards (32px font, 48px line height, 36px card gap)
-        let curY = 360;
+        // 7. Dynamic Layout & Spacing Calculation (Filling Canvas Gracefully)
+        let curY = subPillY + subPillH + 32;
         const secCardW = 888;
         const innerW = secCardW - 68;
+        const footerY = 1720;
+        const availableHeight = footerY - curY - 30;
 
-        coreCards.forEach((sec, cIdx) => {
-          ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        const cardMeasurements = coreCards.map(sec => {
+          ctx.font = '500 30px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
           const itemLinesArr = [];
           sec.items.forEach(it => {
             const wrapped = wrapText(ctx, it, sec.isAction ? innerW - 64 : innerW - 40);
             itemLinesArr.push(wrapped);
           });
-
           const totalLines = itemLinesArr.reduce((sum, lines) => sum + lines.length, 0);
-          const cardH = 86 + totalLines * 48 + itemLinesArr.length * 18;
+          const cardH = 80 + totalLines * 46 + itemLinesArr.length * 16;
+          return { sec, itemLinesArr, cardH };
+        });
 
-          // Card Background
-          drawRoundedRect(ctx, 96, curY, secCardW, cardH, 28, sec.bg, sec.border, 2);
+        const totalCardsH = cardMeasurements.reduce((sum, c) => sum + c.cardH, 0);
+        let dynamicGap = 28;
+        if (coreCards.length > 1) {
+          const remainingSpace = availableHeight - totalCardsH;
+          if (remainingSpace > 60) {
+            dynamicGap = Math.min(Math.floor(remainingSpace / (coreCards.length - 1)), 48);
+          }
+        }
 
-          // Card Title (Large 34px)
-          ctx.font = 'bold 34px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        // 8. Render Cards with Crisp Typography
+        cardMeasurements.forEach(({ sec, itemLinesArr, cardH }) => {
+          drawRoundedRect(ctx, 96, curY, secCardW, cardH, 26, sec.bg, sec.border, 2);
+
+          ctx.font = 'bold 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
           ctx.fillStyle = sec.titleColor;
-          ctx.fillText(sec.title, 136, curY + 48);
+          ctx.fillText(sec.title, 136, curY + 46);
 
-          // Card Items (Large 32px, line-height 48px)
-          let itemY = curY + 102;
-          ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+          let itemY = curY + 96;
+          ctx.font = '500 30px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
 
           itemLinesArr.forEach((lines, iIdx) => {
             if (sec.isAction) {
-              // Action Number Badge
               const badgeX = 136;
-              const badgeY = itemY - 28;
-              drawRoundedRect(ctx, badgeX, badgeY, 40, 40, 20, sec.badgeColor);
+              const badgeY = itemY - 26;
+              drawRoundedRect(ctx, badgeX, badgeY, 38, 38, 19, sec.badgeColor);
               ctx.fillStyle = '#FFFFFF';
-              ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, sans-serif';
+              ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, sans-serif';
               ctx.textAlign = 'center';
-              ctx.fillText((iIdx + 1).toString(), badgeX + 20, badgeY + 29);
+              ctx.fillText((iIdx + 1).toString(), badgeX + 19, badgeY + 27);
               ctx.textAlign = 'left';
 
               ctx.fillStyle = '#0F172A';
-              ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+              ctx.font = '500 30px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
               lines.forEach(lineText => {
-                ctx.fillText(lineText, 196, itemY + 2);
-                itemY += 48;
+                ctx.fillText(lineText, 192, itemY + 2);
+                itemY += 46;
               });
-              itemY += 18;
+              itemY += 16;
             } else {
-              // Bullet Dot
               ctx.fillStyle = sec.badgeColor;
               ctx.beginPath();
-              ctx.arc(148, itemY - 8, 7, 0, Math.PI * 2);
+              ctx.arc(146, itemY - 8, 6.5, 0, Math.PI * 2);
               ctx.fill();
 
               ctx.fillStyle = '#1E293B';
               lines.forEach(lineText => {
-                ctx.fillText(lineText, 178, itemY);
-                itemY += 48;
+                ctx.fillText(lineText, 172, itemY);
+                itemY += 46;
               });
-              itemY += 16;
+              itemY += 14;
             }
           });
 
-          curY += cardH + 36;
+          curY += cardH + dynamicGap;
         });
 
-        // 6. Bottom Brand Footer
+        // 9. Bottom Brand Footer
         ctx.strokeStyle = '#E2E8F0';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(96, 1720);
-        ctx.lineTo(cardX + cardW - 48, 1720);
+        ctx.moveTo(96, footerY);
+        ctx.lineTo(cardX + cardW - 48, footerY);
         ctx.stroke();
 
-        drawSpineIcon(ctx, 134, 1762, 42);
+        drawSpineIcon(ctx, 134, footerY + 44, 40);
 
         ctx.fillStyle = '#0F172A';
         ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('臺灣物理治療實證助手', 168, 1758);
+        ctx.fillText('臺灣物理治療實證助手', 168, footerY + 40);
 
         ctx.fillStyle = '#64748B';
         ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('AI 衛教內容僅供參考，無法替代實體醫療診斷 · 依物理治療師法執行', 168, 1788);
+        ctx.fillText('AI 衛教內容僅供參考，無法替代實體醫療診斷 · 依物理治療師法執行', 168, footerY + 70);
 
         canvas.toBlob(blob => {
           if (blob) resolve(blob);
@@ -2734,7 +2780,7 @@
     });
   }
 
-    // ── 📤 分享衛教圖卡至其他軟體（LINE / IG / Threads / 原生分享）────
+  // ── 📤 分享衛教圖卡至其他軟體（LINE / IG / Threads / 原生分享）────
   async function directShareImage(btn, msgId) {
     triggerHaptic('medium');
 
@@ -2755,7 +2801,7 @@
         }
         if (prev) {
           const userText = prev.innerText.trim();
-          if (userText) topic = userText.substring(0, 24);
+          if (userText) topic = userText;
         }
       }
 
