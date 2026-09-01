@@ -2728,8 +2728,11 @@
       const blob = await generateApple1080x1920CardBlob(topic, text);
       const file = new File([blob], filename, { type: 'image/png' });
 
-      // 若裝置原生支援檔案分享（如手機 Safari / Chrome），直接喚起原生分享視窗
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      // 判斷是否為手機觸控裝置
+      const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && window.innerWidth <= 820);
+
+      // 若為手機端且支援原生檔案分享（如手機 Safari / Chrome），喚起手機原生分享面板
+      if (isMobileDevice && navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
             files: [file],
@@ -2749,7 +2752,7 @@
         }
       }
 
-      // 電腦端或不支援原生檔案分享時：開啟質感「分享衛教指引與圖卡」專屬視窗
+      // 電腦版或非手機環境：一律直接彈出 Apple 質感專屬分享視窗（含 LINE 分享、下載圖卡、複製文字、複製圖片）
       openShareModal(topic, text, blob, filename);
       btn.innerHTML = origHtml;
     } catch (err) {
