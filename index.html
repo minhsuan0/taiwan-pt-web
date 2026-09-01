@@ -48,6 +48,10 @@
   <meta name="twitter:description" content="即時查詢 PubMed 實證文獻、臨床指南與臺灣《物理治療師法》。" />
   <meta name="twitter:image" content="https://taiwan-pt-web.vercel.app/og-image.png?v=3" />
 
+  <!-- Vercel Speed Insights & Web Analytics (Real User Performance Monitoring) -->
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -2269,11 +2273,31 @@
 
     if (!bestText) return '';
 
-    // 4. 若為 Raw Markdown，提取 body
-    const parsed = parseBotResponse(bestText);
-    const textToClean = (parsed && parsed.body && parsed.body.length > 80) ? parsed.body : bestText;
+    // 4. 取得對應的使用者提問標題
+    let userTopic = '';
+    if (msgEl) {
+      let prev = msgEl.previousElementSibling;
+      while (prev && !prev.classList.contains('user')) {
+        prev = prev.previousElementSibling;
+      }
+      if (prev) {
+        userTopic = prev.innerText.trim();
+      }
+    }
 
-    return cleanMarkdownForClipboard(textToClean);
+    // 5. 整理全文，保留 100% 完整內容
+    let textToClean = bestText;
+    const followupRegex = /【(?:💡\s*)?(?:相關探索|延伸探索)】([\s\S]*?)(?=(?:\n\s*【|\n\s*---|💡\s*尋求專業|⚖️\s*免責聲明|$))/i;
+    textToClean = textToClean.replace(followupRegex, '');
+    textToClean = textToClean.replace(/---+\s*(?:⚖️\s*)?免責聲明[\s\S]*$/i, '').trim();
+
+    let cleaned = cleanMarkdownForClipboard(textToClean);
+
+    if (userTopic && !cleaned.includes(userTopic)) {
+      cleaned = `【臺灣物理治療實證衛教指引】\n主題：${userTopic}\n\n${cleaned}`;
+    }
+
+    return cleaned;
   }
 
   function enableActionBarDrag(el) {
@@ -2445,47 +2469,41 @@
         // 2px Subtle Border
         drawRoundedRect(ctx, cardX, cardY, cardW, cardH, cardRadius, null, 'rgba(0, 0, 0, 0.06)', 2);
 
-        // 3. Top Header: Brand Pill & Topic Title
+        // 3. Top Header: Brand Pill & Spaced Topic Title
         const pillX = 96;
         const pillY = 96;
-        const pillW = 360;
-        const pillH = 54;
-        drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 27, '#EFF6FF', '#BFDBFE', 1.5);
+        const pillW = 400;
+        const pillH = 64;
+        drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 32, '#F0FDF4', '#BBF7D0', 1.5);
         
-        drawSpineIcon(ctx, pillX + 28, pillY + 27, 34);
+        drawSpineIcon(ctx, pillX + 32, pillY + 32, 38);
 
         ctx.fillStyle = '#0284C7';
-        ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('臺灣物理治療實證助手', pillX + 56, pillY + 35);
+        ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('臺灣物理治療實證助手', pillX + 62, pillY + 41);
 
         ctx.fillStyle = '#64748B';
-        ctx.font = '600 21px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.font = '600 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText('✓ 國際臨床實證指引', cardX + cardW - 48, pillY + 35);
+        ctx.fillText('✓ 國際臨床實證指引', cardX + cardW - 48, pillY + 41);
         ctx.textAlign = 'left';
 
-        // Main Topic Title (Large & Bold)
+        // Main Topic Title (Spaced down from pill for generous breathing room)
         let cleanTopic = cleanStringNoEmoji(topic) || '物理治療實證衛教指南';
-        if (cleanTopic.length > 18) cleanTopic = cleanTopic.substring(0, 18) + '…';
+        if (cleanTopic.length > 20) cleanTopic = cleanTopic.substring(0, 20) + '…';
         ctx.fillStyle = '#0F172A';
-        ctx.font = 'bold 44px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText(cleanTopic, 96, 196);
-
-        // Gradient Accent Line
-        const lineGrad = ctx.createLinearGradient(96, 0, 276, 0);
-        lineGrad.addColorStop(0, '#007AFF');
-        lineGrad.addColorStop(1, '#00C7BE');
-        drawRoundedRect(ctx, 96, 222, 180, 6, 3, lineGrad);
+        ctx.font = 'bold 54px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText(cleanTopic, 96, 222);
 
         // Principle Tag Pill
         const subPillX = 96;
-        const subPillY = 246;
-        const subPillW = 460;
-        const subPillH = 42;
-        drawRoundedRect(ctx, subPillX, subPillY, subPillW, subPillH, 21, '#F1F5F9', null);
+        const subPillY = 270;
+        const subPillW = 470;
+        const subPillH = 48;
+        drawRoundedRect(ctx, subPillX, subPillY, subPillW, subPillH, 24, '#F1F5F9', null);
         ctx.fillStyle = '#475569';
-        ctx.font = '500 20px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('循序漸進 · 無痛原則 · 建議每日 2–3 次', subPillX + 22, subPillY + 27);
+        ctx.font = '600 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('循序漸進 · 無痛原則 · 建議每日 2–3 次', subPillX + 26, subPillY + 31);
 
         // 4. Parse & Extract 3 Core Highlights (Safety, Action, Avoid)
         let cleanText = cleanStringNoEmoji(fullRawText);
@@ -2582,70 +2600,70 @@
           });
         }
 
-        // 5. Draw 3 Large-Font High-Contrast Cards
-        let curY = 320;
+        // 5. Draw 3 Large-Font High-Contrast Cards (32px font, 48px line height, 36px card gap)
+        let curY = 360;
         const secCardW = 888;
-        const innerW = secCardW - 64;
+        const innerW = secCardW - 68;
 
         coreCards.forEach((sec, cIdx) => {
-          ctx.font = 'normal 26px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+          ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
           const itemLinesArr = [];
           sec.items.forEach(it => {
-            const wrapped = wrapText(ctx, it, sec.isAction ? innerW - 56 : innerW - 36);
+            const wrapped = wrapText(ctx, it, sec.isAction ? innerW - 64 : innerW - 40);
             itemLinesArr.push(wrapped);
           });
 
           const totalLines = itemLinesArr.reduce((sum, lines) => sum + lines.length, 0);
-          const cardH = 76 + totalLines * 40 + itemLinesArr.length * 12;
+          const cardH = 86 + totalLines * 48 + itemLinesArr.length * 18;
 
           // Card Background
-          drawRoundedRect(ctx, 96, curY, secCardW, cardH, 26, sec.bg, sec.border, 2);
+          drawRoundedRect(ctx, 96, curY, secCardW, cardH, 28, sec.bg, sec.border, 2);
 
-          // Card Title (Large 30px)
-          ctx.font = 'bold 30px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+          // Card Title (Large 34px)
+          ctx.font = 'bold 34px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
           ctx.fillStyle = sec.titleColor;
-          ctx.fillText(sec.title, 136, curY + 44);
+          ctx.fillText(sec.title, 136, curY + 48);
 
-          // Card Items (Large 26px, line-height 40px)
-          let itemY = curY + 88;
-          ctx.font = 'normal 26px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+          // Card Items (Large 32px, line-height 48px)
+          let itemY = curY + 102;
+          ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
 
           itemLinesArr.forEach((lines, iIdx) => {
             if (sec.isAction) {
               // Action Number Badge
               const badgeX = 136;
-              const badgeY = itemY - 24;
-              drawRoundedRect(ctx, badgeX, badgeY, 36, 36, 18, sec.badgeColor);
+              const badgeY = itemY - 28;
+              drawRoundedRect(ctx, badgeX, badgeY, 40, 40, 20, sec.badgeColor);
               ctx.fillStyle = '#FFFFFF';
-              ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, sans-serif';
+              ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, sans-serif';
               ctx.textAlign = 'center';
-              ctx.fillText((iIdx + 1).toString(), badgeX + 18, badgeY + 26);
+              ctx.fillText((iIdx + 1).toString(), badgeX + 20, badgeY + 29);
               ctx.textAlign = 'left';
 
               ctx.fillStyle = '#0F172A';
-              ctx.font = 'normal 26px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+              ctx.font = '500 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
               lines.forEach(lineText => {
-                ctx.fillText(lineText, 188, itemY + 2);
-                itemY += 40;
+                ctx.fillText(lineText, 196, itemY + 2);
+                itemY += 48;
               });
-              itemY += 14;
+              itemY += 18;
             } else {
               // Bullet Dot
               ctx.fillStyle = sec.badgeColor;
               ctx.beginPath();
-              ctx.arc(146, itemY - 6, 6, 0, Math.PI * 2);
+              ctx.arc(148, itemY - 8, 7, 0, Math.PI * 2);
               ctx.fill();
 
               ctx.fillStyle = '#1E293B';
               lines.forEach(lineText => {
-                ctx.fillText(lineText, 172, itemY);
-                itemY += 40;
+                ctx.fillText(lineText, 178, itemY);
+                itemY += 48;
               });
-              itemY += 12;
+              itemY += 16;
             }
           });
 
-          curY += cardH + 24;
+          curY += cardH + 36;
         });
 
         // 6. Bottom Brand Footer
@@ -2709,51 +2727,109 @@
       const filename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
       const blob = await generateApple1080x1920CardBlob(topic, text);
       const file = new File([blob], filename, { type: 'image/png' });
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-      if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: '臺灣物理治療實證衛教',
-          text: '臺灣物理治療實證衛教指引'
-        });
-        btn.innerHTML = origHtml;
-      } else {
-        // 電腦版或不支援 Web Share Sheet：複製圖片至剪貼簿
-        let copied = false;
-        if (navigator.clipboard && navigator.clipboard.write) {
-          try {
-            await navigator.clipboard.write([
-              new ClipboardItem({ 'image/png': blob })
-            ]);
-            copied = true;
-          } catch (e) {}
-        }
-        if (copied) {
-          btn.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            <span>已複製圖卡！可直接貼上分享</span>
-          `;
-          setTimeout(() => { btn.innerHTML = origHtml; }, 2200);
-        } else {
-          // 直接下載
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          a.click();
-          URL.revokeObjectURL(url);
+      // 若裝置原生支援檔案分享（如手機 Safari / Chrome），直接喚起原生分享視窗
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: '臺灣物理治療實證衛教',
+            text: `【臺灣物理治療實證衛教】${topic}\nhttps://taiwan-pt-web.vercel.app`
+          });
           btn.innerHTML = origHtml;
+          return;
+        } catch (e) {
+          if (e.name === 'AbortError') {
+            btn.innerHTML = origHtml;
+            return;
+          }
+          openShareModal(topic, text, blob, filename);
+          btn.innerHTML = origHtml;
+          return;
         }
       }
+
+      // 電腦端或不支援原生檔案分享時：開啟質感「分享衛教指引與圖卡」專屬視窗
+      openShareModal(topic, text, blob, filename);
+      btn.innerHTML = origHtml;
     } catch (err) {
       if (err.name !== 'AbortError') {
         console.error('[Share image error]', err);
       }
       btn.innerHTML = origHtml;
     }
+  }
+
+  // ── 🎨 電腦版/跨裝置專屬「分享衛教圖卡與指引」彈窗 ───────────────
+  let currentShareBlob = null;
+  let currentShareFilename = '';
+  let currentShareTopic = '';
+  let currentShareText = '';
+
+  function openShareModal(topic, text, blob, filename) {
+    currentShareTopic = topic;
+    currentShareText = text;
+    currentShareBlob = blob;
+    currentShareFilename = filename;
+
+    const modal = document.getElementById('share-modal');
+    const topicEl = document.getElementById('share-modal-topic');
+    if (topicEl) topicEl.textContent = topic;
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeShareModal() {
+    const modal = document.getElementById('share-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  function shareToLine() {
+    const shareUrl = encodeURIComponent(`https://taiwan-pt-web.vercel.app`);
+    const text = encodeURIComponent(`【臺灣物理治療實證助手】${currentShareTopic}\n\n${currentShareText.substring(0, 260)}...\n\n完整衛教指引：`);
+    window.open(`https://line.me/R/msg/text/?${text}%0A${shareUrl}`, '_blank');
+  }
+
+  function downloadShareCard() {
+    if (!currentShareBlob) return;
+    const url = URL.createObjectURL(currentShareBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentShareFilename || '臺灣物理治療實證衛教.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  async function copyShareCardImage(btn) {
+    if (!currentShareBlob) return;
+    try {
+      if (navigator.clipboard && navigator.clipboard.write) {
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': currentShareBlob })
+        ]);
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<span>已複製圖卡！可直接貼上</span>';
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      }
+    } catch (e) {
+      downloadShareCard();
+    }
+  }
+
+  function copyShareText(btn) {
+    if (!currentShareText) return;
+    copyToClipboard(currentShareText, () => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<span>已複製文字！</span>';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    });
   }
 
   // ── 剪貼簿跨裝置相容複製工具（完美相容 iOS Safari / LINE 內置 / Android Chrome / 電腦端）──────
@@ -2957,7 +3033,8 @@
     // 移除氣泡內部可能殘留的免責聲明段落（保持氣泡內部純淨）
     raw = raw.replace(/---+\s*(?:⚖️\s*)?免責聲明[\s\S]*$/i, '').trim();
 
-    const followupRegex = /【(?:💡\s*)?(?:相關探索|延伸探索)】([\s\S]*?)(?=(?:---|【?需要運動物理治療師|💡 尋求專業|⚖️ 免責聲明|$))/i;
+    // 精確匹配【相關探索】區塊（絕不向後誤吞【你可以這樣做】、【應避免的動作】等後續重要章節）
+    const followupRegex = /【(?:💡\s*)?(?:相關探索|延伸探索)】([\s\S]*?)(?=(?:\n\s*【|\n\s*---|💡\s*尋求專業|⚖️\s*免責聲明|$))/i;
     const match = raw.match(followupRegex);
 
     if (!match) return { body: raw, followups: [] };
@@ -3815,6 +3892,55 @@
     </div>
   </div>
 
+  <!-- 🎨 電腦版/跨裝置「分享衛教圖卡與指引」專屬 Modal -->
+  <div id="share-modal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeShareModal()">
+    <div class="modal-card" style="max-width:440px; padding: 26px 24px;">
+      <div class="modal-header" style="margin-bottom:12px;">
+        <h3 style="margin:0; font-size:1.25rem; font-weight:700; color:var(--text-primary);">分享衛教圖卡與指引</h3>
+        <button class="modal-close" onclick="closeShareModal()" aria-label="關閉" style="font-size:1.5rem;">&times;</button>
+      </div>
+      <p id="share-modal-topic" style="margin:0 0 18px; font-size:0.95rem; color:var(--text-secondary); font-weight:600;"></p>
+      
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <!-- 分享至 LINE -->
+        <button type="button" class="action-pill-btn" onclick="shareToLine()" style="justify-content:center; padding:12px; background:#06C755; color:#FFFFFF; border:none; font-weight:700; font-size:1rem; border-radius:14px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right:6px;">
+            <path d="M24 10.3c0-4.8-5.4-8.8-12-8.8S0 5.5 0 10.3c0 4.3 3.8 8 9.3 8.7.4.1.9.3 1 .6.1.4 0 .9-.1 1.4l-.4 2.3c-.1.7-.4 2.7 1.2 1.5 1.6-1.2 8.6-5.1 11.7-8.7 1-1.6 1.3-3.6 1.3-5.5z"/>
+          </svg>
+          <span>分享至 LINE 好友 / 群組</span>
+        </button>
+
+        <!-- 下載高畫質圖卡 -->
+        <button type="button" class="action-pill-btn" onclick="downloadShareCard()" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>下載 1080×1920 高畫質圖卡 (PNG)</span>
+        </button>
+
+        <!-- 複製純文字內容 -->
+        <button type="button" class="action-pill-btn" onclick="copyShareText(this)" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span>複製完整衛教文字</span>
+        </button>
+
+        <!-- 複製圖卡圖片 -->
+        <button type="button" class="action-pill-btn" onclick="copyShareCardImage(this)" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span>複製圖卡圖片（剪貼簿直接貼上）</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
 
