@@ -851,32 +851,67 @@
       padding: 2px 8px;
       border-radius: 20px;
     }
-    .jko-account-box {
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
+    /* ── JKO 2-Step Unified Action Rows ──────────────────── */
+    .jko-step-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 12px;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
       border-radius: 12px;
-      padding: 8px 12px;
       margin-bottom: 8px;
       cursor: pointer;
       transition: all 0.15s ease;
+      text-align: left;
     }
-    .jko-account-box:hover, .jko-account-box:active {
-      background: #F3F4F6;
-      border-color: #D1D5DB;
+    .jko-step-row:hover, .jko-step-row:active {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+      transform: translateY(-1px);
     }
-    .jko-account-label {
-      font-size: 0.72rem;
-      color: #6B7280;
-      font-weight: 700;
+    .jko-step-left-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
     }
-    .jko-account-num {
-      font-size: 1.1rem;
+    .jko-step-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #EB2228;
+      color: #FFFFFF;
       font-weight: 800;
-      color: #111827;
-      letter-spacing: 0.5px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
-    .jko-copy-badge {
-      padding: 6px 12px;
+    .jko-step-content {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .jko-step-hint {
+      font-size: 0.72rem;
+      color: #64748B;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .jko-step-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+      margin-top: 1px;
+    }
+    .jko-step-action-btn {
+      padding: 6px 11px;
       background: #EB2228;
       color: #FFFFFF;
       border: none;
@@ -889,6 +924,32 @@
       align-items: center;
       gap: 4px;
       flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(235, 34, 40, 0.2);
+    }
+    .jko-step-action-btn:hover {
+      background: #D41B21;
+      transform: scale(0.98);
+    }
+    .jko-step-action-btn .mini-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      background: #FFFFFF;
+      color: #EB2228;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 900;
+    }
+    /* Legacy support */
+    .jko-account-box {
+      background: #F9FAFB;
+      border: 1px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
     }
     .jko-app-btn {
       width: 100%;
@@ -905,12 +966,6 @@
       font-size: 0.92rem;
       cursor: pointer;
       margin-bottom: 8px;
-      box-shadow: 0 3px 10px rgba(235,34,40,0.25);
-      transition: all 0.15s ease;
-    }
-    .jko-app-btn:hover, .jko-app-btn:active {
-      background: #D41B21;
-      transform: scale(0.98);
     }
     .jko-qr-card {
       background: #FFFFFF;
@@ -1964,6 +2019,20 @@
       /* JKO Modal Dark Mode */
       .jko-desc {
         color: #D1D5DB;
+      }
+      .jko-step-row {
+        background: #2C2C2E;
+        border-color: #3A3A3C;
+      }
+      .jko-step-row:hover, .jko-step-row:active {
+        background: #3A3A3C;
+        border-color: #48484A;
+      }
+      .jko-step-hint {
+        color: #9CA3AF;
+      }
+      .jko-step-val {
+        color: #FFFFFF;
       }
       .jko-account-box, .jko-sec-box {
         background: #2C2C2E;
@@ -3873,11 +3942,11 @@
         const origBadge = badge.innerHTML;
         badge.innerHTML = '✓ 已複製！';
         badge.style.background = '#10B981';
-        if (label) label.textContent = '❶ 帳號已複製至剪貼簿！';
+        if (label) label.textContent = '帳號已複製至剪貼簿！';
         setTimeout(() => {
           badge.innerHTML = origBadge;
           badge.style.background = '';
-          if (label) label.textContent = '❶ 街口帳號（點擊即複製）';
+          if (label) label.textContent = '街口帳號（點擊即複製）';
         }, 2200);
       } else if (el) {
         const labelEl = el.querySelector('.jko-account-label');
@@ -4369,25 +4438,35 @@
         <span class="jko-badge-easy">✓ 隨喜心意無負擔</span>
       </div>
 
-      <!-- 步驟 ❶：點擊直接複製帳號卡片 -->
-      <div class="jko-account-box" onclick="copyJkoAccount(this)" title="點擊複製帳號">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="text-align:left;">
-            <div id="jko-account-step-label" class="jko-account-label">❶ 街口帳號（點擊即複製）</div>
-            <div class="jko-account-num">901290119</div>
+      <!-- 步驟 ❶：複製街口帳號 -->
+      <div class="jko-step-row" onclick="copyJkoAccount(this)" title="點擊複製帳號">
+        <div class="jko-step-left-group">
+          <div class="jko-step-badge">1</div>
+          <div class="jko-step-content">
+            <div id="jko-account-step-label" class="jko-step-hint">街口帳號（點擊即複製）</div>
+            <div class="jko-step-val">901290119</div>
           </div>
-          <button type="button" id="jko-copy-badge" class="jko-copy-badge" onclick="event.stopPropagation(); copyJkoAccount(this.closest('.jko-account-box'));">
-            <span>📋 點擊複製</span>
-          </button>
         </div>
+        <button type="button" id="jko-copy-badge" class="jko-step-action-btn" onclick="event.stopPropagation(); copyJkoAccount(this.closest('.jko-step-row'));">
+          <span>📋 點擊複製</span>
+        </button>
         <div id="jko-account-val" style="display:none;">901290119</div>
       </div>
 
       <!-- 步驟 ❷：一鍵開啟街口 App 貼上轉帳 -->
-      <button type="button" class="jko-app-btn" onclick="openJkoApp()">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; background:#FFFFFF; color:#EB2228; border-radius:5px; font-size:0.75rem; font-weight:900;">街</span>
-        <span>❷ 一鍵開啟街口 App 貼上轉帳 ↗</span>
-      </button>
+      <div class="jko-step-row" onclick="openJkoApp()" title="開啟街口 App 轉帳">
+        <div class="jko-step-left-group">
+          <div class="jko-step-badge">2</div>
+          <div class="jko-step-content">
+            <div class="jko-step-hint">打開後於搜尋欄貼上轉帳</div>
+            <div class="jko-step-val">街口支付 App</div>
+          </div>
+        </div>
+        <button type="button" class="jko-step-action-btn" onclick="event.stopPropagation(); openJkoApp();">
+          <span class="mini-logo">街</span>
+          <span>開啟轉帳 ↗</span>
+        </button>
+      </div>
 
       <!-- 街口支付 / TWQR 永久收款碼卡片 -->
       <div class="jko-qr-card">
