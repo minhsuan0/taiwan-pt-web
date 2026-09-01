@@ -1705,6 +1705,23 @@
         border-color: #48484A;
         color: #63E6E2;
       }
+
+      /* Modal Dark Mode */
+      .modal-card {
+        background: #1C1C1E;
+        border: 1px solid #38383A;
+        color: #FFFFFF;
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);
+      }
+      .modal-header {
+        border-bottom: 1px solid #2C2C2E !important;
+      }
+      .modal-title, .modal-header h3 {
+        color: #FFFFFF !important;
+      }
+      #share-modal-topic {
+        color: #8E8E93 !important;
+      }
     }
   </style>
 </head>
@@ -2697,11 +2714,6 @@
     // ── 📤 分享衛教圖卡至其他軟體（LINE / IG / Threads / 原生分享）────
   async function directShareImage(btn, msgId) {
     triggerHaptic('medium');
-    const origHtml = btn.innerHTML;
-    btn.innerHTML = `
-      <div class="search-spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:4px;"></div>
-      <span>處理中…</span>
-    `;
 
     try {
       const msgDiv = (msgId ? document.querySelector(`.msg.bot[data-id="${msgId}"]`) : null) || (btn ? btn.closest('.msg') : null);
@@ -2725,41 +2737,49 @@
       }
 
       const filename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
-      const blob = await generateApple1080x1920CardBlob(topic, text);
-      const file = new File([blob], filename, { type: 'image/png' });
-
-      // 判斷是否為手機觸控裝置
       const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && window.innerWidth <= 820);
 
-      // 若為手機端且支援原生檔案分享（如手機 Safari / Chrome），喚起手機原生分享面板
-      if (isMobileDevice && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
+      // 電腦端：0ms 立即彈出 Apple 質感專屬分享選單（極致流暢、無任何卡頓）
+      if (!isMobileDevice) {
+        openShareModal(topic, text, null, filename);
+        // 背景預先生成 Canvas Blob
+        generateApple1080x1920CardBlob(topic, text).then(b => { currentShareBlob = b; }).catch(console.error);
+        return;
+      }
+
+      // 手機端：顯示載入中並喚起原生分享面板
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.innerHTML = `
+          <div class="search-spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:4px;"></div>
+          <span>處理中…</span>
+        `;
+      }
+
+      try {
+        const blob = await generateApple1080x1920CardBlob(topic, text);
+        const file = new File([blob], filename, { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
             title: '臺灣物理治療實證衛教',
             text: `【臺灣物理治療實證衛教】${topic}\nhttps://taiwan-pt-web.vercel.app`
           });
-          btn.innerHTML = origHtml;
+          if (btn) btn.innerHTML = origHtml;
           return;
-        } catch (e) {
-          if (e.name === 'AbortError') {
-            btn.innerHTML = origHtml;
-            return;
-          }
+        } else {
           openShareModal(topic, text, blob, filename);
-          btn.innerHTML = origHtml;
-          return;
+          if (btn) btn.innerHTML = origHtml;
         }
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          openShareModal(topic, text, null, filename);
+        }
+        if (btn) btn.innerHTML = origHtml;
       }
-
-      // 電腦版或非手機環境：一律直接彈出 Apple 質感專屬分享視窗（含 LINE 分享、下載圖卡、複製文字、複製圖片）
-      openShareModal(topic, text, blob, filename);
-      btn.innerHTML = origHtml;
     } catch (err) {
-      if (err.name !== 'AbortError') {
-        console.error('[Share image error]', err);
-      }
-      btn.innerHTML = origHtml;
+      console.error('[Share image error]', err);
     }
   }
 
@@ -2779,7 +2799,7 @@
     const topicEl = document.getElementById('share-modal-topic');
     if (topicEl) topicEl.textContent = topic;
     if (modal) {
-      modal.style.display = 'flex';
+      modal.classList.add('show');
       document.body.style.overflow = 'hidden';
     }
   }
@@ -2787,51 +2807,89 @@
   function closeShareModal() {
     const modal = document.getElementById('share-modal');
     if (modal) {
-      modal.style.display = 'none';
+      modal.classList.remove('show');
       document.body.style.overflow = '';
     }
   }
 
   function shareToLine() {
     const shareUrl = encodeURIComponent(`https://taiwan-pt-web.vercel.app`);
-    const text = encodeURIComponent(`【臺灣物理治療實證助手】${currentShareTopic}\n\n${currentShareText.substring(0, 260)}...\n\n完整衛教指引：`);
-    window.open(`https://line.me/R/msg/text/?${text}%0A${shareUrl}`, '_blank');
+    const previewSummary = currentShareText ? currentShareText.substring(0, 200).replace(/[#*`_]/g, '').trim() : '';
+    const text = encodeURIComponent(`【臺灣物理治療實證衛教】${currentShareTopic}\n\n${previewSummary}...\n\n完整實證指引：`);
+    window.open(`https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${text}`, '_blank');
   }
 
-  function downloadShareCard() {
-    if (!currentShareBlob) return;
-    const url = URL.createObjectURL(currentShareBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = currentShareFilename || '臺灣物理治療實證衛教.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  async function ensureShareBlob() {
+    if (currentShareBlob) return currentShareBlob;
+    currentShareBlob = await generateApple1080x1920CardBlob(currentShareTopic, currentShareText);
+    return currentShareBlob;
+  }
+
+  async function downloadShareCard(btn) {
+    let orig = '';
+    if (btn) {
+      orig = btn.innerHTML;
+      btn.innerHTML = `<div class="search-spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></div><span>生成圖卡中…</span>`;
+    }
+    try {
+      const blob = await ensureShareBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = currentShareFilename || '臺灣物理治療實證衛教.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('[Download card error]', e);
+    } finally {
+      if (btn) btn.innerHTML = orig;
+    }
   }
 
   async function copyShareCardImage(btn) {
-    if (!currentShareBlob) return;
+    let orig = '';
+    if (btn) {
+      orig = btn.innerHTML;
+      btn.innerHTML = `<div class="search-spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></div><span>處理中…</span>`;
+    }
     try {
+      const blob = await ensureShareBlob();
       if (navigator.clipboard && navigator.clipboard.write) {
         await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': currentShareBlob })
+          new ClipboardItem({ 'image/png': blob })
         ]);
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<span>已複製圖卡！可直接貼上</span>';
-        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        if (btn) {
+          btn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>已複製圖卡！可直接貼上</span>
+          `;
+          setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        }
+      } else {
+        downloadShareCard(btn);
       }
     } catch (e) {
-      downloadShareCard();
+      downloadShareCard(btn);
     }
   }
 
   function copyShareText(btn) {
     if (!currentShareText) return;
     copyToClipboard(currentShareText, () => {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '<span>已複製文字！</span>';
-      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      const orig = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.innerHTML = `
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>已複製完整文字！</span>
+        `;
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      }
     });
   }
 
@@ -3896,11 +3954,11 @@
   </div>
 
   <!-- 🎨 電腦版/跨裝置「分享衛教圖卡與指引」專屬 Modal -->
-  <div id="share-modal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeShareModal()">
-    <div class="modal-card" style="max-width:440px; padding: 26px 24px;">
-      <div class="modal-header" style="margin-bottom:12px;">
-        <h3 style="margin:0; font-size:1.25rem; font-weight:700; color:var(--text-primary);">分享衛教圖卡與指引</h3>
-        <button class="modal-close" onclick="closeShareModal()" aria-label="關閉" style="font-size:1.5rem;">&times;</button>
+  <div id="share-modal" class="modal-backdrop" onclick="if(event.target===this)closeShareModal()">
+    <div class="modal-card" style="max-width:440px; padding: 26px 24px; box-sizing:border-box;">
+      <div class="modal-header" style="margin-bottom:12px; padding:0 0 12px; border-bottom:1px solid var(--border-color);">
+        <h3 style="margin:0; font-size:1.2rem; font-weight:700; color:var(--text-primary);">分享衛教圖卡與指引</h3>
+        <button class="modal-close" onclick="closeShareModal()" aria-label="關閉" style="font-size:1.5rem; background:none; border:none; color:var(--text-secondary); cursor:pointer;">&times;</button>
       </div>
       <p id="share-modal-topic" style="margin:0 0 18px; font-size:0.95rem; color:var(--text-secondary); font-weight:600;"></p>
       
@@ -3914,7 +3972,7 @@
         </button>
 
         <!-- 下載高畫質圖卡 -->
-        <button type="button" class="action-pill-btn" onclick="downloadShareCard()" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
+        <button type="button" class="action-pill-btn" onclick="downloadShareCard(this)" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
