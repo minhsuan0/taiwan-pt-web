@@ -1238,9 +1238,21 @@
     .drawer-action-btn .btn-left {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
       color: #111827;
       font-weight: 600;
+      flex: 1;
+      min-width: 0;
+    }
+    .drawer-action-btn .btn-icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+      line-height: 1;
     }
     .drawer-action-btn .btn-badge {
       font-size: 0.72rem;
@@ -1249,11 +1261,13 @@
       padding: 2px 6px;
       border-radius: 4px;
       font-weight: 600;
+      flex-shrink: 0;
     }
     .drawer-action-btn .btn-line-badge {
       font-size: 0.74rem;
       color: #06C755;
       font-weight: 700;
+      flex-shrink: 0;
     }
     .drawer-sec-hint {
       font-size: 0.68rem;
@@ -2012,8 +2026,26 @@
       .modal-title, .modal-header h3 {
         color: #FFFFFF !important;
       }
+      .modal-body {
+        color: #F3F4F6 !important;
+      }
+      .modal-body p {
+        color: #F3F4F6 !important;
+      }
+      .modal-body strong {
+        color: #FFFFFF !important;
+      }
+      .modal-close-btn {
+        background: #2C2C2E;
+        color: #D1D5DB;
+        border: 1px solid #3A3A3C;
+      }
+      .modal-close-btn:hover {
+        background: #3A3A3C;
+        color: #FFFFFF;
+      }
       #share-modal-topic {
-        color: #8E8E93 !important;
+        color: #9CA3AF !important;
       }
 
       /* JKO Modal Dark Mode */
@@ -2229,18 +2261,20 @@
     <!-- 請喝咖啡 -->
     <button type="button" class="drawer-action-btn" onclick="closeHistoryDrawer(); openJkoModal();">
       <div class="btn-left">
-        <span style="font-size:1.05rem;">☕</span>
+        <div class="btn-icon">☕</div>
         <span>請團隊喝杯咖啡</span>
       </div>
-      <span class="btn-badge">街口 / 銀行掃碼</span>
+      <span class="btn-badge">街口轉帳</span>
     </button>
 
     <!-- 官方 LINE 諮詢 -->
     <a href="https://lin.ee/y6VBRuh" target="_blank" rel="noopener noreferrer" class="drawer-action-btn">
       <div class="btn-left">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="#06C755">
-          <path d="M24 10.3c0-4.8-5.4-8.8-12-8.8S0 5.5 0 10.3c0 4.3 3.8 8 9.3 8.7.4.1.9.3 1 .6.1.4 0 .9-.1 1.4l-.4 2.3c-.1.7-.4 2.7 1.2 1.5 1.6-1.2 8.6-5.1 11.7-8.7 1-1.6 1.3-3.6 1.3-5.5z"/>
-        </svg>
+        <div class="btn-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="#06C755">
+            <path d="M24 10.3c0-4.8-5.4-8.8-12-8.8S0 5.5 0 10.3c0 4.3 3.8 8 9.3 8.7.4.1.9.3 1 .6.1.4 0 .9-.1 1.4l-.4 2.3c-.1.7-.4 2.7 1.2 1.5 1.6-1.2 8.6-5.1 11.7-8.7 1-1.6 1.3-3.6 1.3-5.5z"/>
+          </svg>
+        </div>
         <span>預約治療師一對一評估</span>
       </div>
       <span class="btn-line-badge">諮詢 ↗</span>
