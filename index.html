@@ -2566,7 +2566,17 @@
         ctx.font = '600 22px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
         ctx.fillText('循序漸進 · 無痛原則 · 建議每日 2–3 次', subPillX + 24, subPillY + 28);
 
-        // 5. Robust Section Parser (Excluding Header Noise and Topic Echos)
+        // 5. Robust Section Parser (Excluding Header Noise & Transitional Sentences)
+        function isTransitionalNoise(str) {
+          if (!str) return true;
+          const s = str.trim();
+          if (s.length < 4) return true;
+          if (/^(操作步驟|動作步驟|訓練步驟|指引|運動方式|運動要點|執行方式|步驟|建議事項)?(如下|如下：|如下:)$/.test(s)) return true;
+          if (/^以下為?(彈力帶|核心|物理治療|動作|操作)?(步驟|要點|指引|建議)?(如下|如下：|如下:)$/.test(s)) return true;
+          if (s.endsWith('步驟如下：') || s.endsWith('步驟如下:') || s.endsWith('指引如下：') || s.endsWith('指引如下:')) return true;
+          return false;
+        }
+
         let cleanText = cleanStringNoEmoji(fullRawText);
         cleanText = cleanText.replace(/【(?:臺灣物理治療實證衛教指引|物理治療實證衛教|實證衛教指引)】/gi, '');
         cleanText = cleanText.replace(/^主題[：:][^\n]*\n+/gi, '');
@@ -2592,6 +2602,7 @@
             if (item.startsWith('主題：') || item === cleanTopic || item.startsWith('AI 生成內容') || item.startsWith('相關探索') || item.startsWith('延伸探索') || item.startsWith('───')) {
               return;
             }
+            if (isTransitionalNoise(item)) return;
             if (item.length >= 4) {
               curSec.items.push(item);
             }
@@ -2645,7 +2656,7 @@
 
         // Fallback if needed
         if (coreCards.length < 2) {
-          const meaningfulLines = rawLines.map(r => r.replace(/^[•\*\-\d\.]+\s*/, '').trim()).filter(r => r.length > 6 && !r.startsWith('---') && !r.startsWith('主題：') && !r.includes('物理治療實證'));
+          const meaningfulLines = rawLines.map(r => r.replace(/^[•\*\-\d\.]+\s*/, '').trim()).filter(r => r.length > 6 && !r.startsWith('---') && !r.startsWith('主題：') && !r.includes('物理治療實證') && !isTransitionalNoise(r));
           if (coreCards.length === 0) {
             coreCards.push({
               title: '安全篩檢與就醫警訊',
@@ -2678,10 +2689,10 @@
         }
 
         // 7. Dynamic Layout & Spacing Calculation (Filling Canvas Gracefully)
-        let curY = subPillY + subPillH + 32;
+        let curY = subPillY + subPillH + 30;
         const secCardW = 888;
         const innerW = secCardW - 68;
-        const footerY = 1720;
+        const footerY = 1690;
         const availableHeight = footerY - curY - 30;
 
         const cardMeasurements = coreCards.map(sec => {
@@ -2692,28 +2703,28 @@
             itemLinesArr.push(wrapped);
           });
           const totalLines = itemLinesArr.reduce((sum, lines) => sum + lines.length, 0);
-          const cardH = 80 + totalLines * 46 + itemLinesArr.length * 16;
+          const cardH = 82 + totalLines * 48 + itemLinesArr.length * 18;
           return { sec, itemLinesArr, cardH };
         });
 
         const totalCardsH = cardMeasurements.reduce((sum, c) => sum + c.cardH, 0);
-        let dynamicGap = 28;
+        let dynamicGap = 26;
         if (coreCards.length > 1) {
           const remainingSpace = availableHeight - totalCardsH;
-          if (remainingSpace > 60) {
-            dynamicGap = Math.min(Math.floor(remainingSpace / (coreCards.length - 1)), 48);
+          if (remainingSpace > 50) {
+            dynamicGap = Math.min(Math.floor(remainingSpace / (coreCards.length - 1)), 46);
           }
         }
 
-        // 8. Render Cards with Crisp Typography
+        // 8. Render Cards with Crisp Typography & Perfect Indentation
         cardMeasurements.forEach(({ sec, itemLinesArr, cardH }) => {
           drawRoundedRect(ctx, 96, curY, secCardW, cardH, 26, sec.bg, sec.border, 2);
 
           ctx.font = 'bold 32px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
           ctx.fillStyle = sec.titleColor;
-          ctx.fillText(sec.title, 136, curY + 46);
+          ctx.fillText(sec.title, 136, curY + 48);
 
-          let itemY = curY + 96;
+          let itemY = curY + 102;
           ctx.font = '500 30px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
 
           itemLinesArr.forEach((lines, iIdx) => {
@@ -2731,7 +2742,7 @@
               ctx.font = '500 30px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
               lines.forEach(lineText => {
                 ctx.fillText(lineText, 192, itemY + 2);
-                itemY += 46;
+                itemY += 48;
               });
               itemY += 16;
             } else {
@@ -2743,7 +2754,7 @@
               ctx.fillStyle = '#1E293B';
               lines.forEach(lineText => {
                 ctx.fillText(lineText, 172, itemY);
-                itemY += 46;
+                itemY += 48;
               });
               itemY += 14;
             }
@@ -2752,7 +2763,7 @@
           curY += cardH + dynamicGap;
         });
 
-        // 9. Bottom Brand Footer
+        // 9. Bottom Brand Footer with Official Site QR Code
         ctx.strokeStyle = '#E2E8F0';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
@@ -2760,27 +2771,54 @@
         ctx.lineTo(cardX + cardW - 48, footerY);
         ctx.stroke();
 
-        drawSpineIcon(ctx, 134, footerY + 44, 40);
+        drawSpineIcon(ctx, 134, footerY + 54, 44);
 
         ctx.fillStyle = '#0F172A';
-        ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('臺灣物理治療實證助手', 168, footerY + 40);
+        ctx.font = 'bold 26px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+        ctx.fillText('臺灣物理治療實證助手', 172, footerY + 48);
 
         ctx.fillStyle = '#64748B';
         ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
-        ctx.fillText('AI 衛教內容僅供參考，無法替代實體醫療診斷 · 依物理治療師法執行', 168, footerY + 70);
+        ctx.fillText('AI 衛教內容僅供參考，無法替代實體醫療診斷 · 依物理治療師法執行', 172, footerY + 80);
 
-        canvas.toBlob(blob => {
-          if (blob) resolve(blob);
-          else reject(new Error('Canvas toBlob failed'));
-        }, 'image/png');
+        // Draw Right QR Code for instant viral site traffic
+        const SITE_QR_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AQMAAAAHA5RxAAAABlBMVEX///8ChMcMqQ1MAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABMklEQVRYhdWXMQ7DIAxFjTJkzBE4So4GR+MoHIExA4r7jaFVVXX/sVS1fizG+vanIn8iqUWRFPre3nnl41ZsLElluw47HzkhD6otItcuBy7iOS1PWb3h5Nx0cB315OUfPbh+f3XCwWd78715/d9zR8Pf+wkfm6+fvUXCrd4WVadu1e/xHI7YtZ4gHT/PIjfuR8i97wj/Lmns3UrHRadvrXPUb3PHxpHvbe2HKmh436fPcvEbXM4sofvALT2zcdSN+crjHP4g5g/jXmQ8DN+yPXCJzDmLpFxdD8256/ghfAbeM8gjDCPY/fh4Gm6w5s7eM3Pu2LgVO3U8fMHqj4R8vmPVfGyE9ZuXZ+yxw/at5a5nTn5b/QWLd/v+v8DCXQ/J/XU0+hJGvubrdp/19+Bz+J94Ab7JYuuWt/ZrAAAAAElFTkSuQmCC';
+        const qrImg = new Image();
+        qrImg.src = SITE_QR_B64;
+        qrImg.onload = () => {
+          const qrSize = 88;
+          const qrX = cardX + cardW - 48 - qrSize;
+          const qrY = footerY + 18;
+          drawRoundedRect(ctx, qrX - 8, qrY - 8, qrSize + 16, qrSize + 16, 12, '#FFFFFF', '#E2E8F0', 1);
+          ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+
+          ctx.fillStyle = '#0284C7';
+          ctx.font = 'bold 15px -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText('掃碼即時諮詢 ↗', qrX - 16, qrY + 36);
+          ctx.fillStyle = '#94A3B8';
+          ctx.font = '500 13px -apple-system, BlinkMacSystemFont, sans-serif';
+          ctx.fillText('taiwan-pt-web.vercel.app', qrX - 16, qrY + 58);
+          ctx.textAlign = 'left';
+
+          canvas.toBlob(blob => {
+            if (blob) resolve(blob);
+            else reject(new Error('Canvas toBlob failed'));
+          }, 'image/png');
+        };
+        qrImg.onerror = () => {
+          canvas.toBlob(blob => {
+            if (blob) resolve(blob);
+            else reject(new Error('Canvas toBlob failed'));
+          }, 'image/png');
+        };
       } catch (e) {
         reject(e);
       }
     });
   }
 
-  // ── 📤 分享衛教圖卡至其他軟體（LINE / IG / Threads / 原生分享）────
+  // ── 📤 分享衛教圖卡至其他軟體（直接喚起 iOS / Android Apple 原生分享）────
   async function directShareImage(btn, msgId) {
     triggerHaptic('medium');
 
@@ -2805,23 +2843,14 @@
         }
       }
 
-      const filename = `臺灣物理治療實證衛教_${topic.replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
-      const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && window.innerWidth <= 820);
+      const filename = `臺灣物理治療實證衛教_${topic.substring(0, 20).replace(/[^\w\u4e00-\u9fa5]/g, '_')}.png`;
 
-      // 電腦端：0ms 立即彈出 Apple 質感專屬分享選單（極致流暢、無任何卡頓）
-      if (!isMobileDevice) {
-        openShareModal(topic, text, null, filename);
-        // 背景預先生成 Canvas Blob
-        generateApple1080x1920CardBlob(topic, text).then(b => { currentShareBlob = b; }).catch(console.error);
-        return;
-      }
-
-      // 手機端：顯示載入中並喚起原生分享面板
+      // 顯示載入動畫
       const origHtml = btn ? btn.innerHTML : '';
       if (btn) {
         btn.innerHTML = `
           <div class="search-spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:4px;"></div>
-          <span>處理中…</span>
+          <span>生成圖卡中…</span>
         `;
       }
 
@@ -2898,7 +2927,7 @@
     let orig = '';
     if (btn) {
       orig = btn.innerHTML;
-      btn.innerHTML = `<div class="search-spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></div><span>生成圖卡中…</span>`;
+      btn.innerHTML = `<div class="search-spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></div><span>下載中…</span>`;
     }
     try {
       const blob = await ensureShareBlob();
@@ -2915,51 +2944,6 @@
     } finally {
       if (btn) btn.innerHTML = orig;
     }
-  }
-
-  async function copyShareCardImage(btn) {
-    let orig = '';
-    if (btn) {
-      orig = btn.innerHTML;
-      btn.innerHTML = `<div class="search-spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></div><span>處理中…</span>`;
-    }
-    try {
-      const blob = await ensureShareBlob();
-      if (navigator.clipboard && navigator.clipboard.write) {
-        await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': blob })
-        ]);
-        if (btn) {
-          btn.innerHTML = `
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            <span>已複製圖卡！可直接貼上</span>
-          `;
-          setTimeout(() => { btn.innerHTML = orig; }, 2000);
-        }
-      } else {
-        downloadShareCard(btn);
-      }
-    } catch (e) {
-      downloadShareCard(btn);
-    }
-  }
-
-  function copyShareText(btn) {
-    if (!currentShareText) return;
-    copyToClipboard(currentShareText, () => {
-      const orig = btn ? btn.innerHTML : '';
-      if (btn) {
-        btn.innerHTML = `
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          <span>已複製完整文字！</span>
-        `;
-        setTimeout(() => { btn.innerHTML = orig; }, 2000);
-      }
-    });
   }
 
   // ── 剪貼簿跨裝置相容複製工具（完美相容 iOS Safari / LINE 內置 / Android Chrome / 電腦端）──────
@@ -4150,51 +4134,32 @@
     </div>
   </div>
 
-  <!-- 🎨 電腦版/跨裝置「分享衛教圖卡與指引」專屬 Modal -->
+  <!-- 🎨 電腦版/未支援原生分享環境專屬「分享衛教內容」Modal -->
   <div id="share-modal" class="modal-backdrop" onclick="if(event.target===this)closeShareModal()">
-    <div class="modal-card" style="max-width:440px; padding: 26px 24px; box-sizing:border-box;">
-      <div class="modal-header" style="margin-bottom:12px; padding:0 0 12px; border-bottom:1px solid var(--border-color);">
-        <h3 style="margin:0; font-size:1.2rem; font-weight:700; color:var(--text-primary);">分享衛教圖卡與指引</h3>
-        <button class="modal-close" onclick="closeShareModal()" aria-label="關閉" style="font-size:1.5rem; background:none; border:none; color:var(--text-secondary); cursor:pointer;">&times;</button>
+    <div class="modal-card" style="max-width:380px; padding: 22px 20px; box-sizing:border-box; text-align:center; background:var(--card-bg, #ffffff);">
+      <div class="modal-header" style="margin-bottom:12px; padding:0 0 10px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0; font-size:1.15rem; font-weight:700; color:var(--text-primary);">分享衛教內容</h3>
+        <button class="modal-close" onclick="closeShareModal()" aria-label="關閉" style="font-size:1.4rem; background:none; border:none; color:var(--text-secondary); cursor:pointer;">&times;</button>
       </div>
-      <p id="share-modal-topic" style="margin:0 0 18px; font-size:0.95rem; color:var(--text-secondary); font-weight:600;"></p>
+      <p id="share-modal-topic" style="margin:0 0 16px; font-size:0.9rem; color:var(--text-secondary); font-weight:600; text-align:left;"></p>
       
-      <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="display:flex; flex-direction:column; gap:10px;">
         <!-- 分享至 LINE -->
-        <button type="button" class="action-pill-btn" onclick="shareToLine()" style="justify-content:center; padding:12px; background:#06C755; color:#FFFFFF; border:none; font-weight:700; font-size:1rem; border-radius:14px;">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right:6px;">
+        <button type="button" onclick="shareToLine()" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; background:#06C755; color:#FFFFFF; border:none; font-weight:700; font-size:0.95rem; border-radius:12px; cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
             <path d="M24 10.3c0-4.8-5.4-8.8-12-8.8S0 5.5 0 10.3c0 4.3 3.8 8 9.3 8.7.4.1.9.3 1 .6.1.4 0 .9-.1 1.4l-.4 2.3c-.1.7-.4 2.7 1.2 1.5 1.6-1.2 8.6-5.1 11.7-8.7 1-1.6 1.3-3.6 1.3-5.5z"/>
           </svg>
           <span>分享至 LINE 好友 / 群組</span>
         </button>
 
-        <!-- 下載高畫質圖卡 -->
-        <button type="button" class="action-pill-btn" onclick="downloadShareCard(this)" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+        <!-- 下載衛教圖卡 -->
+        <button type="button" onclick="downloadShareCard(this)" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); font-weight:600; font-size:0.95rem; border-radius:12px; cursor:pointer; outline:none;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          <span>下載 1080×1920 高畫質圖卡 (PNG)</span>
-        </button>
-
-        <!-- 複製純文字內容 -->
-        <button type="button" class="action-pill-btn" onclick="copyShareText(this)" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          <span>複製完整衛教文字</span>
-        </button>
-
-        <!-- 複製圖卡圖片 -->
-        <button type="button" class="action-pill-btn" onclick="copyShareCardImage(this)" style="justify-content:center; padding:12px; font-weight:600; font-size:0.95rem; border-radius:14px;">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <polyline points="21 15 16 10 5 21"/>
-          </svg>
-          <span>複製圖卡圖片（剪貼簿直接貼上）</span>
+          <span>儲存衛教圖卡 (PNG)</span>
         </button>
       </div>
     </div>
