@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const { type, query, feedback } = req.body || {};
+      const { type, query, reasons, comment, feedback, msgId } = req.body || {};
 
       // 驗證 type 欄位
       if (!['up', 'down'].includes(type)) {
@@ -66,10 +66,15 @@ export default async function handler(req, res) {
         globalFeedbackStats.thumbsDown++;
       }
 
+      const formattedReasons = Array.isArray(reasons) ? reasons.join(', ') : (reasons || '');
+      const userComment = typeof comment === 'string' ? comment.substring(0, 200) : (typeof feedback === 'string' ? feedback.substring(0, 100) : '');
+
       const entry = {
         type,
-        query: typeof query === 'string' ? query.substring(0, 50) : '',
-        feedback: typeof feedback === 'string' ? feedback.substring(0, 100) : '',
+        query: typeof query === 'string' ? query.substring(0, 80) : '',
+        reasons: formattedReasons,
+        comment: userComment,
+        msgId: typeof msgId === 'string' ? msgId.substring(0, 40) : '',
         time: new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
       };
 
@@ -78,7 +83,7 @@ export default async function handler(req, res) {
         globalFeedbackStats.recentFeedback.pop();
       }
 
-      console.log('📊 [USER_FEEDBACK]', JSON.stringify(entry));
+      console.log(`📊 [USER_FEEDBACK] [${type.toUpperCase()}] Q: "${entry.query}" | Reasons: "${entry.reasons}" | Note: "${entry.comment}" | Time: ${entry.time}`);
       return res.status(200).json({ ok: true });
     } catch (e) {
       // 不洩漏內部錯誤

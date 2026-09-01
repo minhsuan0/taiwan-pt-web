@@ -1024,6 +1024,120 @@
       background: #E5E7EB;
     }
 
+    /* ── App Floating Toast ───────────────────────────────── */
+    .app-toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(17, 24, 39, 0.94);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #FFFFFF;
+      padding: 9px 18px;
+      border-radius: 24px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      max-width: 90vw;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .app-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Feedback Tags & Modal ────────────────────────────── */
+    .feedback-subtext {
+      color: #64748B;
+    }
+    .feedback-tags-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .feedback-tag {
+      padding: 6px 10px;
+      background: #F1F5F9;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-zh);
+    }
+    .feedback-tag:hover {
+      background: #E2E8F0;
+    }
+    .feedback-tag.selected {
+      background: rgba(235, 34, 40, 0.08);
+      border-color: #EB2228;
+      color: #EB2228;
+      font-weight: 700;
+    }
+    .feedback-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 8px;
+      background: #F8FAFC;
+      color: #0F172A;
+      resize: none;
+      outline: none;
+      font-family: var(--font-zh);
+      transition: border-color 0.15s ease;
+    }
+    .feedback-textarea:focus {
+      border-color: #007AFF;
+      background: #FFFFFF;
+    }
+    .feedback-cancel-btn {
+      flex: 1;
+      padding: 8px;
+      background: #F1F5F9;
+      color: #64748B;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: var(--font-zh);
+      transition: all 0.15s;
+    }
+    .feedback-cancel-btn:hover {
+      background: #E2E8F0;
+      color: #334155;
+    }
+    .feedback-submit-btn {
+      flex: 2;
+      padding: 8px;
+      background: #EB2228;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: var(--font-zh);
+      transition: all 0.15s;
+      box-shadow: 0 2px 6px rgba(235, 34, 40, 0.25);
+    }
+    .feedback-submit-btn:hover {
+      background: #D41B21;
+    }
+
     /* ── History Drawer / Modal ──────────────────────────── */
     .drawer-backdrop {
       position: fixed;
@@ -2044,8 +2158,39 @@
         background: #3A3A3C;
         color: #FFFFFF;
       }
-      #share-modal-topic {
-        color: #9CA3AF !important;
+      /* Feedback Modal Dark Mode */
+      .feedback-subtext {
+        color: #9CA3AF;
+      }
+      .feedback-tag {
+        background: #2C2C2E;
+        border-color: #3A3A3C;
+        color: #D1D5DB;
+      }
+      .feedback-tag:hover {
+        background: #3A3A3C;
+      }
+      .feedback-tag.selected {
+        background: rgba(235, 34, 40, 0.2);
+        border-color: #FF453A;
+        color: #FF453A;
+      }
+      .feedback-textarea {
+        background: #2C2C2E;
+        border-color: #3A3A3C;
+        color: #FFFFFF;
+      }
+      .feedback-textarea:focus {
+        border-color: #0A84FF;
+        background: #1C1C1E;
+      }
+      .feedback-cancel-btn {
+        background: #2C2C2E;
+        color: #9CA3AF;
+      }
+      .feedback-cancel-btn:hover {
+        background: #3A3A3C;
+        color: #FFFFFF;
       }
 
       /* JKO Modal Dark Mode */
@@ -2281,7 +2426,7 @@
     </a>
 
     <div style="display:flex; justify-content:space-between; align-items:center; padding-top:4px;">
-      <span class="drawer-sec-hint">🔒 本地安全儲存</span>
+      <span class="drawer-sec-hint" style="cursor:pointer;" onclick="showFeedbackStatsModal()" title="點擊檢視回饋統計">🔒 本地安全儲存</span>
       <button class="drawer-clear-btn" onclick="clearAllHistory()" style="padding:2px 6px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.75rem;height:0.75rem;">
           <polyline points="3 6 5 6 21 6"/>
@@ -2575,41 +2720,192 @@
     if (histCountEl) histCountEl.textContent = historyList.length;
   }
 
-    // ── OpenEvidence Style Actions ────────────────────────────────
+  // ── OpenEvidence Style Feedback & Analytics ────────────────────
+  let pendingImproveFeedback = null;
+
+  function showAppToast(msg, duration = 2500) {
+    let toast = document.getElementById('app-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'app-toast';
+      toast.className = 'app-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, duration);
+  }
+
+  function recordFeedbackLocally(entry) {
+    try {
+      const raw = localStorage.getItem('tw_pt_feedback_stats');
+      const stats = raw ? JSON.parse(raw) : { thumbsUp: 0, thumbsDown: 0, list: [] };
+      if (entry.type === 'up') stats.thumbsUp++;
+      else stats.thumbsDown++;
+      stats.list.unshift(entry);
+      if (stats.list.length > 50) stats.list.pop();
+      localStorage.setItem('tw_pt_feedback_stats', JSON.stringify(stats));
+    } catch (e) {}
+  }
+
+  function showFeedbackStatsModal() {
+    triggerHaptic('light');
+    try {
+      const raw = localStorage.getItem('tw_pt_feedback_stats');
+      const stats = raw ? JSON.parse(raw) : { thumbsUp: 0, thumbsDown: 0, list: [] };
+      const total = stats.thumbsUp + stats.thumbsDown;
+      const rate = total > 0 ? Math.round((stats.thumbsUp / total) * 100) + '%' : '100%';
+      showAppToast(`📊 回饋統計：${stats.thumbsUp} 個讚 · ${stats.thumbsDown} 則建議 · 滿意度 ${rate}`, 3500);
+    } catch (e) {}
+  }
+
   async function sendVote(btn, type, msgId) {
     triggerHaptic('light');
     const parent = btn.closest('.bubble-actions');
     if (!parent) return;
 
-    const allVoteBtns = parent.querySelectorAll('.action-pill-btn');
+    const userMsgEl = btn.closest('.msg.bot')?.previousElementSibling?.querySelector('.bubble');
+    const query = userMsgEl ? userMsgEl.innerText.trim() : '';
+
     if (type === 'up') {
       btn.classList.add('voted-up');
       btn.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
-        <span>感謝回饋</span>
+        <span>已讚好</span>
       `;
+      showAppToast('✓ 感謝您的肯定！這有助於實證模型持續精進 👍');
+      
+      const payload = { type: 'up', query, msgId, timestamp: Date.now() };
+      recordFeedbackLocally(payload);
+
+      // Vercel Analytics Event
+      if (window.va) {
+        try { window.va('event', { name: 'feedback_helpful', data: { query: query.substring(0, 40) } }); } catch (e) {}
+      }
+
+      try {
+        fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }).catch(() => {});
+      } catch (e) {}
     } else {
+      // 'down': 觸發改進意見回饋彈窗
+      pendingImproveFeedback = { btn, msgId, query };
+      openFeedbackModal();
+    }
+  }
+
+  function openFeedbackModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('feedback-modal');
+    if (!modal) return;
+    modal.querySelectorAll('.feedback-tag').forEach(t => t.classList.remove('selected'));
+    const input = document.getElementById('feedback-comment-input');
+    if (input) input.value = '';
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFeedbackModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('feedback-modal');
+    if (modal) {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    // 若使用者略過，依然記錄一般需改進投票
+    if (pendingImproveFeedback && pendingImproveFeedback.btn) {
+      const { btn, msgId, query } = pendingImproveFeedback;
       btn.classList.add('voted-down');
       btn.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
-        <span>已記錄反饋</span>
+        <span>已記錄改進</span>
+      `;
+      const payload = { type: 'down', reasons: ['一般需改進'], comment: '', query, msgId, timestamp: Date.now() };
+      recordFeedbackLocally(payload);
+      if (window.va) {
+        try { window.va('event', { name: 'feedback_improvement', data: { reason: '一般需改進' } }); } catch (e) {}
+      }
+      try {
+        fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }).catch(() => {});
+      } catch (e) {}
+    }
+    pendingImproveFeedback = null;
+  }
+
+  function toggleFeedbackTag(btn) {
+    triggerHaptic('light');
+    btn.classList.toggle('selected');
+  }
+
+  function submitImproveFeedback() {
+    triggerHaptic('medium');
+    const modal = document.getElementById('feedback-modal');
+    const selectedTags = modal ? Array.from(modal.querySelectorAll('.feedback-tag.selected')).map(t => t.dataset.val || t.textContent.trim()) : [];
+    const comment = document.getElementById('feedback-comment-input')?.value?.trim() || '';
+
+    const { btn, msgId, query } = pendingImproveFeedback || {};
+    if (btn) {
+      btn.classList.add('voted-down');
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>已記錄改進</span>
       `;
     }
 
-    const userMsgEl = btn.closest('.msg.bot')?.previousElementSibling?.querySelector('.bubble');
-    const query = userMsgEl ? userMsgEl.innerText.trim() : '';
+    const reasons = selectedTags.length > 0 ? selectedTags : ['未填寫具體原因'];
+    const payload = {
+      type: 'down',
+      reasons,
+      comment,
+      query: query || '',
+      msgId: msgId || '',
+      timestamp: Date.now()
+    };
+
+    recordFeedbackLocally(payload);
+
+    if (window.va) {
+      try {
+        window.va('event', {
+          name: 'feedback_improvement',
+          data: {
+            reason: reasons.join(', '),
+            has_comment: comment ? 'yes' : 'no'
+          }
+        });
+      } catch (e) {}
+    }
 
     try {
       fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, query, msgId, timestamp: Date.now() }),
+        body: JSON.stringify(payload),
       }).catch(() => {});
     } catch (e) {}
+
+    if (modal) {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    pendingImproveFeedback = null;
+    showAppToast('✓ 感謝您的寶貴建議！已記錄並將持續優化 🤝');
   }
 
     // ── OpenEvidence 動作與純文字/圖片生成模組 ──────────────────────
@@ -4536,6 +4832,43 @@
         <p><strong>1. 衛教性質說明</strong><br>本系統由 AI 實證模型生成，所有內容僅作為日常動作教育與運動衛教參考，可能存在資訊落差，無法取代醫師或物理治療師之專業臨床評估與診斷。</p>
         <p><strong>2. 法規遵循說明</strong><br>依《物理治療師法》第 12 條規定，實際物理治療處置應依醫師診斷或醫囑執行。</p>
         <p><strong>3. 就醫諮詢叮嚀</strong><br>若您有急性劇痛、夜間痛醒、神經壓迫或任何身體不適，請務必至醫療院所諮詢專科醫師或物理治療師進行評估。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📝 改善回答意見回饋 Modal -->
+  <div id="feedback-modal" class="modal-backdrop" onclick="if(event.target===this)closeFeedbackModal()">
+    <div class="modal-card" style="max-width:380px; padding:18px 20px; box-sizing:border-box; text-align:left;">
+      <div class="modal-header" style="margin-bottom:8px; padding:0 0 8px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:1.15rem;">📝</span>
+          <span class="modal-title" style="font-size:1.05rem; font-weight:700;">協助我們改善回答</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeFeedbackModal()" aria-label="關閉">✕</button>
+      </div>
+
+      <p style="font-size:0.8rem; margin:0 0 12px; line-height:1.4;" class="feedback-subtext">
+        請告訴我們遇到什麼問題，幫助臺灣物理治療助手持續精進：
+      </p>
+
+      <!-- 快速標籤選擇器 -->
+      <div class="feedback-tags-grid">
+        <button type="button" class="feedback-tag" onclick="toggleFeedbackTag(this)" data-val="未完全解答問題">未完全解答問題</button>
+        <button type="button" class="feedback-tag" onclick="toggleFeedbackTag(this)" data-val="動作指引不夠明確">動作指引不夠明確</button>
+        <button type="button" class="feedback-tag" onclick="toggleFeedbackTag(this)" data-val="內容太長/難以理解">內容太長/難以理解</button>
+        <button type="button" class="feedback-tag" onclick="toggleFeedbackTag(this)" data-val="實證內容有疑慮">實證內容有疑慮</button>
+        <button type="button" class="feedback-tag" onclick="toggleFeedbackTag(this)" data-val="專有名詞過多">專有名詞過多</button>
+      </div>
+
+      <!-- 補充輸入框 -->
+      <div style="margin-top:10px;">
+        <textarea id="feedback-comment-input" class="feedback-textarea" placeholder="有其他建議或想補充的細節嗎？（選填）" rows="3" maxlength="200"></textarea>
+      </div>
+
+      <!-- 底部操作按鈕 -->
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button type="button" class="feedback-cancel-btn" onclick="closeFeedbackModal()">略過</button>
+        <button type="button" class="feedback-submit-btn" onclick="submitImproveFeedback()">送出回饋</button>
       </div>
     </div>
   </div>
