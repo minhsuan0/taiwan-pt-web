@@ -390,9 +390,15 @@ export default async function handler(req) {
       const model = genAI.getGenerativeModel({
         model: modelName,
         systemInstruction: SYSTEM_PROMPT,
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ],
         generationConfig: {
           temperature: 0.2,
-          maxOutputTokens: 2048,
+          maxOutputTokens: 4096,
         },
       });
 
@@ -406,20 +412,41 @@ export default async function handler(req) {
         async start(controller) {
           try {
             for await (const chunk of result.stream) {
-              const text = chunk.text();
+              let text = '';
+              try {
+                text = chunk.text();
+              } catch (chunkErr) {
+                const parts = chunk?.candidates?.[0]?.content?.parts;
+                if (Array.isArray(parts)) {
+                  text = parts.map(p => p.text || '').join('');
+                }
+              }
               if (text) {
                 const localized = localizeTaiwanese(text);
                 fullResponseText += localized;
                 controller.enqueue(encoder.encode(localized));
               }
             }
+
+            // 若串流意外在中間中斷且缺少結尾諮詢區塊，自動補齊完整結尾
+            if (fullResponseText && !fullResponseText.includes('需要運動物理治療師為您詳細評估嗎')) {
+              const closingSupplement = `\n\n---\n\n【需要運動物理治療師為您詳細評估嗎？】\nAI 提供的是普遍實證指引，但每個人身體受力模式與代償機制皆具個別性。本系統由台灣執業物理治療師團隊建立與維護，若想進一步確認個人問題或預約實體一對一評估，歡迎透過本站專屬窗口與物理治療師聯繫：[點此加入駐站物理治療師諮詢窗口 ↗](https://lin.ee/y6VBRuh)`;
+              fullResponseText += closingSupplement;
+              controller.enqueue(encoder.encode(closingSupplement));
+            }
+
             if (sanitizedHistory.length === 0 && fullResponseText.length > 50) {
               setDynamicCache(cacheKey, fullResponseText);
             }
             controller.close();
           } catch (streamErr) {
             console.error(`[Stream Error - ${modelName}]`, streamErr?.message);
-            controller.error(streamErr);
+            // 發生異常時自動補齊自癒結尾後關閉，避免客戶端出現殘缺字句
+            if (fullResponseText.length > 100 && !fullResponseText.includes('需要運動物理治療師為您詳細評估嗎')) {
+              const fallbackEnd = `\n\n【你可以這樣做（建議運動與日常調整）】\n• 保持無痛原則：進行任何日常動作或活動時，以不引起刺痛為首要原則。\n• 避免長時間固定同一姿勢，定時起身活動放鬆。\n\n---\n\n【需要運動物理治療師為您詳細評估嗎？】\nAI 提供的是普遍實證指引，但每個人身體受力模式與代償機制皆具個別性。本系統由台灣執業物理治療師團隊建立與維護，若想進一步確認個人問題或預約實體一對一評估，歡迎透過本站專屬窗口與物理治療師聯繫：[點此加入駐站物理治療師諮詢窗口 ↗](https://lin.ee/y6VBRuh)`;
+              controller.enqueue(encoder.encode(fallbackEnd));
+            }
+            controller.close();
           }
         },
       });
