@@ -3700,20 +3700,6 @@
 
   // ── ☕ 街口支付一鍵跳轉與贊助彈窗控制 ─────────────────────
   function triggerCoffeeDonation() {
-    triggerHaptic('light');
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      // 手機端先自動複製街口帳號至剪貼簿，並直接喚起街口 App 轉帳功能頁
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText('901290119').catch(() => {});
-        }
-      } catch(e) {}
-      try {
-        window.location.href = 'jkos://transfer';
-      } catch (e) {}
-    }
-    // 同步開啟收款資訊彈窗（提供 TWQR 掃碼與複製帳號雙重保障）
     openJkoModal();
   }
 
@@ -4257,7 +4243,7 @@
       <div class="jko-account-box">
         <div style="text-align:left;">
           <div class="jko-account-label">街口支付 (機構代碼 396)</div>
-          <div class="jko-account-num">901290119 <span class="jko-account-name">(旻軒)</span></div>
+          <div class="jko-account-num">901290119</div>
         </div>
         <div id="jko-account-val" style="display:none;">901290119</div>
         <button type="button" class="action-pill-btn" onclick="copyJkoAccount(this)" style="padding:6px 12px; background:#EB2228; color:#FFFFFF; border:none; font-weight:700; font-size:0.82rem; border-radius:8px; cursor:pointer;">
@@ -4278,7 +4264,7 @@
 
       <!-- 提示與安全聲明 -->
       <div class="jko-sec-box">
-        🔒 <strong>零資安風險</strong>：本站不經手任何個人金流，全程由街口官方 App 安全加密轉帳。
+        🔒 <strong>官方加密轉帳 · 杜絕詐騙風險</strong>：本站絕不索取您的信用卡或銀行帳密，轉帳全程由街口官方 App 加密處理，請安心支持！
       </div>
 
       <!-- 關閉按鈕 -->
