@@ -830,103 +830,123 @@
 
     /* ── JKO Coffee Modal Styles ────────────────────────── */
     .jko-desc {
-      margin: 0 0 12px;
-      font-size: 0.88rem;
-      color: var(--gray-600);
-      line-height: 1.55;
-      text-align: left;
+      font-size: 0.8rem;
+      color: #4B5563;
+      line-height: 1.4;
+      margin: 0 0 6px;
     }
     .jko-badge-fee {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #0284C7;
       background: #E0F2FE;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 20px;
     }
     .jko-badge-easy {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #10B981;
       background: #D1FAE5;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 20px;
-    }
-    .jko-guide-box {
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      text-align: left;
-      font-size: 0.8rem;
-      color: #111827;
-    }
-    .jko-guide-title {
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: #111827;
-    }
-    .jko-guide-text {
-      color: #4B5563;
-      line-height: 1.45;
     }
     .jko-account-box {
       background: #F9FAFB;
       border: 1px solid #E5E7EB;
       border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      padding: 8px 12px;
+      margin-bottom: 8px;
       cursor: pointer;
       transition: all 0.15s ease;
     }
+    .jko-account-box:hover, .jko-account-box:active {
+      background: #F3F4F6;
+      border-color: #D1D5DB;
+    }
     .jko-account-label {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #6B7280;
+      font-weight: 700;
     }
     .jko-account-num {
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #111827;
       letter-spacing: 0.5px;
     }
-    .jko-account-name {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #6B7280;
+    .jko-copy-badge {
+      padding: 6px 12px;
+      background: #EB2228;
+      color: #FFFFFF;
+      border: none;
+      font-weight: 700;
+      font-size: 0.78rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .jko-app-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      background: #EB2228;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      margin-bottom: 8px;
+      box-shadow: 0 3px 10px rgba(235,34,40,0.25);
+      transition: all 0.15s ease;
+    }
+    .jko-app-btn:hover, .jko-app-btn:active {
+      background: #D41B21;
+      transform: scale(0.98);
     }
     .jko-qr-card {
       background: #FFFFFF;
       border: 1px solid #E5E5EA;
-      border-radius: 12px;
-      padding: 10px 8px 8px;
-      margin-bottom: 12px;
+      border-radius: 10px;
+      padding: 6px 8px 6px;
+      margin-bottom: 8px;
       display: inline-block;
       max-width: 100%;
     }
+    .jko-qr-card img {
+      width: 85px;
+      height: 85px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 6px;
+    }
     .jko-qr-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #64748B;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .jko-qr-footer {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: #8E8E93;
-      margin-top: 4px;
+      margin-top: 2px;
     }
     .jko-sec-box {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #4B5563;
-      line-height: 1.45;
+      line-height: 1.4;
       background: #F9FAFB;
-      padding: 8px 10px;
-      border-radius: 10px;
-      margin-bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
       text-align: left;
       border: 1px solid #E5E7EB;
     }
@@ -935,14 +955,18 @@
     }
     .jko-close-btn {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       background: #F3F4F6;
       color: #374151;
       border: 1px solid #E5E7EB;
       border-radius: 10px;
+      font-size: 0.85rem;
       font-weight: 600;
-      font-size: 0.88rem;
       cursor: pointer;
+      transition: all 0.15s;
+    }
+    .jko-close-btn:hover {
+      background: #E5E7EB;
     }
 
     /* ── History Drawer / Modal ──────────────────────────── */
@@ -1941,16 +1965,13 @@
       .jko-desc {
         color: #D1D5DB;
       }
-      .jko-guide-box, .jko-account-box, .jko-sec-box {
+      .jko-account-box, .jko-sec-box {
         background: #2C2C2E;
         border-color: #3A3A3C;
         color: #F3F4F6;
       }
-      .jko-guide-title {
-        color: #F9FAFB;
-      }
-      .jko-guide-text {
-        color: #D1D5DB;
+      .jko-account-box:hover, .jko-account-box:active {
+        background: #3A3A3C;
       }
       .jko-account-label {
         color: #9CA3AF;
@@ -1958,8 +1979,15 @@
       .jko-account-num {
         color: #FFFFFF;
       }
-      .jko-account-name {
+      .jko-qr-card {
+        background: #2C2C2E;
+        border-color: #3A3A3C;
+      }
+      .jko-qr-label {
         color: #9CA3AF;
+      }
+      .jko-qr-footer {
+        color: #8E8E93;
       }
       .jko-sec-box {
         color: #D1D5DB;
@@ -1971,6 +1999,9 @@
         background: #2C2C2E;
         color: #E5E7EB;
         border-color: #3A3A3C;
+      }
+      .jko-close-btn:hover {
+        background: #3A3A3C;
       }
     }
   </style>
@@ -2130,7 +2161,7 @@
     <button type="button" class="drawer-action-btn" onclick="closeHistoryDrawer(); openJkoModal();">
       <div class="btn-left">
         <span style="font-size:1.05rem;">☕</span>
-        <span>請物治團隊喝杯咖啡</span>
+        <span>請團隊喝杯咖啡</span>
       </div>
       <span class="btn-badge">街口 / 銀行掃碼</span>
     </button>
@@ -3354,7 +3385,7 @@
             </svg>
             <span>分享</span>
           </button>
-          <button class="action-pill-btn" onclick="triggerCoffeeDonation()" title="隨喜請物治團隊喝杯咖啡" style="color:#D97706; border-color:rgba(217,119,6,0.25); background:rgba(217,119,6,0.06); font-weight:700;">
+          <button class="action-pill-btn" onclick="triggerCoffeeDonation()" title="隨喜請團隊喝杯咖啡" style="color:#D97706; border-color:rgba(217,119,6,0.25); background:rgba(217,119,6,0.06); font-weight:700;">
             <span style="font-size:0.9rem; margin-right:4px;">☕</span>
             <span>請喝咖啡</span>
           </button>
@@ -3836,7 +3867,19 @@
     const acc = document.getElementById('jko-account-val')?.textContent?.trim() || '901290119';
     copyToClipboard(acc, () => {
       triggerHaptic('medium');
-      if (el) {
+      const badge = document.getElementById('jko-copy-badge');
+      const label = document.getElementById('jko-account-step-label');
+      if (badge) {
+        const origBadge = badge.innerHTML;
+        badge.innerHTML = '✓ 已複製！';
+        badge.style.background = '#10B981';
+        if (label) label.textContent = '❶ 帳號已複製至剪貼簿！';
+        setTimeout(() => {
+          badge.innerHTML = origBadge;
+          badge.style.background = '';
+          if (label) label.textContent = '❶ 街口帳號（點擊即複製）';
+        }, 2200);
+      } else if (el) {
         const labelEl = el.querySelector('.jko-account-label');
         if (labelEl) {
           const orig = labelEl.textContent;
@@ -4306,47 +4349,45 @@
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 
-  <!-- ☕ 請物治團隊喝杯咖啡 Modal (純靜態/TWQR 跨機構掃碼 · 零資安風險) -->
+  <!-- ☕ 請團隊喝杯咖啡 Modal (純靜態/TWQR 跨機構掃碼 · 零資安風險) -->
   <div id="jko-modal" class="modal-backdrop" onclick="if(event.target===this)closeJkoModal()">
-    <div class="modal-card" style="max-width:390px; padding:20px; box-sizing:border-box; text-align:center;">
-      <div class="modal-header" style="margin-bottom:12px; padding:0 0 10px; display:flex; justify-content:space-between; align-items:center;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:1.25rem;">☕</span>
-          <span class="modal-title" style="font-size:1.1rem; font-weight:700;">請物治團隊喝杯咖啡</span>
+    <div class="modal-card" style="max-width:370px; max-height:90vh; overflow-y:auto; padding:16px 18px; box-sizing:border-box; text-align:center;">
+      <div class="modal-header" style="margin-bottom:8px; padding:0 0 8px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:1.15rem;">☕</span>
+          <span class="modal-title" style="font-size:1.05rem; font-weight:700;">請團隊喝杯咖啡</span>
         </div>
         <button type="button" class="modal-close-btn" onclick="closeJkoModal()" aria-label="關閉">✕</button>
       </div>
 
       <p class="jko-desc">
-        若本站實證解答對您的健康有所幫助，歡迎隨喜請團隊喝杯咖啡，支持 AI 算力與伺服器持續維護運作，非常感謝您的支持！
+        若實證解答對您有幫助，歡迎隨喜請團隊喝杯咖啡，支持系統持續維護運作！
       </p>
 
-      <div style="display:flex; justify-content:center; gap:8px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:center; gap:6px; margin-bottom:10px;">
         <span class="jko-badge-fee">✓ 街口互轉 0 手續費</span>
         <span class="jko-badge-easy">✓ 隨喜心意無負擔</span>
       </div>
 
-      <!-- 手機 2 步驟極簡指引 -->
-      <div class="jko-guide-box">
-        <div class="jko-guide-title">📱 手機轉帳超簡單（2 步驟）：</div>
-        <div class="jko-guide-text">
-          ❶ 點擊下方按鈕（系統自動複製帳號並開啟街口）<br>
-          ❷ 街口打開後，於搜尋欄「貼上」即可轉帳！
+      <!-- 步驟 ❶：點擊直接複製帳號卡片 -->
+      <div class="jko-account-box" onclick="copyJkoAccount(this)" title="點擊複製帳號">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="text-align:left;">
+            <div id="jko-account-step-label" class="jko-account-label">❶ 街口帳號（點擊即複製）</div>
+            <div class="jko-account-num">901290119</div>
+          </div>
+          <button type="button" id="jko-copy-badge" class="jko-copy-badge" onclick="event.stopPropagation(); copyJkoAccount(this.closest('.jko-account-box'));">
+            <span>📋 點擊複製</span>
+          </button>
         </div>
-      </div>
-
-      <!-- 手機端一鍵開啟街口 App 按鈕 -->
-      <button type="button" onclick="openJkoApp()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; background:#EB2228; color:#FFFFFF; border:none; border-radius:12px; font-weight:700; font-size:0.95rem; cursor:pointer; margin-bottom:12px; box-shadow:0 3px 10px rgba(235,34,40,0.3);">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; background:#FFFFFF; color:#EB2228; border-radius:6px; font-size:0.8rem; font-weight:900;">街</span>
-        <span>一鍵開啟街口 App 轉帳 ↗</span>
-      </button>
-
-      <!-- 街口帳號卡片 (點擊卡片亦可單純複製帳號) -->
-      <div class="jko-account-box" onclick="copyJkoAccount(this)" title="點擊直接複製帳號">
-        <div class="jko-account-label">街口支付 (機構代碼 396)</div>
-        <div class="jko-account-num" style="font-size:1.1rem; letter-spacing:1px; margin-top:2px;">901290119</div>
         <div id="jko-account-val" style="display:none;">901290119</div>
       </div>
+
+      <!-- 步驟 ❷：一鍵開啟街口 App 貼上轉帳 -->
+      <button type="button" class="jko-app-btn" onclick="openJkoApp()">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; background:#FFFFFF; color:#EB2228; border-radius:5px; font-size:0.75rem; font-weight:900;">街</span>
+        <span>❷ 一鍵開啟街口 App 貼上轉帳 ↗</span>
+      </button>
 
       <!-- 街口支付 / TWQR 永久收款碼卡片 -->
       <div class="jko-qr-card">
