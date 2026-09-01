@@ -3066,13 +3066,13 @@
             </svg>
             <span>需改進</span>
           </button>
-          <button class="action-pill-btn" onclick="directShareImage(this, '${msgId}')" title="分享衛教圖卡至 LINE / IG / 其他軟體">
+          <button class="action-pill-btn" onclick="directShareImage(this, '${msgId}')" title="分享至 LINE / IG / 其他軟體">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
               <polyline points="16 6 12 2 8 6"/>
               <line x1="12" y1="2" x2="12" y2="15"/>
             </svg>
-            <span>分享圖卡</span>
+            <span>分享</span>
           </button>
           <button class="action-pill-btn" onclick="triggerCoffeeDonation()" title="隨喜請物治團隊喝杯咖啡" style="color:#D97706; border-color:rgba(217,119,6,0.25); background:rgba(217,119,6,0.06); font-weight:700;">
             <span style="font-size:0.9rem; margin-right:4px;">☕</span>
@@ -3523,9 +3523,14 @@
     triggerHaptic('light');
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
-      // 手機端嘗試直接喚起街口 App
+      // 手機端先自動複製街口帳號至剪貼簿，並直接喚起街口 App 轉帳功能頁
       try {
-        window.location.href = 'jkos://';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText('901290119').catch(() => {});
+        }
+      } catch(e) {}
+      try {
+        window.location.href = 'jkos://transfer';
       } catch (e) {}
     }
     // 同步開啟收款資訊彈窗（提供 TWQR 掃碼與複製帳號雙重保障）
@@ -3534,7 +3539,13 @@
 
   function openJkoApp() {
     triggerHaptic('light');
-    window.location.href = 'jkos://';
+    // 自動複製街口帳號至剪貼簿，跳轉轉帳頁後直接貼上即可
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText('901290119').catch(() => {});
+      }
+    } catch(e) {}
+    window.location.href = 'jkos://transfer';
   }
 
   function openJkoModal() {
