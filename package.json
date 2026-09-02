@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
+    "build": "node scripts/verify-all.cjs",
     "test": "node scripts/verify-all.cjs",
     "preview": "node scripts/verify-all.cjs && vercel",
     "deploy": "node scripts/verify-all.cjs && vercel --prod",
