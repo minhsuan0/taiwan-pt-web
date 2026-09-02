@@ -1400,178 +1400,6 @@
       line-height: 1.5;
     }
 
-    /* ── Right Drawer: Slide-in (Apple Frosted Glass Style) ── */
-    .right-drawer-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      z-index: 999;
-      display: none;
-      opacity: 0;
-      transition: opacity 0.25s ease;
-    }
-    .right-drawer-backdrop.show {
-      display: block;
-      opacity: 1;
-    }
-    .right-drawer-content {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: min(320px, 85vw);
-      height: 100vh;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border-left: 1px solid rgba(229, 231, 235, 0.8);
-      box-shadow: -10px 0 36px rgba(0, 0, 0, 0.12);
-      z-index: 1000;
-      transform: translateX(100%);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
-      box-sizing: border-box;
-    }
-    .right-drawer-content.open, .right-drawer-content.show {
-      transform: translateX(0);
-    }
-    .right-drawer-header {
-      padding: 0.9rem 1rem 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(229, 231, 235, 0.6);
-      flex-shrink: 0;
-    }
-    .right-drawer-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .right-drawer-close-btn {
-      background: transparent;
-      border: none;
-      color: #8E8E93;
-      font-size: 1.1rem;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-    }
-    .right-drawer-close-btn:hover {
-      background: rgba(0, 0, 0, 0.06);
-      color: #111827;
-    }
-    .right-drawer-new-chat-btn {
-      margin: 0.75rem 0.85rem 0.4rem;
-      padding: 0.65rem 0.85rem;
-      background: #007AFF;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 0.75rem;
-      font-weight: 700;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
-    }
-    .right-drawer-new-chat-btn:hover, .right-drawer-new-chat-btn:active {
-      background: #0062CC;
-      transform: scale(0.98);
-    }
-    .right-drawer-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0.6rem 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-      -webkit-overflow-scrolling: touch;
-    }
-    .right-drawer-section-title {
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: #6B7280;
-      letter-spacing: 0.5px;
-      margin-bottom: 0.35rem;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    .right-tag-chip {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0.55rem 0.75rem;
-      background: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(229, 231, 235, 0.8);
-      border-radius: 0.65rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #1F2937;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.15s ease;
-      margin-bottom: 0.35rem;
-      font-family: var(--font-zh);
-    }
-    .right-tag-chip:hover, .right-tag-chip:active {
-      background: #FFFFFF;
-      border-color: #007AFF;
-      color: #007AFF;
-      transform: translateX(-2px);
-    }
-    .right-tag-arrow {
-      color: #9CA3AF;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-    .right-drawer-footer {
-      padding: 0.75rem 0.85rem;
-      border-top: 1px solid rgba(229, 231, 235, 0.6);
-      background: rgba(255, 255, 255, 0.5);
-      flex-shrink: 0;
-    }
-    .right-drawer-line-btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0.7rem 0.85rem;
-      background: #06C755;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 0.75rem;
-      font-weight: 700;
-      font-size: 0.82rem;
-      text-decoration: none;
-      box-sizing: border-box;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      box-shadow: 0 3px 10px rgba(6, 199, 85, 0.25);
-    }
-    .right-drawer-line-btn:hover, .right-drawer-line-btn:active {
-      background: #05B04B;
-      transform: scale(0.98);
-    }
-
     /* ── ⚡ 3 秒常見症狀互動快篩 Hero 區塊 ── */
     .screener-hero-box {
       margin-top: 1.25rem;
@@ -2364,46 +2192,6 @@
         color: #9CA3AF;
       }
 
-      /* Right Drawer Dark Mode */
-      .right-drawer-content {
-        background: rgba(28, 28, 30, 0.85);
-        border-left-color: rgba(255, 255, 255, 0.1);
-        box-shadow: -10px 0 36px rgba(0, 0, 0, 0.6);
-      }
-      .right-drawer-header {
-        border-bottom-color: rgba(255, 255, 255, 0.1);
-      }
-      .right-drawer-title {
-        color: #FFFFFF;
-      }
-      .right-drawer-close-btn {
-        color: #8E8E93;
-      }
-      .right-drawer-close-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: #FFFFFF;
-      }
-      .right-drawer-section-title {
-        color: #9CA3AF;
-      }
-      .right-tag-chip {
-        background: rgba(44, 44, 46, 0.7);
-        border-color: rgba(58, 58, 60, 0.8);
-        color: #F3F4F6;
-      }
-      .right-tag-chip:hover, .right-tag-chip:active {
-        background: #3A3A3C;
-        border-color: #0A84FF;
-        color: #60A5FA;
-      }
-      .right-tag-arrow {
-        color: #8E8E93;
-      }
-      .right-drawer-footer {
-        border-top-color: rgba(255, 255, 255, 0.1);
-        background: rgba(28, 28, 30, 0.5);
-      }
-
       /* Screener Dark Mode */
       .screener-card {
         background: #2C2C2E;
@@ -2672,18 +2460,13 @@
     <!-- Center: Title (absolute) -->
     <span class="header-title-center">臺灣物理治療實證助手</span>
 
-    <!-- Right: Right Drawer Toggle Panel & New Chat -->
-    <div style="display:flex; align-items:center; gap:2px;">
-      <button class="header-icon-btn" onclick="openRightDrawer()" aria-label="臨床決策快捷面板" title="臨床決策與快捷面板">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <path d="M15 3v18"/>
-          <path d="M8 8h3"/>
-          <path d="M8 12h3"/>
-          <path d="M8 16h3"/>
-        </svg>
-      </button>
-    </div>
+    <!-- Right: New Compose -->
+    <button class="header-icon-btn" onclick="resetChat()" aria-label="新對話" title="開啟新對話">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+    </button>
   </header>
 
   <!-- Messages -->
@@ -2844,132 +2627,6 @@
         <span>清除紀錄</span>
       </button>
     </div>
-  </div>
-</div>
-
-<!-- Right Drawer: Right Slide-in (Apple Frosted Glass Style) -->
-<div id="right-drawer-backdrop" class="right-drawer-backdrop" onclick="closeRightDrawer()"></div>
-<div id="right-drawer-content" class="right-drawer-content">
-  <!-- Header -->
-  <div class="right-drawer-header">
-    <div class="right-drawer-title">
-      <span style="font-size:1.1rem;">⚡</span>
-      <span>臨床決策與快捷面板</span>
-    </div>
-    <button type="button" class="right-drawer-close-btn" onclick="closeRightDrawer()" aria-label="關閉快捷面板" title="關閉">✕</button>
-  </div>
-
-  <!-- 【＋ 開啟新對話】按鈕（一鍵清空當前對話） -->
-  <button type="button" class="right-drawer-new-chat-btn" onclick="closeRightDrawer(); resetChat();">
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19"/>
-      <line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-    <span>開啟新對話（清空紀錄）</span>
-  </button>
-
-  <!-- 中間 Body：【臨床常用決策速查標籤】 -->
-  <div class="right-drawer-body">
-    <!-- ⚡ 3 秒常見症狀互動快篩 -->
-    <div style="margin-bottom:0.75rem;">
-      <button type="button" class="screener-card" onclick="closeRightDrawer(); openScreenerModal('sitting');" style="width:100%; box-sizing:border-box;">
-        <div class="screener-card-top">
-          <span style="font-size:0.86rem; font-weight:700; color:#007AFF;">⚡ 3 秒互動快篩自測</span>
-          <span class="screener-card-arrow">開始 ↗</span>
-        </div>
-        <div class="screener-card-desc" style="margin-top:2px;">久坐腰痠 · 膝蓋退化 · 低頭肩頸 · 足底刺痛</div>
-      </button>
-    </div>
-
-    <!-- 紅旗警訊 -->
-    <div>
-      <div class="right-drawer-section-title">
-        <span>🚨</span>
-        <span>臨床紅旗危險警訊篩檢</span>
-      </div>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('脊髓馬尾症候群急診紅旗警訊自我篩檢')">
-        <span>⚠️ 馬尾症候群急診快篩</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('夜間無誘因靜止骨痛與體重減輕評估')">
-        <span>🚨 夜間靜止骨痛警訊</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('下肢進行性無力與劇烈觸電麻木')">
-        <span>⚡ 進行性神經壓迫麻痛</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-    </div>
-
-    <!-- 脊椎與關節決策 -->
-    <div>
-      <div class="right-drawer-section-title">
-        <span>🦴</span>
-        <span>脊椎與關節臨床決策</span>
-      </div>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('久坐腰椎椎間盤突出減壓與姿勢調整')">
-        <span>🪑 腰椎椎間盤突出減壓</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('退化性膝關節炎階段指引與運動調整')">
-        <span>🏃 退化性膝關節炎階梯運動</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('五十肩（沾黏性關節囊炎）分期與活動度')">
-        <span>🙋 五十肩角度受限分期處置</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-    </div>
-
-    <!-- 軟組織與肌腱管理 -->
-    <div>
-      <div class="right-drawer-section-title">
-        <span>⚡</span>
-        <span>軟組織與肌腱問題處置</span>
-      </div>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('足底筋膜炎下床第一步疼痛與伸展')">
-        <span>🦶 足底筋膜炎起床第一步處置</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('網球肘（肱骨外上髁炎）抗阻力舒緩')">
-        <span>🎾 網球肘抗阻力居家照護</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('媽媽手（狹窄性腱鞘炎）肌腱滑動運動')">
-        <span>👶 媽媽手芬克斯坦測試與減壓</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-    </div>
-
-    <!-- 日常人體工學與運動 -->
-    <div>
-      <div class="right-drawer-section-title">
-        <span>💻</span>
-        <span>日常人體工學與動作檢視</span>
-      </div>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('辦公族人體工學坐姿與螢幕視角調整')">
-        <span>💻 辦公族人體工學坐姿配置</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-      <button type="button" class="right-tag-chip" onclick="handleRightDrawerTopic('深蹲膝蓋能不能過腳尖與受力迷思')">
-        <span>🏋️ 深蹲膝蓋受力與動作模式</span>
-        <span class="right-tag-arrow">↗</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- 底部 Footer：【預約 1 對 1 線上動作代償審查】LINE 連結 -->
-  <div class="right-drawer-footer">
-    <a href="https://lin.ee/y6VBRuh" target="_blank" rel="noopener noreferrer" class="right-drawer-line-btn">
-      <div style="display:flex; align-items:center; gap:0.55rem;">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
-          <path fill="#FFFFFF" d="M19.365 9.864c0-4.04-4.2-7.33-9.365-7.33S.635 5.824.635 9.864c0 3.616 3.208 6.66 7.545 7.21.294.063.694.194.795.446.091.229.06.586.03.816l-.13.784c-.04.24-.187.938.822.512 1.009-.427 5.442-3.206 7.426-5.49 1.442-1.227 2.242-2.736 2.242-4.278z"/>
-          <path fill="#06C755" d="M8.053 8.35v3.238H6.512V7.47h2.42v.88H8.053zm1.884 3.238h-.878V7.47h.878v4.118zm3.626 0h-.88V9.458l-1.48 2.13h-.768V7.47h.88v2.13l1.48-2.13h.768v4.118zm2.668-3.238h-1.54v.737h1.432v.88h-1.432v.741h1.54v.88H14.69V7.47h2.541v.88z"/>
-        </svg>
-        <span>預約 1 對 1 線上動作代償審查</span>
-      </div>
-      <span style="font-size:0.75rem; font-weight:800;">LINE ↗</span>
-    </a>
   </div>
 </div>
 
@@ -4899,39 +4556,6 @@
     document.getElementById('drawer-content').classList.remove('show');
   }
 
-  // ── ⚡ 右側快捷決策抽屜 (Right Drawer) 控制 ─────────────────────────
-  function openRightDrawer() {
-    triggerHaptic('light');
-    closeHistoryDrawer();
-    const backdrop = document.getElementById('right-drawer-backdrop');
-    const drawer = document.getElementById('right-drawer-content');
-    if (backdrop) backdrop.classList.add('show');
-    if (drawer) drawer.classList.add('show');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeRightDrawer() {
-    triggerHaptic('light');
-    const backdrop = document.getElementById('right-drawer-backdrop');
-    const drawer = document.getElementById('right-drawer-content');
-    if (backdrop) backdrop.classList.remove('show');
-    if (drawer) drawer.classList.remove('show');
-    document.body.style.overflow = '';
-  }
-
-  function handleRightDrawerTopic(topic) {
-    triggerHaptic('medium');
-    closeRightDrawer();
-    const input = document.getElementById('input');
-    if (input) {
-      input.value = topic;
-      updateActionButtonState();
-      setTimeout(() => {
-        sendMsg();
-      }, 120);
-    }
-  }
-
   function formatDate(ts) {
     if (!ts) return '';
     const d = new Date(ts);
@@ -5412,11 +5036,11 @@
     }
   }
 
-  // ── 👆 左右雙側邊緣滑動手勢引擎（嚴格邊界 40px / 拖曳 > 60px / 防誤觸）──────────
+  // ── 👆 左側邊緣滑動手勢引擎（左側邊緣 40px 內 ➔ 向右拖曳 > 60px 展開歷史選單，防誤觸）──────────
   (function() {
     let touchStartX = 0;
     let touchStartY = 0;
-    let edgeGestureType = null; // 'leftEdge' | 'rightEdge' | 'closeLeft' | 'closeRight' | null
+    let edgeGestureType = null; // 'leftEdge' | 'closeLeft' | null
 
     window.addEventListener('touchstart', (e) => {
       if (e.touches.length !== 1) {
@@ -5424,26 +5048,20 @@
         return;
       }
       const touch = e.touches[0];
-      const winWidth = window.innerWidth || document.documentElement.clientWidth;
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
 
       const isLeftOpen = document.getElementById('drawer-content')?.classList.contains('show');
-      const isRightOpen = document.getElementById('right-drawer-content')?.classList.contains('show');
 
-      if (!isLeftOpen && !isRightOpen) {
-        // 邊界嚴格隔離（左側 40px 內 或 右側 40px 內）
+      if (!isLeftOpen) {
+        // 左側邊緣 40px 內觸發
         if (touchStartX <= 40) {
           edgeGestureType = 'leftEdge';
-        } else if (touchStartX >= winWidth - 40) {
-          edgeGestureType = 'rightEdge';
         } else {
-          edgeGestureType = null; // 中間文字區域一律不觸發
+          edgeGestureType = null; // 中間與右側文字區域一律不觸發
         }
-      } else if (isLeftOpen) {
+      } else {
         edgeGestureType = 'closeLeft';
-      } else if (isRightOpen) {
-        edgeGestureType = 'closeRight';
       }
     }, { passive: true });
 
@@ -5453,20 +5071,14 @@
       const dx = touch.clientX - touchStartX;
       const dy = Math.abs(touch.clientY - touchStartY);
 
-      // 防誤觸：垂直滾動幅度大於或等於水平幅度時，一律判定為正常上下捲動，不觸發抽屜
+      // 防誤觸：垂直滾動幅度大於或等於水平幅度時，判定為正常上下捲動，不觸發抽屜
       if (dy >= Math.abs(dx)) return;
 
       if (edgeGestureType === 'leftEdge' && dx > 60) {
         openHistoryDrawer();
         edgeGestureType = null;
-      } else if (edgeGestureType === 'rightEdge' && dx < -60) {
-        openRightDrawer();
-        edgeGestureType = null;
       } else if (edgeGestureType === 'closeLeft' && dx < -50) {
         closeHistoryDrawer();
-        edgeGestureType = null;
-      } else if (edgeGestureType === 'closeRight' && dx > 50) {
-        closeRightDrawer();
         edgeGestureType = null;
       }
     }, { passive: true });
