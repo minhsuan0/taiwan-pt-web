@@ -1572,12 +1572,155 @@
       transform: scale(0.98);
     }
 
+    /* ── ⚡ 3 秒常見症狀互動快篩 Hero 區塊 ── */
+    .screener-hero-box {
+      margin-top: 1.25rem;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .screener-hero-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.6rem;
+      padding: 0 0.25rem;
+    }
+    .screener-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #007AFF;
+      background: rgba(0, 122, 255, 0.1);
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+    }
+    .screener-hero-title {
+      font-size: 0.78rem;
+      color: #6B7280;
+      font-weight: 600;
+    }
+    .screener-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.55rem;
+    }
+    .screener-card {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      border-radius: 0.85rem;
+      padding: 0.75rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      position: relative;
+      touch-action: manipulation;
+    }
+    .screener-card:hover, .screener-card:active {
+      transform: translateY(-2px);
+      border-color: #007AFF;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.12);
+      background: #FFFFFF;
+    }
+    .screener-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .screener-card-icon {
+      font-size: 1.25rem;
+    }
+    .screener-card-arrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #007AFF;
+      background: rgba(0, 122, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .screener-card-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #111827;
+      margin-top: 0.15rem;
+      line-height: 1.3;
+    }
+    .screener-card-desc {
+      font-size: 0.7rem;
+      color: #8E8E93;
+      line-height: 1.3;
+    }
+
+    /* ── ⚡ 3 秒快篩彈窗樣式 ── */
+    .screener-step-progress {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 0.9rem;
+    }
+    .screener-step-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 2px;
+      transition: background 0.25s ease;
+    }
+    .screener-step-bar.active {
+      background: #007AFF;
+    }
+    .screener-question-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.85rem;
+      line-height: 1.45;
+    }
+    .screener-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .screener-option-btn {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      background: rgba(243, 244, 246, 0.8);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      border-radius: 0.75rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #1F2937;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+      font-family: var(--font-zh);
+    }
+    .screener-option-btn:hover, .screener-option-btn:active {
+      background: #FFFFFF;
+      border-color: #007AFF;
+      color: #007AFF;
+      transform: scale(0.99);
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.15);
+    }
+    .screener-option-arrow {
+      color: #9CA3AF;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
     @media (max-width: 480px) {
       .input-area { padding: 0.6rem 0.75rem 0.25rem; gap: 0.5rem; }
       .bubble-wrapper { max-width: 90%; }
       .bubble { font-size: 0.86rem; padding: 0.75rem 0.9rem; }
       .chip { font-size: 0.74rem; padding: 0.35rem 0.75rem; }
       .header-text h1 { font-size: 0.95rem; }
+      .screener-cards-grid { grid-template-columns: 1fr; }
     }
 
     /* ── 🚨 醫療紅旗警訊與注意事項視覺卡片 ──────────────── */
@@ -2261,6 +2404,53 @@
         background: rgba(28, 28, 30, 0.5);
       }
 
+      /* Screener Dark Mode */
+      .screener-card {
+        background: #2C2C2E;
+        border-color: #3A3A3C;
+      }
+      .screener-card:hover, .screener-card:active {
+        background: #3A3A3C;
+        border-color: #0A84FF;
+        box-shadow: 0 4px 16px rgba(10, 132, 255, 0.25);
+      }
+      .screener-card-name {
+        color: #F9FAFB;
+      }
+      .screener-card-desc {
+        color: #9CA3AF;
+      }
+      .screener-card-arrow {
+        color: #60A5FA;
+        background: rgba(96, 165, 250, 0.15);
+      }
+      .screener-badge {
+        color: #60A5FA;
+        background: rgba(96, 165, 250, 0.15);
+      }
+      .screener-hero-title {
+        color: #9CA3AF;
+      }
+      .screener-step-bar {
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .screener-step-bar.active {
+        background: #0A84FF;
+      }
+      .screener-question-title {
+        color: #F9FAFB;
+      }
+      .screener-option-btn {
+        background: #2C2C2E;
+        border-color: #3A3A3C;
+        color: #F3F4F6;
+      }
+      .screener-option-btn:hover, .screener-option-btn:active {
+        background: #3A3A3C;
+        border-color: #0A84FF;
+        color: #60A5FA;
+      }
+
       /* Search Status & Typing Indicator */
       .search-status {
         color: #ebebf5;
@@ -2680,6 +2870,17 @@
 
   <!-- 中間 Body：【臨床常用決策速查標籤】 -->
   <div class="right-drawer-body">
+    <!-- ⚡ 3 秒常見症狀互動快篩 -->
+    <div style="margin-bottom:0.75rem;">
+      <button type="button" class="screener-card" onclick="closeRightDrawer(); openScreenerModal('sitting');" style="width:100%; box-sizing:border-box;">
+        <div class="screener-card-top">
+          <span style="font-size:0.86rem; font-weight:700; color:#007AFF;">⚡ 3 秒互動快篩自測</span>
+          <span class="screener-card-arrow">開始 ↗</span>
+        </div>
+        <div class="screener-card-desc" style="margin-top:2px;">久坐腰痠 · 膝蓋退化 · 低頭肩頸 · 足底刺痛</div>
+      </button>
+    </div>
+
     <!-- 紅旗警訊 -->
     <div>
       <div class="right-drawer-section-title">
@@ -3001,12 +3202,57 @@
     });
   }
 
-  // 初始渲染純淨歡迎畫面
+  // 初始渲染純淨歡迎畫面（含 3 秒常見症狀互動快篩）
   function renderWelcome() {
     messagesEl.innerHTML = `
       <div class="welcome">
         <h2>你好，我是臺灣物理治療實證助手</h2>
         <p>依據國際醫學實證與臨床指引，為你提供安心、客觀的動作衛教與運動指引。</p>
+
+        <!-- ⚡ 3 秒常見症狀互動快篩 -->
+        <div class="screener-hero-box">
+          <div class="screener-hero-header">
+            <span class="screener-badge">⚡ 3 秒互動快篩</span>
+            <span class="screener-hero-title">不知道怎麼問？點選身體狀況快速自測</span>
+          </div>
+          <div class="screener-cards-grid">
+            <button type="button" class="screener-card" onclick="openScreenerModal('sitting')">
+              <div class="screener-card-top">
+                <span class="screener-card-icon">🪑</span>
+                <span class="screener-card-arrow">開始 ↗</span>
+              </div>
+              <div class="screener-card-name">辦公久坐腰痠自測</div>
+              <div class="screener-card-desc">下背緊繃 · 屁股刺痛 · 站立卡住</div>
+            </button>
+
+            <button type="button" class="screener-card" onclick="openScreenerModal('knee')">
+              <div class="screener-card-top">
+                <span class="screener-card-icon">🏃</span>
+                <span class="screener-card-arrow">開始 ↗</span>
+              </div>
+              <div class="screener-card-name">膝關節健康與退化快篩</div>
+              <div class="screener-card-desc">上下樓梯痛 · 蹲下起立摩擦 · 晨間僵硬</div>
+            </button>
+
+            <button type="button" class="screener-card" onclick="openScreenerModal('neck')">
+              <div class="screener-card-top">
+                <span class="screener-card-icon">💆</span>
+                <span class="screener-card-arrow">開始 ↗</span>
+              </div>
+              <div class="screener-card-name">低頭肩頸與富貴包自評</div>
+              <div class="screener-card-desc">烏龜頸 · 膏肓痛 · 手指發麻</div>
+            </button>
+
+            <button type="button" class="screener-card" onclick="openScreenerModal('foot')">
+              <div class="screener-card-top">
+                <span class="screener-card-icon">🦶</span>
+                <span class="screener-card-arrow">開始 ↗</span>
+              </div>
+              <div class="screener-card-name">早晨足底刺痛快篩</div>
+              <div class="screener-card-desc">下床第一步踩地痛 · 腳跟緊繃 · 扁平足</div>
+            </button>
+          </div>
+        </div>
       </div>
     `;
     const strip = document.getElementById('suggestions-strip');
@@ -4942,6 +5188,230 @@
     });
   }
 
+  // ── ⚡ 3 秒常見症狀互動快篩題庫與狀態引擎 ───────────────────────
+  const SCREENER_DATA = {
+    sitting: {
+      name: '辦公久坐腰痠自測',
+      icon: '🪑',
+      steps: [
+        {
+          title: '步驟 1/3：哪裡最容易感到痠痛或不適？',
+          options: [
+            { label: '下背與腰椎正中心（彎腰穿鞋特別緊）', value: '下背與腰椎正中心緊繃' },
+            { label: '屁股深處或單側臀部（像坐到石頭）', value: '屁股深處單側臀部痠痛' },
+            { label: '腰部延伸到大腿後側或小腿（牽扯感）', value: '腰部延伸至大腿後側牽扯' }
+          ]
+        },
+        {
+          title: '步驟 2/3：什麼情境下疼痛最為明顯？',
+          options: [
+            { label: '坐辦公椅超過 30 分鐘後', value: '久坐超過 30 分鐘' },
+            { label: '從椅子站起來那一瞬間腰卡住', value: '由坐到站那一瞬間卡住' },
+            { label: '彎腰搬重物或低頭駝背時', value: '彎腰搬物或低頭駝背' }
+          ]
+        },
+        {
+          title: '步驟 3/3：是否有以下神經或危險警訊？',
+          options: [
+            { label: '無發麻，主要是單純肌肉痠痛緊繃', value: '無發麻純肌肉緊繃' },
+            { label: '有放射到小腿或腳底的觸電麻木感', value: '有下肢放射觸電麻木感' },
+            { label: '有會陰部麻木或排尿感覺異常（急診警訊）', value: '有會陰部麻木或排尿異常' }
+          ]
+        }
+      ]
+    },
+    knee: {
+      name: '膝關節健康與退化快篩',
+      icon: '🏃',
+      steps: [
+        {
+          title: '步驟 1/3：膝蓋最主要的不適部位在哪裡？',
+          options: [
+            { label: '膝蓋骨（髕骨）正前側或深處', value: '膝前髕骨深處痠痛' },
+            { label: '膝蓋內側骨頭關節縫下方', value: '膝關節內側縫隙疼痛' },
+            { label: '膝蓋外側骨突處（跑步時特別痛）', value: '膝蓋外側骨突處刺痛' }
+          ]
+        },
+        {
+          title: '步驟 2/3：哪種動作最容易引發疼痛或無力？',
+          options: [
+            { label: '下樓梯或深蹲到底時特別吃力', value: '下樓梯與蹲下動作' },
+            { label: '早晨起床膝蓋僵硬約 10~15 分鐘', value: '早晨起床關節僵硬' },
+            { label: '跑步 3~5 公里後外側灼熱刺痛', value: '長跑後外側灼熱刺痛' }
+          ]
+        },
+        {
+          title: '步驟 3/3：是否有以下警訊或關節卡頓？',
+          options: [
+            { label: '無卡死，主要是活動時有微摩擦聲', value: '無卡死微細摩擦聲' },
+            { label: '膝關節曾卡住鎖死無法伸直彎曲', value: '關節曾卡住鎖死' },
+            { label: '關節明顯持續發紅積水發熱或受傷撕裂聲', value: '明顯積水紅腫或撕裂聲' }
+          ]
+        }
+      ]
+    },
+    neck: {
+      name: '低頭肩頸與富貴包自評',
+      icon: '💆',
+      steps: [
+        {
+          title: '步驟 1/3：肩頸最明顯的緊繃點在哪裡？',
+          options: [
+            { label: '後頸部大椎處厚厚隆起（富貴包/烏龜頸）', value: '後頸大椎富貴包緊繃' },
+            { label: '肩胛骨內側深處（膏肓痛怎麼按都按不到）', value: '肩胛骨內側膏肓深層痛' },
+            { label: '頸部兩側向肩膀上方延伸緊繃', value: '頸側與上斜方肌緊繃' }
+          ]
+        },
+        {
+          title: '步驟 2/3：什麼時候肩頸不適感最嚴重？',
+          options: [
+            { label: '長時間滑手機或盯著電腦螢幕後', value: '長時間低頭打電腦滑手機' },
+            { label: '早晨醒來脖子卡住轉不動（落枕）', value: '早晨醒來脖子卡住落枕' },
+            { label: '後仰或轉頭到特定角度時刺痛', value: '後仰或轉頭特定角度刺痛' }
+          ]
+        },
+        {
+          title: '步驟 3/3：是否有伴隨以下神經或頭部症狀？',
+          options: [
+            { label: '無手麻，主要是肩頸僵硬與偶爾頭脹', value: '無手麻純肩頸僵硬' },
+            { label: '有單側或雙側手臂手指發麻刺痛感', value: '手臂手指發麻刺痛' },
+            { label: '伴隨手部握力驟降或走路步態飄浮', value: '握力驟降或走路步態飄浮' }
+          ]
+        }
+      ]
+    },
+    foot: {
+      name: '早晨足底刺痛快篩',
+      icon: '🦶',
+      steps: [
+        {
+          title: '步驟 1/3：腳部最主要的痛點在哪裡？',
+          options: [
+            { label: '腳底靠近腳跟內側骨頭處（足底筋膜）', value: '腳底腳跟內側刺痛' },
+            { label: '後腳跟上方大條肌腱（阿基里斯跟腱）', value: '後腳跟阿基里斯肌腱痛' },
+            { label: '腳踝外側韌帶（走不平路面怕翻船）', value: '腳踝外側不穩定怕翻船' }
+          ]
+        },
+        {
+          title: '步驟 2/3：什麼時機點踩地最痛？',
+          options: [
+            { label: '早晨起床下床第一步踩地如針刺', value: '早晨下床第一步踩地如針刺' },
+            { label: '走久站久後足底內側與小腿痠脹', value: '久站久走足底小腿痠脹' },
+            { label: '墊腳尖或跑步推蹬瞬間後跟拉扯痛', value: '墊腳尖跑步推蹬拉扯痛' }
+          ]
+        },
+        {
+          title: '步驟 3/3：是否有以下狀況？',
+          options: [
+            { label: '走動幾分鐘後疼痛稍微減輕，但走多又痛', value: '走動後稍緩但久走又痛' },
+            { label: '腳底感覺麻木如隔著厚襪子或踩棉花', value: '腳底麻木感覺異常' },
+            { label: '腳跟有大片瘀血或扭傷當下無法走滿4步', value: '局部瘀血或無法走滿4步' }
+          ]
+        }
+      ]
+    }
+  };
+
+  let currentScreenerType = null;
+  let currentScreenerStep = 0;
+  let currentScreenerAnswers = [];
+
+  function openScreenerModal(type = 'sitting') {
+    triggerHaptic('light');
+    currentScreenerType = type;
+    currentScreenerStep = 0;
+    currentScreenerAnswers = [];
+
+    const data = SCREENER_DATA[type] || SCREENER_DATA.sitting;
+    const titleEl = document.getElementById('screener-modal-title');
+    const iconEl = document.getElementById('screener-modal-icon');
+    if (titleEl) titleEl.textContent = data.name;
+    if (iconEl) iconEl.textContent = data.icon;
+
+    renderScreenerStep();
+    const modal = document.getElementById('screener-modal');
+    if (modal) modal.classList.add('show');
+  }
+
+  function closeScreenerModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('screener-modal');
+    if (modal) modal.classList.remove('show');
+    currentScreenerType = null;
+    currentScreenerStep = 0;
+    currentScreenerAnswers = [];
+  }
+
+  function renderScreenerStep() {
+    const data = SCREENER_DATA[currentScreenerType] || SCREENER_DATA.sitting;
+    const stepData = data.steps[currentScreenerStep];
+    if (!stepData) return;
+
+    // Update Step Bars
+    for (let i = 1; i <= 3; i++) {
+      const bar = document.getElementById(`screener-bar-${i}`);
+      if (bar) {
+        if (i <= currentScreenerStep + 1) bar.classList.add('active');
+        else bar.classList.remove('active');
+      }
+    }
+
+    const container = document.getElementById('screener-question-container');
+    if (!container) return;
+
+    let html = `
+      <div class="screener-question-title">${escapeHtml(stepData.title)}</div>
+      <div class="screener-options-list">
+    `;
+
+    stepData.options.forEach((opt, idx) => {
+      html += `
+        <button type="button" class="screener-option-btn" onclick="selectScreenerOption(${idx})">
+          <span>${escapeHtml(opt.label)}</span>
+          <span class="screener-option-arrow">選取 ➔</span>
+        </button>
+      `;
+    });
+
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+
+  function selectScreenerOption(idx) {
+    triggerHaptic('light');
+    const data = SCREENER_DATA[currentScreenerType] || SCREENER_DATA.sitting;
+    const stepData = data.steps[currentScreenerStep];
+    const selected = stepData.options[idx];
+    if (selected) {
+      currentScreenerAnswers.push(selected.value);
+    }
+
+    if (currentScreenerStep < 2) {
+      currentScreenerStep++;
+      renderScreenerStep();
+    } else {
+      // 3 steps finished -> submit to AI assistant
+      finishScreenerAndSend();
+    }
+  }
+
+  function finishScreenerAndSend() {
+    triggerHaptic('medium');
+    const data = SCREENER_DATA[currentScreenerType] || SCREENER_DATA.sitting;
+    const summaryQuery = `【${data.name}】部位：${currentScreenerAnswers[0] || '不適'}，情境：${currentScreenerAnswers[1] || '活動受限'}，狀況：${currentScreenerAnswers[2] || '無特殊麻木'}。請問物理治療實證建議如何自我舒緩與日常動作調整？`;
+
+    closeScreenerModal();
+
+    const input = document.getElementById('input');
+    if (input) {
+      input.value = summaryQuery;
+      updateActionButtonState();
+      setTimeout(() => {
+        sendMessage();
+      }, 150);
+    }
+  }
+
   // ── 👆 左右雙側邊緣滑動手勢引擎（嚴格邊界 40px / 拖曳 > 60px / 防誤觸）──────────
   (function() {
     let touchStartX = 0;
@@ -5298,6 +5768,31 @@
           </svg>
           <span>儲存衛教圖卡 (PNG)</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚡ 3 秒常見症狀互動快篩 Modal -->
+  <div id="screener-modal" class="modal-backdrop" onclick="if(event.target===this)closeScreenerModal()">
+    <div class="modal-card" style="max-width:420px; padding:20px; box-sizing:border-box; text-align:left;">
+      <div class="modal-header" style="margin-bottom:10px; padding:0 0 8px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span id="screener-modal-icon" style="font-size:1.2rem;">⚡</span>
+          <span id="screener-modal-title" class="modal-title" style="font-size:1.05rem; font-weight:700;">3 秒症狀快篩</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeScreenerModal()" aria-label="關閉">✕</button>
+      </div>
+
+      <!-- 進度指示條 (Step 1 / Step 2 / Step 3) -->
+      <div class="screener-step-progress">
+        <div id="screener-bar-1" class="screener-step-bar active"></div>
+        <div id="screener-bar-2" class="screener-step-bar"></div>
+        <div id="screener-bar-3" class="screener-step-bar"></div>
+      </div>
+
+      <!-- 題目與選項渲染容器 -->
+      <div id="screener-question-container">
+        <!-- Dynamically rendered by renderScreenerStep() -->
       </div>
     </div>
   </div>
