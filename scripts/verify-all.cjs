@@ -130,6 +130,22 @@ assert(htmlCode.includes('AI 衛教內容僅供參考，無法替代實體醫療
 assert(htmlCode.includes('openDisclaimerModal()'), '具備點擊彈窗事件');
 assert(htmlCode.includes('id="disclaimer-modal"'), '具備免責聲明 Modal DOM');
 
+// ── 測試 4：全域按鈕函式有效性與抽屜按鈕迴歸檢驗 ─────────────────
+console.log('\n--- 測試 4：全域按鈕函式有效性與抽屜按鈕迴歸檢驗 ---');
+assert(typeof openHistoryDrawer === 'function', 'openHistoryDrawer 函式存在且為有效函式');
+assert(typeof resetChat === 'function', 'resetChat 函式存在且為有效函式');
+assert(typeof openScreenerModal === 'function', 'openScreenerModal 函式存在且為有效函式');
+assert(typeof openJkoModal === 'function', 'openJkoModal 函式存在且為有效函式');
+assert(typeof openDisclaimerModal === 'function', 'openDisclaimerModal 函式存在且為有效函式');
+assert(!htmlCode.includes('openRightDrawer('), '絕無殘留 openRightDrawer 未定義呼叫');
+assert(!htmlCode.includes('closeRightDrawer('), '絕無殘留 closeRightDrawer 未定義呼叫');
+try {
+  openHistoryDrawer();
+  assert(true, 'openHistoryDrawer 執行無拋出未捕獲例外（如 ReferenceError）');
+} catch (e) {
+  assert(false, `openHistoryDrawer 執行拋出異常: ${e.message}`);
+}
+
 
 console.log('\n====================================================');
 if (failureCount === 0) {
