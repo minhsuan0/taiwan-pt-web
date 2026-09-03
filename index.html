@@ -1541,6 +1541,56 @@
       font-size: 0.8rem;
       font-weight: 700;
     }
+    .screener-custom-btn {
+      border-style: dashed;
+      background: rgba(249, 250, 251, 0.9);
+      color: #4B5563;
+    }
+    .screener-custom-btn:hover {
+      border-color: #007AFF;
+      color: #007AFF;
+    }
+    .screener-custom-box {
+      width: 100%;
+      box-sizing: border-box;
+      animation: fadeIn 0.2s ease;
+    }
+    .screener-custom-input {
+      flex: 1;
+      height: 42px;
+      padding: 0 0.85rem;
+      border: 1.5px solid #007AFF;
+      border-radius: 0.75rem;
+      font-size: 0.86rem;
+      font-family: var(--font-zh);
+      background: #FFFFFF;
+      color: #111827;
+      outline: none;
+      box-sizing: border-box;
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.12);
+    }
+    .screener-custom-confirm-btn {
+      height: 42px;
+      padding: 0 1.1rem;
+      background: #007AFF;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 0.86rem;
+      font-weight: 700;
+      font-family: var(--font-zh);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .screener-custom-confirm-btn:hover, .screener-custom-confirm-btn:active {
+      background: #0062CC;
+      transform: scale(0.98);
+    }
 
     @media (max-width: 480px) {
       .input-area { padding: 0.6rem 0.75rem 0.25rem; gap: 0.5rem; }
@@ -2237,6 +2287,27 @@
         background: #3A3A3C;
         border-color: #0A84FF;
         color: #60A5FA;
+      }
+      .screener-custom-btn {
+        background: #2C2C2E;
+        border-color: #48484A;
+        color: #9CA3AF;
+      }
+      .screener-custom-btn:hover {
+        border-color: #0A84FF;
+        color: #60A5FA;
+      }
+      .screener-custom-input {
+        background: #2C2C2E;
+        color: #FFFFFF;
+        border-color: #0A84FF;
+      }
+      .screener-custom-confirm-btn {
+        background: #0A84FF;
+        color: #FFFFFF;
+      }
+      .screener-custom-confirm-btn:hover, .screener-custom-confirm-btn:active {
+        background: #0062CC;
       }
 
       /* Search Status & Typing Indicator */
@@ -5015,8 +5086,56 @@
       `;
     });
 
+    // ✏️ 第 4 個選項：其他（不在預設中，自行補充描述）
+    html += `
+      <div id="screener-custom-container" style="margin-top:0.25rem;">
+        <button type="button" class="screener-option-btn screener-custom-btn" id="screener-custom-toggle-btn" onclick="toggleScreenerCustomInput()">
+          <span>✏️ 其他（不在選項中，自行補充描述）</span>
+          <span class="screener-option-arrow">自填 ✎</span>
+        </button>
+        <div id="screener-custom-box" class="screener-custom-box" style="display:none;">
+          <div style="display:flex; gap:0.45rem; align-items:center;">
+            <input type="text" id="screener-custom-input" class="screener-custom-input" placeholder="請簡述您的狀況（例如：重訓深蹲到底會痛）…" maxlength="100" onkeydown="if(event.key==='Enter') submitScreenerCustom();" />
+            <button type="button" class="screener-custom-confirm-btn" onclick="submitScreenerCustom()">確定</button>
+          </div>
+        </div>
+      </div>
+    `;
+
     html += `</div>`;
     container.innerHTML = html;
+  }
+
+  function toggleScreenerCustomInput() {
+    triggerHaptic('light');
+    const toggleBtn = document.getElementById('screener-custom-toggle-btn');
+    const customBox = document.getElementById('screener-custom-box');
+    const input = document.getElementById('screener-custom-input');
+    if (toggleBtn && customBox) {
+      toggleBtn.style.display = 'none';
+      customBox.style.display = 'block';
+      if (input) {
+        input.focus();
+      }
+    }
+  }
+
+  function submitScreenerCustom() {
+    const input = document.getElementById('screener-custom-input');
+    const val = input ? input.value.trim() : '';
+    if (!val) {
+      if (input) input.focus();
+      return;
+    }
+    triggerHaptic('light');
+    currentScreenerAnswers.push(val);
+
+    if (currentScreenerStep < 2) {
+      currentScreenerStep++;
+      renderScreenerStep();
+    } else {
+      finishScreenerAndSend();
+    }
   }
 
   function selectScreenerOption(idx) {
