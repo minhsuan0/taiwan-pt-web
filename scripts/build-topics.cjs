@@ -155,11 +155,13 @@ TOPICS.forEach((topic) => {
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(topic.title)}">
-  <meta name="twitter:description" content="${escapeHtml(topic.description)}">
-  <meta name="twitter:image" content="${BASE_URL}/og-image.png?v=3">
+  <meta name="twitter:image" content="${BASE_URL}/og-image.png?v=20260903">
 
   <!-- Favicon & PWA -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+  <link rel="shortcut icon" href="${BASE_URL}/favicon.ico?v=20260903">
+  <link rel="icon" type="image/x-icon" href="${BASE_URL}/favicon.ico?v=20260903">
+  <link rel="icon" type="image/png" sizes="192x192" href="${BASE_URL}/icon-192.png?v=20260903">
+  <link rel="apple-touch-icon" sizes="180x180" href="${BASE_URL}/apple-touch-icon.png?v=20260903">
   <meta name="theme-color" content="#007AFF" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1C1C1E" media="(prefers-color-scheme: dark)">
 
@@ -605,9 +607,12 @@ const indexHtml = `<!DOCTYPE html>
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="百大常見疼痛與肌骨問題實證百科 | 臺灣物理治療實證助手">
   <meta name="twitter:description" content="全台灣百大常見疼痛、肌肉拉傷、關節退化與辦公人體工學實證百科目錄。由物理治療團隊依據國際醫學臨床指引建立。">
-  <meta name="twitter:image" content="${BASE_URL}/og-image.png?v=3">
+  <meta name="twitter:image" content="${BASE_URL}/og-image.png?v=20260903">
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <link rel="shortcut icon" href="${BASE_URL}/favicon.ico?v=20260903">
+  <link rel="icon" type="image/x-icon" href="${BASE_URL}/favicon.ico?v=20260903">
+  <link rel="icon" type="image/png" sizes="192x192" href="${BASE_URL}/icon-192.png?v=20260903">
+  <link rel="apple-touch-icon" sizes="180x180" href="${BASE_URL}/apple-touch-icon.png?v=20260903">
   <meta name="theme-color" content="#007AFF" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1C1C1E" media="(prefers-color-scheme: dark)">
 
