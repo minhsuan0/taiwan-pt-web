@@ -2714,6 +2714,17 @@
     initSuggestionsSlider(strip);
   }
 
+  function hideSuggestionsStrip() {
+    const strip = document.getElementById('suggestions-strip');
+    if (strip) {
+      strip.style.display = 'none';
+    }
+    if (autoScrollAnimId) {
+      cancelAnimationFrame(autoScrollAnimId);
+      autoScrollAnimId = null;
+    }
+  }
+
   function initSuggestionsSlider(strip) {
     if (!strip) return;
 
@@ -4201,7 +4212,7 @@
 
   // ── 對話控制與重置 ──────────────────────────────────────
   function resetChat() {
-    if (isLoading) return;
+    isLoading = false;
     currentSessionId = 'session_' + Date.now();
     history = [];
     renderWelcome();
@@ -4251,8 +4262,11 @@
     const text = inputEl.value.trim();
     if (!text || isLoading) return;
 
-    // 清除歡迎卡片
+    const thisSessionId = currentSessionId;
+
+    // 清除歡迎卡片與下方熱門探索橫軸（進入對話後隱藏，釋放閱讀空間）
     document.querySelector('.welcome')?.remove();
+    hideSuggestionsStrip();
 
     inputEl.value = '';
     inputEl.style.height = '';
@@ -4292,6 +4306,11 @@
       const elapsed = Date.now() - startTime;
       if (elapsed < 500) {
         await new Promise(r => setTimeout(r, 500 - elapsed));
+      }
+
+      if (currentSessionId !== thisSessionId) {
+        removeTyping();
+        return;
       }
 
       if (!res || !res.ok) {
@@ -4432,6 +4451,7 @@
       checkAndShowPwaBanner();
 
     } catch (err) {
+      if (currentSessionId !== thisSessionId) return;
       console.error('[sendMessage error]', err);
       removeTyping();
       if (!botMsgDiv || !accumulatedText || !accumulatedText.trim()) {
@@ -4608,8 +4628,7 @@
 
     messagesEl.innerHTML = '';
     document.querySelector('.welcome')?.remove();
-    const strip = document.getElementById('suggestions-strip');
-    if (strip) strip.style.display = 'none';
+    hideSuggestionsStrip();
 
     history.forEach(item => {
       if (item.role === 'user') {

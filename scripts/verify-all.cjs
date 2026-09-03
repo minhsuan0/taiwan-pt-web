@@ -146,6 +146,11 @@ try {
   assert(false, `openHistoryDrawer 執行拋出異常: ${e.message}`);
 }
 
+// ── 測試 5：對話時熱門探索橫軸隱藏與重置顯示機制 ─────────────────
+console.log('\n--- 測試 5：對話時熱門探索橫軸隱藏與重置顯示機制 ---');
+assert(typeof hideSuggestionsStrip === 'function', 'hideSuggestionsStrip 函式存在且為有效函式');
+assert(htmlCode.includes('hideSuggestionsStrip()'), 'sendMessage/loadHistorySession 中正確呼叫 hideSuggestionsStrip');
+
 
 console.log('\n====================================================');
 if (failureCount === 0) {
