@@ -6,6 +6,7 @@
   <title>臺灣物理治療實證助手 — 專業實證 AI 衛教</title>
   <meta name="description" content="臺灣物理治療實證助手 — 即時查詢 PubMed 實證文獻、臨床指南、《物理治療師法》與解剖生物力學資訊。" />
   <meta name="google-site-verification" content="4FE8VjPYT4NzDNajbYPiakW30hZDkauPCJ14JmDDrEo" />
+  <link rel="canonical" href="https://taiwan-pt-web.vercel.app/" />
   
   <!-- PWA & Theme -->
   <link rel="manifest" href="/manifest.json" />
@@ -48,6 +49,49 @@
   <meta name="twitter:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
   <meta name="twitter:description" content="即時查詢 PubMed 實證文獻、臨床指南與臺灣《物理治療師法》。" />
   <meta name="twitter:image" content="https://taiwan-pt-web.vercel.app/og-image.png?v=3" />
+
+  <!-- JSON-LD Structured Data (Google SEO, E-E-A-T & SGE) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://taiwan-pt-web.vercel.app/#website",
+        "url": "https://taiwan-pt-web.vercel.app/",
+        "name": "臺灣物理治療實證助手",
+        "description": "即時查詢 PubMed 實證文獻、臨床指南、《物理治療師法》與解剖生物力學資訊。",
+        "publisher": {
+          "@type": "Organization",
+          "name": "臺灣物理治療實證團隊",
+          "url": "https://taiwan-pt-web.vercel.app/"
+        },
+        "inLanguage": "zh-TW"
+      },
+      {
+        "@type": "MedicalWebPage",
+        "@id": "https://taiwan-pt-web.vercel.app/#webpage",
+        "url": "https://taiwan-pt-web.vercel.app/",
+        "name": "臺灣物理治療實證助手 — 專業實證 AI 衛教",
+        "description": "即時查詢實證文獻、臨床指南與臺灣《物理治療師法》，提供專業實證衛教資訊與居家運動指引。",
+        "author": {
+          "@type": "Organization",
+          "name": "臺灣物理治療實證團隊"
+        },
+        "reviewedBy": {
+          "@type": "Person",
+          "name": "臺灣執業物理治療師",
+          "jobTitle": "Licensed Physical Therapist (Taiwan)"
+        },
+        "about": {
+          "@type": "MedicalSpecialty",
+          "name": "Physical Therapy / Physiotherapy"
+        },
+        "inLanguage": "zh-TW"
+      }
+    ]
+  }
+  </script>
 
   <!-- Vercel Speed Insights & Web Analytics (Real User Performance Monitoring) -->
   <script defer src="/_vercel/speed-insights/script.js"></script>
@@ -2543,7 +2587,26 @@
 
   <!-- Messages -->
   <div id="messages">
-    <!-- Welcome Hero rendered by JS on init/reset -->
+    <!-- 靜態 SEO 爬蟲語意內容（JS 載入後自動被互動對話取代，爬蟲可直接索引 104 專題） -->
+    <div class="welcome" id="crawler-welcome">
+      <h2>你好，我是臺灣物理治療實證助手</h2>
+      <p>依據國際醫學實證與臨床指引，為你提供安心、客觀的動作衛教與運動指引。</p>
+
+      <div style="margin-top:1.25rem; text-align:center;">
+        <a href="/topics/" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.65rem 1.2rem; background:#007AFF; color:#FFFFFF; border-radius:999px; text-decoration:none; font-weight:700; font-size:0.92rem; box-shadow:0 3px 10px rgba(0,122,255,0.25);">
+          <span>📚 查看全部 104 篇常見症狀實證百科</span>
+          <span>➔</span>
+        </a>
+      </div>
+
+      <div style="margin-top:1.25rem; display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; font-size:0.82rem;">
+        <a href="/topics/#neck-shoulder" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">💆 頸肩與上肢</a>
+        <a href="/topics/#spine-back" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🪑 脊椎胸腰與核心</a>
+        <a href="/topics/#hip-knee" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🏃 髖部骨盆與膝關節</a>
+        <a href="/topics/#foot-ankle" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🦶 足踝足底與步態</a>
+        <a href="/topics/#ergonomics-sports" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🏋️ 辦公人體工學與運動</a>
+      </div>
+    </div>
   </div>
 
   <!-- Input & Suggestions Container (OpenEvidence Style) -->

@@ -79,13 +79,34 @@ TOPICS.forEach((topic) => {
     }))
   };
 
-  // Schema.org MedicalWebPage
+  // Schema.org MedicalWebPage (E-E-A-T 專業審核背書)
   const medicalSchema = {
     '@context': 'https://schema.org',
     '@type': 'MedicalWebPage',
     'name': topic.title,
     'description': topic.description,
     'url': pageUrl,
+    'inLanguage': 'zh-TW',
+    'author': {
+      '@type': 'Organization',
+      'name': '臺灣物理治療實證團隊',
+      'url': BASE_URL
+    },
+    'reviewedBy': {
+      '@type': 'Person',
+      'name': '臺灣執業物理治療師',
+      'jobTitle': 'Licensed Physical Therapist (Taiwan)'
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': '臺灣物理治療實證助手',
+      'url': BASE_URL,
+      'logo': {
+        '@type': 'ImageObject',
+        'url': `${BASE_URL}/icon-512.png?v=3`
+      }
+    },
+    'citation': '依據臺灣物理治療學會、APTA、JOSPT 臨床指引 (CPG) 及 PubMed 實證文獻',
     'about': {
       '@type': 'MedicalCondition',
       'name': topic.shortName,
@@ -124,6 +145,10 @@ TOPICS.forEach((topic) => {
   <meta property="og:url" content="${pageUrl}">
   <meta property="og:title" content="${escapeHtml(topic.title)} | 臺灣物理治療實證助手">
   <meta property="og:description" content="${escapeHtml(topic.description)}">
+  <meta property="og:image" content="${BASE_URL}/og-image.png?v=3">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${escapeHtml(topic.title)}">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:site_name" content="臺灣物理治療實證助手">
   
@@ -131,6 +156,7 @@ TOPICS.forEach((topic) => {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(topic.title)}">
   <meta name="twitter:description" content="${escapeHtml(topic.description)}">
+  <meta name="twitter:image" content="${BASE_URL}/og-image.png?v=3">
 
   <!-- Favicon & PWA -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
@@ -533,6 +559,15 @@ TOPICS.forEach((topic) => {
       </a>
     </div>
 
+    <!-- E-E-A-T 專業審核與指引認證卡 -->
+    <div style="background:var(--card-bg); border-radius:0.85rem; padding:0.9rem 1rem; margin-top:1.5rem; font-size:0.82rem; color:var(--text-muted); border:1px solid rgba(0,0,0,0.06); display:flex; align-items:center; gap:0.75rem;">
+      <div style="font-size:1.6rem; flex-shrink:0;">🩺</div>
+      <div>
+        <div style="font-weight:700; color:var(--text-main); font-size:0.88rem; margin-bottom:0.2rem;">臺灣執業物理治療師團隊 審核與維護</div>
+        <div>依據國際醫學臨床實踐指南（CPG）與 PubMed 實證醫學文獻整理，確保衛教動作安全合規。</div>
+      </div>
+    </div>
+
     <div class="footer-disclaimer">
       本百科內容依據國際醫學臨床指引與文獻整理，僅供衛生教育與動作參考，無法取代實體醫療診斷與治療。
     </div>
@@ -554,9 +589,56 @@ const indexHtml = `<!DOCTYPE html>
   <meta name="description" content="全台灣百大常見疼痛、肌肉拉傷、關節退化與辦公人體工學實證百科目錄。由物理治療團隊依據國際醫學臨床指引建立。">
   <meta name="google-site-verification" content="4FE8VjPYT4NzDNajbYPiakW30hZDkauPCJ14JmDDrEo">
   <link rel="canonical" href="${BASE_URL}/topics/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${BASE_URL}/topics/">
+  <meta property="og:title" content="百大常見疼痛與肌骨問題實證百科 | 臺灣物理治療實證助手">
+  <meta property="og:description" content="全台灣百大常見疼痛、肌肉拉傷、關節退化與辦公人體工學實證百科目錄。由物理治療團隊依據國際醫學臨床指引建立。">
+  <meta property="og:image" content="${BASE_URL}/og-image.png?v=3">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:site_name" content="臺灣物理治療實證助手">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="百大常見疼痛與肌骨問題實證百科 | 臺灣物理治療實證助手">
+  <meta name="twitter:description" content="全台灣百大常見疼痛、肌肉拉傷、關節退化與辦公人體工學實證百科目錄。由物理治療團隊依據國際醫學臨床指引建立。">
+  <meta name="twitter:image" content="${BASE_URL}/og-image.png?v=3">
+
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
   <meta name="theme-color" content="#007AFF" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1C1C1E" media="(prefers-color-scheme: dark)">
+
+  <!-- JSON-LD Structured Data (CollectionPage & ItemList) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "百大常見疼痛與肌骨問題實證百科",
+    "description": "全台灣百大常見疼痛、肌肉拉傷、關節退化與辦公人體工學實證百科目錄。由物理治療團隊依據國際醫學臨床指引建立。",
+    "url": "${BASE_URL}/topics/",
+    "inLanguage": "zh-TW",
+    "publisher": {
+      "@type": "Organization",
+      "name": "臺灣物理治療實證團隊",
+      "url": "${BASE_URL}"
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": ${TOPICS.length},
+      "itemListElement": [
+        ${TOPICS.map((t, idx) => JSON.stringify({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "name": t.title,
+          "url": `${BASE_URL}/topics/${t.slug}`
+        })).join(',\n        ')}
+      ]
+    }
+  }
+  </script>
 
   <style>
     :root {
