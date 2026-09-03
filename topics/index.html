@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>百大常見疼痛與肌骨問題實證百科 | 臺灣物理治療實證助手</title>
+  <meta name="description" content="全台灣百大常見疼痛、肌肉拉傷、關節退化與辦公人體工學實證百科目錄。由物理治療團隊依據國際醫學臨床指引建立。">
+  <link rel="canonical" href="https://taiwan-pt-web.vercel.app/topics/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <meta name="theme-color" content="#007AFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1C1C1E" media="(prefers-color-scheme: dark)">
+
+  <style>
+    :root {
+      --bg: #F2F2F7;
+      --card-bg: #FFFFFF;
+      --text-main: #1C1C1E;
+      --text-muted: #8E8E93;
+      --primary: #007AFF;
+      --primary-light: rgba(0, 122, 255, 0.08);
+      --font-zh: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card-bg: #1C1C1E;
+        --text-main: #F2F2F7;
+        --text-muted: #98989D;
+        --primary: #0A84FF;
+        --primary-light: rgba(10, 132, 255, 0.15);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-zh);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 4rem;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem;
+    }
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .back-btn {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--primary-light);
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.6rem;
+    }
+    h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+    .subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .search-box {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.85rem;
+      border: 1px solid rgba(0,0,0,0.1);
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      color: var(--text-main);
+      outline: none;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .filter-pills {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .pill {
+      white-space: nowrap;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 1px solid rgba(0,0,0,0.08);
+      cursor: pointer;
+    }
+    .pill.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+    .category-block {
+      margin-bottom: 2rem;
+    }
+    .cat-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 0.75rem;
+    }
+    .topic-card {
+      background: var(--card-bg);
+      border-radius: 0.9rem;
+      padding: 1rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .topic-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 0.96rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-main);
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 0.6rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-header">
+      <a href="/" class="back-btn">← 回到 AI 實證對話助手</a>
+      <span style="font-size:0.8rem; color:var(--text-muted);">共收錄 104 大專題</span>
+    </div>
+
+    <h1>百大常見疼痛與肌骨實證百科</h1>
+    <div class="subtitle">依據國際臨床指引與醫學文獻，提供一般民眾最安心清晰的動作衛教指南</div>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="🔍 搜尋症狀（例：久坐腰痛、膝蓋、足底、富貴包…）" oninput="filterTopics()">
+
+    <div class="filter-pills">
+      <button class="pill active" onclick="setCategory('all', this)">全部 (104)</button>
+      <button class="pill" onclick="setCategory('neck-shoulder', this)">💆 頸肩與上肢 (22)</button>
+      <button class="pill" onclick="setCategory('spine-back', this)">🪑 脊椎胸腰與核心 (22)</button>
+      <button class="pill" onclick="setCategory('hip-knee', this)">🏃 髖部骨盆與膝關節 (22)</button>
+      <button class="pill" onclick="setCategory('foot-ankle', this)">🦶 足踝足底與步態 (20)</button>
+      <button class="pill" onclick="setCategory('ergonomics-sports', this)">🏋️ 辦公人體工學與運動 (18)</button>
+    </div>
+
+    <div id="topicsContainer">
+      
+        <div class="category-block" data-cat="neck-shoulder">
+          <div class="cat-title">💆 頸肩與上肢</div>
+          <div class="topics-grid">
+            
+            <a href="/topics/forward-head-posture" class="topic-card" data-title="低頭族頸椎前傾與富貴包" data-keywords="低頭族 頸椎前傾 富貴包 烏龜頸 姿勢矯正 深層頸屈肌">
+              <div>
+                <div class="card-title">頸椎前傾與富貴包</div>
+                <div class="card-desc">長時間低頭滑手機造成烏龜頸與富貴包？物理治療師解析頸椎力學，提供深層頸屈肌收縮與胸椎活動度自我舒緩指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/cervical-radiculopathy" class="topic-card" data-title="頸椎神經根壓迫（手麻與頸肩放射痛）" data-keywords="頸椎神經壓迫 手麻 椎間盤突出 頸椎退化 放射痛 神經鬆動">
+              <div>
+                <div class="card-title">頸椎神經根壓迫與手麻</div>
+                <div class="card-desc">頸部痠痛延伸至手臂甚至手指發麻？物理治療師說明頸椎神經根病變的減壓原則、神經鬆動術與日常避險姿勢。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/frozen-shoulder" class="topic-card" data-title="五十肩（沾黏性肩關節囊炎）" data-keywords="五十肩 沾黏性肩關節囊炎 肩膀痛 穿衣服痛 手舉不高 鐘擺運動">
+              <div>
+                <div class="card-title">五十肩與活動度受限</div>
+                <div class="card-desc">手舉不高、拉不到背後或睡覺壓到肩膀痛醒？物理治療實證解析五十肩分期（疼痛期、凍結期、解凍期）與安全活動度伸展指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/rotator-cuff-tendinopathy" class="topic-card" data-title="旋轉肌袖肌腱炎與肩夾擠症候群" data-keywords="旋轉肌袖 夾擠症候群 肩膀疼痛 抬手痛 棘上肌 肩胛骨穩定">
+              <div>
+                <div class="card-title">旋轉肌袖肌腱炎</div>
+                <div class="card-desc">手臂抬到特定角度（60~120度）肩膀特別痛？物理治療師解析肩峰下夾擠機制，提供肩胛骨穩定度與旋轉肌肌力強化指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/tennis-elbow" class="topic-card" data-title="網球肘（肱骨外上髁肌腱病變）" data-keywords="網球肘 肱骨外上髁 肘關節疼痛 擰毛巾痛 握力痛 離心訓練">
+              <div>
+                <div class="card-title">網球肘外上髁炎</div>
+                <div class="card-desc">擰毛巾、提菜籃或敲鍵盤時手肘外側痠痛無力？物理治療實證解析伸腕肌群退化機制，提供離心肌力訓練與護肘配戴技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/golfers-elbow" class="topic-card" data-title="高爾夫球肘（肱骨內上髁肌腱炎）" data-keywords="高爾夫球肘 肱骨內上髁 手肘內側痛 屈腕肌群 抓握無力 離心運動">
+              <div>
+                <div class="card-title">高爾夫球肘內上髁炎</div>
+                <div class="card-desc">手肘內側隱隱作痛、提重物或手腕往下彎時特別酸？物理治療師說明屈腕肌腱修復要點、前臂內側伸展與動態抓握平衡。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/de-quervain-tenosynovitis" class="topic-card" data-title="媽媽手（狹窄性腱鞘炎）" data-keywords="媽媽手 狹窄性腱鞘炎 大拇指痛 手腕橈側 抱小孩 芬克斯坦測試">
+              <div>
+                <div class="card-title">媽媽手腱鞘炎</div>
+                <div class="card-desc">抱小孩、滑手機或開門鎖時大拇指根部刺痛？物理治療師介紹芬克斯坦檢測法（Finkelstein Test）、拇指肌腱滑動運動與媽媽手護木選用。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/carpal-tunnel-syndrome" class="topic-card" data-title="腕隧道症候群（手腕壓迫與手指發麻）" data-keywords="腕隧道 正中神經 手指發麻 騎車手麻 甩手舒緩 腕橫韌帶">
+              <div>
+                <div class="card-title">腕隧道症候群與手麻</div>
+                <div class="card-desc">騎機車、敲鍵盤或半夜睡覺時大拇指、食指、中指發麻發脹？物理治療師說明正中神經減壓原則、神經滑動運動與護腕使用時機。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/acute-cervical-strain" class="topic-card" data-title="急性落枕（頸椎小面關節急性卡滯）" data-keywords="落枕 脖子轉不過去 急性頸椎拉傷 小面關節卡住 熱敷 物理治療">
+              <div>
+                <div class="card-title">急性落枕與脖子卡住</div>
+                <div class="card-desc">一早醒來脖子像被石化一樣完全轉不過去？物理治療師解析小面關節卡滯與斜方肌痙攣原因，提供落枕當下安全自救與伸展策略。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/thoracic-outlet-syndrome" class="topic-card" data-title="胸廓出口症候群（手麻手臂發冷與斜角肌緊繃）" data-keywords="胸廓出口 手麻 手臂發冷 斜角肌 小胸肌 鎖骨 肋骨 姿勢不良">
+              <div>
+                <div class="card-title">胸廓出口症候群</div>
+                <div class="card-desc">手抬高刷牙、晾衣服或背包包時，整隻手發麻、沉重甚至冰冷發白？物理治療師解密胸廓出口三大狹窄卡壓點與神經血管減壓運動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/cervical-headache" class="topic-card" data-title="頸因性頭痛（後腦勺脹痛與太陽穴偏頭痛）" data-keywords="頸因性頭痛 後腦勺痛 太陽穴 枕下肌群 頸椎第一二節 眼睛痠脹">
+              <div>
+                <div class="card-title">頸因性頭痛</div>
+                <div class="card-desc">頭痛吃止痛藥總是治標不治本？疼痛常從後腦勺一路蔓延到太陽穴甚至眼睛周圍？物理治療師詳解枕下肌群放鬆與高位頸椎動態關節鬆動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/trigger-finger" class="topic-card" data-title="板機指（屈指肌腱狹窄性腱鞘炎）" data-keywords="板機指 手指卡住 彈響 掌指關節 滑囊 A1滑車 早晨僵硬">
+              <div>
+                <div class="card-title">板機指與手指卡住</div>
+                <div class="card-desc">早晨手指彎曲後伸不直，必須用好手硬扳開還會發出喀一聲？物理治療師解析 A1 滑車肥厚機制，提供熱水溫敷、肌腱伸展與防卡指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/tfcc-tear" class="topic-card" data-title="三角纖維軟骨損傷（TFCC 手腕小指側旋轉痛）" data-keywords="三角纖維軟骨 TFCC 手腕小指側痛 撐床痛 轉門把 旋轉肌群">
+              <div>
+                <div class="card-title">三角纖維軟骨TFCC損傷</div>
+                <div class="card-desc">手撐桌起身、轉門把或擰毛巾時，手腕小指外側深處一陣鑽心刺痛？物理治療師介紹尺側減壓原則、手腕穩定護具與深層肌群強化。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/cubital-tunnel-syndrome" class="topic-card" data-title="肘隧道症候群（手肘壓迫與無名指小指發麻）" data-keywords="肘隧道 尺神經 麻木 小指 無名指 手肘內側 屈肘 爪形手">
+              <div>
+                <div class="card-title">肘隧道尺神經壓迫</div>
+                <div class="card-desc">手肘彎著講電話久了，無名指和小指開始麻木發木？物理治療師解析尺神經在肘部溝槽的滑動受阻機制與神經減壓擺位。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/biceps-tendinopathy" class="topic-card" data-title="肱二頭肌長頭肌腱炎（肩膀前側壓痛與抬手酸痛）" data-keywords="二頭肌長頭 肌腱炎 肩膀前側痛 抬手痛 結節間溝 離心訓練">
+              <div>
+                <div class="card-title">二頭肌長頭肌腱炎</div>
+                <div class="card-desc">手往前抬或提重物時，肩膀正前方特定一條筋深處特別酸痛？物理治療實證解析結節間溝滑動摩擦與肩前側力量平衡技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/acromioclavicular-joint-sprain" class="topic-card" data-title="肩峰鎖骨關節扭傷（肩頭骨突處疼痛與搭肩痛）" data-keywords="肩峰鎖骨關節 AC關節 扭傷 肩頭凸起 橫向搭肩痛 撞擊 韌帶">
+              <div>
+                <div class="card-title">肩峰鎖骨關節扭傷</div>
+                <div class="card-desc">打球摔倒肩膀著地或車禍撞擊後，肩頭最上方骨頭凸凸的壓了劇痛？物理治療師介紹 AC 關節韌帶分級、穩定度支撐與無痛活動指南。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/scapular-dyskinesis" class="topic-card" data-title="肩胛骨動作障礙（翼狀肩胛與上背膏肓痛）" data-keywords="肩胛骨動作障礙 翼狀肩胛 膏肓痛 前鋸肌 下斜方肌 駝背 姿勢矯正">
+              <div>
+                <div class="card-title">肩胛骨動作障礙與翼狀肩胛</div>
+                <div class="card-desc">手臂抬起時背後肩胛骨翹起來像小翅膀，背部膏肓穴深處老是痠痛不已？物理治療師剖析肩胛胸壁節律失衡與前鋸肌激活運動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/cervical-facet-joint-syndrome" class="topic-card" data-title="頸椎小面關節症候群（脖子後仰側彎刺痛卡住）" data-keywords="頸椎小面關節 脖子後仰痛 轉頭卡 關節磨損 頸部牽引 姿勢調整">
+              <div>
+                <div class="card-title">頸椎小面關節症候群</div>
+                <div class="card-desc">脖子往前低頭還好，但只要頭往後仰或向某個方向側彎就一陣卡死刺痛？物理治療師說明小面關節夾擠退化機轉與動態活動度重建。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/throwers-shoulder-gird" class="topic-card" data-title="投擲肩關節後側緊繃（GIRD 症候群與拉弓刺痛）" data-keywords="投擲肩 GIRD 關節囊緊繃 棒球肩 殺球痛 內旋受限 睡眠者伸展">
+              <div>
+                <div class="card-title">投擲肩GIRD關節囊緊繃</div>
+                <div class="card-desc">棒球傳球、羽球殺球或排球扣球在手臂後引拉弓時肩膀後側深處劇痛？物理治療師解析 GIRD 關節囊緊繃與肩關節後側離心減速訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/upper-cross-syndrome" class="topic-card" data-title="上交叉症候群（圓肩駝背與頸肩深層痠痛）" data-keywords="上交叉症候群 圓肩 駝背 烏龜頸 胸大肌緊繃 下斜方肌無力 體態矯正">
+              <div>
+                <div class="card-title">上交叉症候群體態矯正</div>
+                <div class="card-desc">照鏡子側面看整個人圓肩、駝背又伸脖子？物理治療實證解析上交叉肌力失衡（胸肌緊＋背肌弱）的系統性伸展與強化計畫。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/snapping-scapula-syndrome" class="topic-card" data-title="彈響肩胛症候群（肩胛骨活動摩擦喀喀響）" data-keywords="彈響肩胛 肩胛骨喀喀聲 滑囊炎 肋骨摩擦 菱形肌 前鋸肌 肩胛胸壁關節">
+              <div>
+                <div class="card-title">彈響肩胛骨摩擦聲</div>
+                <div class="card-desc">每次轉動肩膀或擴胸時，背後肩胛骨跟肋骨之間老是喀喀作響甚至痠痛？物理治療師剖析肩胛胸壁滑囊炎與肌肉協調調理。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/subacromial-bursitis" class="topic-card" data-title="肩峰下滑囊炎（肩膀劇烈刺痛與夜間痛醒）" data-keywords="肩峰下滑囊炎 肩膀劇痛 夜間痛 穿衣痛 冰敷 旋轉肌 夾擠">
+              <div>
+                <div class="card-title">肩峰下滑囊炎</div>
+                <div class="card-desc">手輕輕一動肩膀就像火燒一樣劇痛，晚上完全無法側睡？物理治療師解析肩峰下滑囊急性發炎處置與無痛活動度維持法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+      
+        <div class="category-block" data-cat="spine-back">
+          <div class="cat-title">🪑 脊椎胸腰與核心</div>
+          <div class="topics-grid">
+            
+            <a href="/topics/lumbar-disc-herniation" class="topic-card" data-title="腰椎椎間盤突出（坐骨神經痛與下肢放射麻木）" data-keywords="椎間盤突出 坐骨神經痛 腰痛 腳麻 麥肯基伸展 直腿抬高">
+              <div>
+                <div class="card-title">腰椎椎間盤突出與坐骨神經痛</div>
+                <div class="card-desc">彎腰搬重物突然閃到腰，隨後屁股與大腿後側如觸電般麻痛？物理治療實證解析椎間盤髓核突出減壓機制與麥肯基伸展指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/nonspecific-low-back-pain" class="topic-card" data-title="慢性非特異性下背痛（久坐腰痠與深層核心失調）" data-keywords="慢性下背痛 久坐腰痠 核心肌群 腹橫肌 多裂肌 運動治療 護腰">
+              <div>
+                <div class="card-title">慢性非特異性下背痛</div>
+                <div class="card-desc">去醫院照 X 光骨頭沒事，但下背每天下午就像被灌鉛一樣痠重？物理治療臨床指引剖析深層核心無力與脊椎微動失衡。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/acute-lumbar-sprain" class="topic-card" data-title="急性閃腰（腰椎小面關節拉傷與肌肉痙攣）" data-keywords="閃腰 急性腰扭傷 肌肉痙攣 冰敷 熱敷 翻身困難 急性處理">
+              <div>
+                <div class="card-title">急性閃腰肌肉痙攣</div>
+                <div class="card-desc">彎腰刷牙或撿地上衛生紙，腰部「喀」一聲瞬間動彈不得？物理治療師提供急性閃腰前 48 小時急救擺位與消痙攣指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/piriformis-syndrome" class="topic-card" data-title="梨狀肌症候群（屁股深處痛與假性坐骨神經痛）" data-keywords="梨狀肌症候群 屁股痛 假性坐骨神經痛 久坐 按摩球 臀部深層刺痛">
+              <div>
+                <div class="card-title">梨狀肌症候群屁股痛</div>
+                <div class="card-desc">屁股深處像坐到石頭一樣頂著痠痛，站起來走路屁股一陣緊縮？物理治療師解密梨狀肌卡壓坐骨神經的原因與網球深層滾壓技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/lumbar-spinal-stenosis" class="topic-card" data-title="腰椎管狹窄症（間歇性跛行與走幾步路腿麻）" data-keywords="腰椎管狹窄 神經性間歇性跛行 走不久 彎腰比較舒服 購物車徵象 退化">
+              <div>
+                <div class="card-title">腰椎管狹窄與間歇性跛行</div>
+                <div class="card-desc">走幾百公尺雙腿就沉重發麻必須坐下休息，但推著大賣場推車向前彎腰時走得很順？物理治療師說明腰椎管減壓原則與核心曲度調理。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/spondylolisthesis" class="topic-card" data-title="腰椎滑脫症（腰部後仰受限與前傾穩定訓練）" data-keywords="腰椎滑脫 椎弓斷裂 核心穩定 腹橫肌 避免後仰 骨盆中立 脊椎滑脫">
+              <div>
+                <div class="card-title">腰椎滑脫症穩定訓練</div>
+                <div class="card-desc">常覺得腰部空空的不吃力，久站或後仰時腰椎像要斷掉一樣？物理治療實證解析滑脫分級（Grade 1~4）與深層腹橫肌骨盆穩定指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/sacroiliac-joint-dysfunction" class="topic-card" data-title="薦髂關節失能（單側臀部後側刺痛與翻身痛）" data-keywords="薦髂關節 SI joint 單側屁股痛 骨盆歪斜 孕期腰痛 骨盆帶 短腿">
+              <div>
+                <div class="card-title">薦髂關節失能</div>
+                <div class="card-desc">痛點總是在單側屁股上方小酒窩位置，翻身或單腳站立穿褲子時特別刺痛？物理治療師剖析薦髂關節微動障礙與骨盆對稱穩定運動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/ankylosing-spondylitis-rehab" class="topic-card" data-title="僵直性脊椎炎（晨間背部僵硬與深呼吸胸椎活動）" data-keywords="僵直性脊椎炎 晨間僵硬 活動後改善 駝背 擴胸運動 呼吸運動 HLA-B27">
+              <div>
+                <div class="card-title">僵直性脊椎炎胸椎活動</div>
+                <div class="card-desc">早晨起床背部像鐵板一樣僵硬超過 30 分鐘，動一動反而變舒服？物理治療師介紹僵直性脊椎炎活動度維持原則與胸廓呼吸運動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/scoliosis-adult-exercise" class="topic-card" data-title="成人脊椎側彎（姿勢失衡與不對稱背部痠痛）" data-keywords="脊椎側彎 凸側 凹側 高低肩 骨盆高低 施羅特 核心對稱訓練">
+              <div>
+                <div class="card-title">成人脊椎側彎姿勢調理</div>
+                <div class="card-desc">照鏡子發現明顯高低肩、兩側腰線不對稱，站久了一邊背特別痠？物理治療實證解析成人退化性側彎特徵與對稱性核心穩定強化。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/lower-crossed-syndrome" class="topic-card" data-title="下交叉症候群（骨盆前傾、小腹突出與久站腰酸）" data-keywords="下交叉症候群 骨盆前傾 小腹突出 翹屁股 髂腰肌緊 臀大肌無力 核心">
+              <div>
+                <div class="card-title">下交叉症候群骨盆前傾</div>
+                <div class="card-desc">明明人不胖但小腹總凸出來，站久了下背痠到不行？物理治療師剖析下交叉失衡鏈（腰緊腹弱、髖緊臀弱）與精準重塑計畫。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/pelvic-posterior-tilt" class="topic-card" data-title="骨盆後傾與平背症候群（腰椎曲度消失減震不良）" data-keywords="骨盆後傾 平背 屁股扁平 駝背 腰椎變平 避震差 核心肌群">
+              <div>
+                <div class="card-title">骨盆後傾平背體態</div>
+                <div class="card-desc">整個人站起來屁股扁扁向內收、走路像老爺爺駝背？物理治療師解析平背引發的腰椎椎間盤高壓危機與生理前凸恢復訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/thoracic-facet-pain" class="topic-card" data-title="胸椎小面關節卡住（深呼吸背痛與後背特定點刺痛）" data-keywords="胸椎小面關節 背痛 深呼吸痛 轉身痛 膏肓卡住 關節鬆動 滾筒">
+              <div>
+                <div class="card-title">胸椎小面關節卡住</div>
+                <div class="card-desc">大口深吸氣或轉動上半身時，後背特定點突然一陣尖銳刺痛？物理治療師剖析胸椎小面關節微卡滯原因與滾筒自我關節伸展。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/rhomboid-muscle-strain" class="topic-card" data-title="菱形肌拉傷與膏肓痛（肩胛骨內側深層盲點痠痛）" data-keywords="菱形肌 膏肓痛 肩胛骨內側 刺痛 斜方肌 打電腦 筋膜球 放鬆">
+              <div>
+                <div class="card-title">菱形肌拉傷與膏肓痛</div>
+                <div class="card-desc">肩胛骨內側邊緣深處老是有個「按不到、揉不深」的盲刺痛點？物理治療師解讀長期伏案拉扯導致的菱形肌過勞與深層筋膜釋放技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/quadratus-lumborum-spasm" class="topic-card" data-title="腰方肌痙攣（單側下背硬梆梆與側彎卡痛）" data-keywords="腰方肌 骨盆高低 側彎 單側腰痛 骨盆提拔 久坐 核心肌群">
+              <div>
+                <div class="card-title">腰方肌痙攣單側腰痛</div>
+                <div class="card-desc">單邊腰部摸起來硬得像石頭、走路一高一低或側彎時抽痛？物理治療師說明腰方肌代償臀中肌無力機轉與單側精準伸展策略。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/coccydynia-tailbone-pain" class="topic-card" data-title="尾椎痛（尾骨挫傷久坐與站起那一瞬間劇痛）" data-keywords="尾椎痛 尾骨 坐下痛 站起來那一瞬間 甜甜圈坐墊 骨盆底肌 挫傷">
+              <div>
+                <div class="card-title">尾椎痛與尾骨減壓</div>
+                <div class="card-desc">跌倒一屁股坐地上之後，每次坐下或由坐姿站起來那一剎那尾椎骨鑽心劇痛？物理治療師提供尾骨中空座墊使用與骨盆底肌減壓指導。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/psoas-major-tightness" class="topic-card" data-title="髂腰肌緊繃（久坐後腰挺不直與髖關節前側卡住）" data-keywords="髂腰肌 腰挺不直 髖屈肌 弓箭步伸展 久坐 骨盆前傾 核心">
+              <div>
+                <div class="card-title">髂腰肌緊繃腰部挺不直</div>
+                <div class="card-desc">在辦公室坐了兩小時，一起身整個人腰像被鋼絲鎖住一樣挺不直？物理治療師剖析髂腰肌縮短引發的腰椎牽拉與站姿重啟運動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/rib-joint-subluxation" class="topic-card" data-title="肋骨小關節錯位（深呼吸背後如針扎刺痛）" data-keywords="肋骨小關節 肋椎關節 錯位 深呼吸背痛 針扎 轉身痛 物理治療">
+              <div>
+                <div class="card-title">肋骨小關節錯位刺痛</div>
+                <div class="card-desc">咳嗽一聲或轉身拿東西，背後特定肋骨交界處突然像被針狠狠扎了一下？物理治療師解析肋椎關節微小錯動與深層呼吸胸廓重置。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/deep-core-weakness" class="topic-card" data-title="深層核心肌群無力（天然護腰失靈與腰椎代償）" data-keywords="深層核心 腹橫肌 多裂肌 腹內壓 骨盆底肌 護腰 天然護腰 呼吸">
+              <div>
+                <div class="card-title">深層核心無力與天然護腰</div>
+                <div class="card-desc">肚子鬆垮沒力量、稍微提個重物就覺得腰部空空直發虛？物理治療師介紹腹內壓（IAP）機制、腹橫肌多裂肌協調與脊椎鋼纜重訓。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/postpartum-pelvic-girdle-pain" class="topic-card" data-title="產後骨盆帶疼痛（恥骨聯合與薦髂關節產後修復）" data-keywords="產後腰痛 骨盆帶 恥骨聯合分離 薦髂關節 翻身痛 骨盆底肌 凱格爾">
+              <div>
+                <div class="card-title">產後骨盆帶疼痛與恥骨痛</div>
+                <div class="card-desc">生完小孩後走路像企鵝搖搖晃晃、跨步或在床上翻身時胯下恥骨鑽心痛？物理治療師詳解產後韌帶鬆弛期保護與骨盆穩定復原計畫。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/degenerative-disc-disease" class="topic-card" data-title="腰椎退化性關節炎（骨刺生成與晨間起床僵硬）" data-keywords="腰椎退化 骨刺 晨間僵硬 關節磨損 熱敷 走路 水中運動 物理治療">
+              <div>
+                <div class="card-title">腰椎退化性關節炎與骨刺</div>
+                <div class="card-desc">早晨起床下背硬邦邦，要稍微走一走熱身才慢慢活動開來？物理治療實證解析長骨刺的生理代償機制與安全關節活動運動指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/cauda-equina-red-flag" class="topic-card" data-title="馬尾症候群警訊（大小便失控與鞍區麻木急診快篩）" data-keywords="馬尾症候群 紅旗警訊 急診 大小便失控 鞍區麻木 垂足 48小時金窗期">
+              <div>
+                <div class="card-title">馬尾症候群急診紅旗快篩</div>
+                <div class="card-desc">下背劇痛伴隨小便解不出來或跨下麻木？這是脊椎外科最高等級醫療紅旗！物理治療師詳解 48 小時黃金減壓時機與就醫指標。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/lordosis-lumbar-hyperlordosis" class="topic-card" data-title="腰椎過度前凸（凹腰翹屁股體態與關節壓力）" data-keywords="腰椎過度前凸 凹腰 假屁股 小腹凸 腹肌無力 髂腰肌 姿勢校正">
+              <div>
+                <div class="card-title">腰椎過度前凸體態重塑</div>
+                <div class="card-desc">側面拍照肚子向前頂、屁股往後翹，站立時間稍微一長下背就痠痛？物理治療師解析小面關節嵌夾機制與腰椎減壓重塑運動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+      
+        <div class="category-block" data-cat="hip-knee">
+          <div class="cat-title">🏃 髖部骨盆與膝關節</div>
+          <div class="topics-grid">
+            
+            <a href="/topics/knee-osteoarthritis" class="topic-card" data-title="退化性膝關節炎（上下樓梯痠軟與關節磨損衛教）" data-keywords="退化性膝關節炎 下樓梯痛 關節磨損 軟骨 股四頭肌 關節鏡 玻尿酸">
+              <div>
+                <div class="card-title">退化性膝關節炎</div>
+                <div class="card-desc">下樓梯膝蓋痠軟無力、久坐站起來膝頭僵硬？物理治療國際指引證實股四頭肌肌力訓練能為關節減震 30%，延緩關節置換。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/patellofemoral-pain-syndrome" class="topic-card" data-title="髕骨股骨疼痛症候群（髕骨外翻與下樓梯膝蓋前側痛）" data-keywords="髕骨股骨疼痛症候群 髕骨外翻 膝蓋前側痛 下樓梯痛 電影院徵象 臀中肌">
+              <div>
+                <div class="card-title">髕骨股骨疼痛症候群</div>
+                <div class="card-desc">看電影久坐膝蓋前側發脹、走下坡時膝蓋骨隱隱作痛？物理治療師解密髕骨滑動軌跡不良機制與臀中肌強化指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/itb-runner-knee" class="topic-card" data-title="髂脛束症候群（跑者膝跑步特定里程外側刺痛）" data-keywords="髂脛束 跑者膝 ITBS 膝蓋外側痛 跑步 滾筒放鬆 臀大肌 離心訓練">
+              <div>
+                <div class="card-title">髂脛束症候群跑者膝</div>
+                <div class="card-desc">每次跑步剛好跑到第 3 公里，膝蓋外側就開始如刀割般劇痛？物理治療師解析髂脛束與股骨外上髁摩擦機制與骨盆力學穩定。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/patellar-tendinopathy-jumper-knee" class="topic-card" data-title="跳躍膝（髕骨肌腱病變落地與起跳下緣刺痛）" data-keywords="跳躍膝 髕骨肌腱炎 籃球 排球 起跳痛 落地痛 離心訓練 髕骨帶">
+              <div>
+                <div class="card-title">跳躍膝髕骨肌腱病變</div>
+                <div class="card-desc">打籃球起跳搶籃板或排球扣球落地那一瞬間，髕骨下緣骨頭處一陣刺痛？物理治療師剖析肌腱退化性病變與西班牙深蹲離心重建法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/acl-rehab-guide" class="topic-card" data-title="前十字韌帶損傷（ACL 扭傷斷裂與階段性復健指引）" data-keywords="前十字韌帶 ACL 扭傷 關節鏡 重建 膕旁肌 開鏈 閉鏈 關節活動度">
+              <div>
+                <div class="card-title">前十字韌帶ACL復健指引</div>
+                <div class="card-desc">打球急停轉身膝蓋發出「啵」一聲隨後腫成大麵包？物理治療師介紹前十字韌帶分期復健目標（消腫、伸直、肌力與本體感覺）。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/meniscus-tear-conservative" class="topic-card" data-title="半月板撕裂保守治療（關節卡死彈響與深蹲動作調整）" data-keywords="半月板撕裂 關節卡死 膝蓋縫痛 彈響 關節鏡 膝關節旋轉 保守治療">
+              <div>
+                <div class="card-title">半月板撕裂保守治療</div>
+                <div class="card-desc">蹲下撿東西站不起來、膝蓋轉身時有卡搭一聲的交鎖感？物理治療實證解析半月板紅區白區血液循環與無痛下肢強化指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/mcl-knee-sprain" class="topic-card" data-title="內側副韌帶扭傷（MCL 膝蓋內側受撞擊壓痛與穩定防護）" data-keywords="內側副韌帶 MCL 扭傷 膝蓋內側痛 側向撞擊 外翻應力 護膝 復健">
+              <div>
+                <div class="card-title">內側副韌帶MCL扭傷</div>
+                <div class="card-desc">踢足球或騎車膝蓋外側被撞了一下，膝蓋內側骨頭周圍腫脹劇痛？物理治療師介紹 MCL 韌帶分級復健與抗外翻動態穩定訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/lcl-knee-sprain" class="topic-card" data-title="外側副韌帶扭傷（LCL 膝外側穩定度與內翻受力防護）" data-keywords="外側副韌帶 LCL 膝蓋外側痛 內翻應力 腓骨頭 腓總神經 關節穩定">
+              <div>
+                <div class="card-title">外側副韌帶LCL扭傷</div>
+                <div class="card-desc">小腿被向內猛烈踢撞，膝蓋外側骨頭凹陷處一碰就痛？物理治療師解析 LCL 解剖、腓總神經防護與外側鏈動態強化策略。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/pes-anserine-bursitis" class="topic-card" data-title="鵝足滑囊炎（膝蓋內側骨頭下方酸痛與夜間膝夾枕頭）" data-keywords="鵝足滑囊炎 膝蓋內側骨頭痛 鵝足肌腱 跑步 縫匠肌 股薄肌 半腱肌">
+              <div>
+                <div class="card-title">鵝足滑囊炎膝內側痛</div>
+                <div class="card-desc">膝蓋關節內側往下約兩指寬的骨面上，按壓起來特別刺痛甚至走路微跛？物理治療師剖析三條肌肉交會受力機制與內側肌群減張法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/bakers-cyst" class="topic-card" data-title="貝克氏囊腫（膝蓋後窩腫脹緊繃與深彎卡住）" data-keywords="貝克氏囊腫 膝窩腫脹 膝後緊繃 關節積水 膕窩 深蹲卡住 抽積水">
+              <div>
+                <div class="card-title">貝克氏囊腫膝窩腫脹</div>
+                <div class="card-desc">膝蓋後方膕窩鼓起一顆軟軟的像水球般的腫塊，蹲下時膝後發脹卡住？物理治療師解讀關節液單向瓣膜積聚機制與源頭治本方法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/dynamic-knee-valgus" class="topic-card" data-title="動態膝外翻（深蹲硬舉膝蓋內扣內夾力學矯正）" data-keywords="膝蓋內扣 膝外翻 動態膝外翻 深蹲 臀中肌 腳踝活動度 扁平足 矯正">
+              <div>
+                <div class="card-title">深蹲膝蓋內扣矯正</div>
+                <div class="card-desc">深蹲蹲到底要站起來時，膝蓋不由自主向內夾了一下？物理治療師剖析下肢動力鏈連鎖反應（足弓塌陷＋臀肌失憶）與彈力帶矯正訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/femoroacetabular-impingement-fai" class="topic-card" data-title="髖臼股骨撞擊症候群（FAI 深蹲鼠蹊部前側卡痛）" data-keywords="FAI 髖臼股骨撞擊 鼠蹊部痛 深蹲卡住 髖關節唇 骨刺 內旋受限">
+              <div>
+                <div class="card-title">髖臼股骨撞擊症FAI</div>
+                <div class="card-desc">深蹲蹲到大腿水平以下，鼠蹊部正前方深處一陣骨頭互撞的卡痛感？物理治療實證解析凸輪型與鉗夾型骨骼力學與骨盆深蹲站姿調整。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/greater-trochanteric-pain-syndrome" class="topic-card" data-title="大轉子疼痛症候群（臀中肌肌腱病變側躺睡覺痛醒）" data-keywords="大轉子疼痛 臀中肌肌腱炎 滑囊炎 側躺痛 屁股外側痛 走久痛 物理治療">
+              <div>
+                <div class="card-title">大轉子疼痛症候群</div>
+                <div class="card-desc">晚上側睡壓到骨盆外側骨頭痛到醒過來，走久了大腿外側上方酸到無力？物理治療師說明臀中肌附著點減壓與側向承重肌力重建。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/hip-osteoarthritis" class="topic-card" data-title="退化性髖關節炎（鼠蹊部深處痠痛穿鞋襪受限）" data-keywords="退化性髖關節炎 鼠蹊部痛 穿鞋襪困難 晨間僵硬 水中運動 關節置換">
+              <div>
+                <div class="card-title">退化性髖關節炎</div>
+                <div class="card-desc">彎腰剪腳趾甲、穿鞋子襪子時髖部卡死下不去，走路一跛一跛？物理治療實證解析髖關節軟骨保護原則、牽引活動度與減震拐杖技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/hamstring-strain" class="topic-card" data-title="膕旁肌拉傷（大腿後側肌肉衝刺跑跳突發拉扯痛）" data-keywords="膕旁肌 大腿後側拉傷 衝刺 跑步 坐骨粗隆 離心訓練 北歐挺身">
+              <div>
+                <div class="card-title">大腿後側膕旁肌拉傷</div>
+                <div class="card-desc">跑步衝刺或踢球大跨步瞬間，大腿後側像被橡皮筋狠抽一下劇痛？物理治療師解析坐骨粗隆肌腱撕裂修復與北歐挺身（Nordic Hamstring）離心防禦。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/quadriceps-strain" class="topic-card" data-title="股四頭肌拉傷（大腿前側踢球跳躍拉扯與腫脹復原）" data-keywords="股四頭肌拉傷 踢球 股直肌 跳躍 大腿前側痛 冰敷 等長收縮">
+              <div>
+                <div class="card-title">大腿前側股四頭肌拉傷</div>
+                <div class="card-desc">大力踢球或全力起跳後，大腿正前方肌肉一收縮就劇烈抽痛？物理治療師剖析股直肌雙關節肌特性與階段性肌力重建流程。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/hip-adductor-groin-strain" class="topic-card" data-title="髖內收肌群拉傷（鼠蹊部內側抽痛與側向變向痛）" data-keywords="內收肌 鼠蹊部拉傷 胯下痛 足球 側向變向 哥本哈根訓練 內夾">
+              <div>
+                <div class="card-title">髖內收肌拉傷鼠蹊痛</div>
+                <div class="card-desc">踢足球內腳背傳球或側向滑步防守時，胯下大腿內側一陣刺痛抽搐？物理治療師介紹內收長肌受力特性與哥本哈根（Copenhagen）離心防禦。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/gluteal-amnesia-dead-butt" class="topic-card" data-title="臀肌失憶症（死臀症候群久坐屁股扁平與腰膝代償）" data-keywords="臀肌失憶症 死臀症候群 屁股扁平 久坐 臀大肌 臀中肌 蚌殼式 橋式">
+              <div>
+                <div class="card-title">臀肌失憶症與死臀症候群</div>
+                <div class="card-desc">整天坐在椅子上 8 小時，屁股肌肉像睡著了一樣完全不會發力，站起來走路腰膝都在痛？物理治療師教你喚醒沉睡屁股的激活訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/knee-hyperextension-genu-recurvatum" class="topic-card" data-title="膝超伸（膝關節過度伸直後頂與小腿粗壯體態）" data-keywords="膝超伸 膝關節過度伸直 骨盆前傾 小腿粗 大腿前側凸 關節卡死 站姿">
+              <div>
+                <div class="card-title">膝超伸體態矯正</div>
+                <div class="card-desc">站著時習慣把膝蓋往後頂死鎖住關節，側面看雙腿像彎曲的弓箭且小腿特別顯粗？物理治療師解析膝後囊過度牽拉與微屈膝自然站姿重塑。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/o-leg-genu-varum" class="topic-card" data-title="O型腿（膝內翻膝關節內側過度受力與調整）" data-keywords="O型腿 膝內翻 內側磨損 骨盆外旋 臀中肌 步態 腳掌外側磨損">
+              <div>
+                <div class="card-title">O型腿膝內翻調整</div>
+                <div class="card-desc">雙腳併攏站立時兩膝之間空隙大於兩指寬，鞋底外側總是磨損特別嚴重？物理治療師說明膝關節內側壓力倍增機轉與下肢排列訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/x-leg-genu-valgum" class="topic-card" data-title="X型腿（膝外翻扁平足與骨盆旋轉連鎖反應）" data-keywords="X型腿 膝外翻 兩膝相撞 扁平足 臀中肌 內八字 跑步相撞 矯正">
+              <div>
+                <div class="card-title">X型腿膝外翻改善</div>
+                <div class="card-desc">雙膝併攏時腳踝分得很開碰不到，跑步時兩膝容易互撞？物理治療師剖析扁平足引起的小腿內旋連鎖效應與臀肌抗外翻運動。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/plica-syndrome" class="topic-card" data-title="膝關節滑膜皺襞症候群（內側摩擦喀喀彈響與假性卡住）" data-keywords="滑膜皺襞 內側皺襞 喀喀響 髕骨內側 卡住 屈伸痛 關節鏡 冰敷">
+              <div>
+                <div class="card-title">膝關節滑膜皺襞症候群</div>
+                <div class="card-desc">膝蓋一彎一伸時，膝蓋骨內側邊緣老是有一條厚厚軟軟的筋在滑動彈響？物理治療師介紹胚胎殘留皺襞發炎機轉與消腫減擦指引。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+      
+        <div class="category-block" data-cat="foot-ankle">
+          <div class="cat-title">🦶 足踝足底與步態</div>
+          <div class="topics-grid">
+            
+            <a href="/topics/plantar-fasciitis" class="topic-card" data-title="足底筋膜炎（早晨下床第一步踩地刺痛與滾球伸展）" data-keywords="足底筋膜炎 下床第一步痛 腳後跟刺痛 滾高爾夫球 網球 小腿拉筋 足弓">
+              <div>
+                <div class="card-title">足底筋膜炎下床痛</div>
+                <div class="card-desc">早晨起床腳踩地那一瞬間腳跟如針扎般劇痛，走動十幾步後才稍微鬆開？物理治療實證解析足底筋膜微撕裂機制與大腳趾背屈伸展法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/lateral-ankle-sprain" class="topic-card" data-title="腳踝翻船扭傷（前距腓韌帶拉傷與急性消腫復原）" data-keywords="腳踝扭傷 翻船 前距腓韌帶 冰敷 彈性繃帶 消腫 本體感覺 關節穩定">
+              <div>
+                <div class="card-title">腳踝翻船扭傷急救</div>
+                <div class="card-desc">打球踩到別人的腳翻船，腳踝外側立刻腫成大麵包？物理治療師介紹最新 PEACE &amp; LOVE 軟組織處理原則與抗習慣性扭傷訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/chronic-ankle-instability" class="topic-card" data-title="慢性腳踝不穩定（常常習慣性翻船與平衡感重建）" data-keywords="慢性腳踝不穩定 習慣性翻船 鬆動 感知 平衡木 單腳站 腓骨肌 彈力帶">
+              <div>
+                <div class="card-title">習慣性腳踝扭傷穩定訓練</div>
+                <div class="card-desc">走在稍微不平的路上就提心吊膽，動不動就拐一下？物理治療實證解析外側韌帶鬆弛與單腳站立本體感覺平衡訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/achilles-tendinopathy" class="topic-card" data-title="阿基里斯跟腱炎（早晨後腳跟僵硬與離心降落訓練）" data-keywords="阿基里斯跟腱炎 腳後跟痛 晨間僵硬 慢跑 離心下沉 艾佛森訓練 墊腳尖">
+              <div>
+                <div class="card-title">阿基里斯跟腱炎離心訓練</div>
+                <div class="card-desc">早晨起床後腳跟又緊又硬，捏著腳後跟那一條大筋特別酸痛？物理治療師介紹經典艾佛森（Alfredson）階梯離心訓練與跟腱修復。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/flatfoot-pes-planus" class="topic-card" data-title="成人後天性扁平足（足弓塌陷內側酸痛與鞋墊選擇）" data-keywords="扁平足 後天足弓塌陷 內側痛 脛後肌 短足運動 人體工學鞋墊 避震">
+              <div>
+                <div class="card-title">成人扁平足與足弓塌陷</div>
+                <div class="card-desc">走路走沒多久腳底內側就酸到受不了，鞋底內側磨損特別快？物理治療師解析脛後肌肌腱失能與足底短足運動（Short Foot）足弓自建法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/high-arched-foot-pes-cavus" class="topic-card" data-title="高足弓（足底減震不良與前腳掌後跟長繭壓痛）" data-keywords="高足弓 爪形趾 減震差 前掌痛 厚繭 壓力性骨折 避震鞋墊 伸展">
+              <div>
+                <div class="card-title">高足弓減震不良與長繭</div>
+                <div class="card-desc">腳掌足弓高高拱起像石拱橋，前腳掌底部跟腳後跟特別容易長厚厚的繭甚至踩地痛？物理治療師解析剛性高足弓避震差與減壓技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/hallux-valgus-bunion" class="topic-card" data-title="拇趾外翻（大腳趾內側紅腫摩擦與足肌鍛鍊指南）" data-keywords="拇趾外翻 大腳趾外翻 紅腫 摩擦痛 寬楦鞋 分趾器 外展拇肌 扁平足">
+              <div>
+                <div class="card-title">拇趾外翻自我保護</div>
+                <div class="card-desc">大腳趾根部骨頭凸起一大塊，穿漂亮包鞋摩擦得又紅又腫又痛？物理治療師解析第一蹠骨內翻力學與外展拇肌自主鍛鍊法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/morton-neuroma" class="topic-card" data-title="莫頓神經瘤（前腳掌發麻觸電感與穿窄鞋刺痛）" data-keywords="莫頓神經瘤 前腳掌痛 踩到小石子 觸電感 腳趾發麻 窄鞋 蹠骨墊">
+              <div>
+                <div class="card-title">莫頓神經瘤前掌麻痛</div>
+                <div class="card-desc">走路時總覺得前腳掌鞋墊裡卡了一顆小石子，腳趾間一陣陣像觸電般發麻？物理治療師介紹第三四蹠骨間神經卡壓與橫足弓減壓法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/posterior-tibial-tendon-dysfunction" class="topic-card" data-title="脛後肌肌腱失能（內踝後方痠痛與後天足弓塌陷）" data-keywords="脛後肌肌腱 內踝痛 足弓塌陷 單腳踮腳尖 扁平足 腱鞘炎 彈力帶">
+              <div>
+                <div class="card-title">脛後肌肌腱失能內踝痛</div>
+                <div class="card-desc">內側腳踝後方總是痠痛腫脹，原本正常的足弓一年比一年塌陷？物理治療實證解析成人後天扁平足頭號元凶脛後肌與離心強化。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/peroneal-tendon-subluxation" class="topic-card" data-title="腓骨肌腱滑脫與腱鞘炎（外踝後方彈響卡卡與扭傷後遺症）" data-keywords="腓骨肌腱滑脫 外踝彈響 卡卡 扭傷後遺症 腓骨長肌 腱鞘炎 外翻">
+              <div>
+                <div class="card-title">腓骨肌腱滑脫外踝彈響</div>
+                <div class="card-desc">每次腳踝轉動或踮腳時，外踝骨頭後方老是有一條筋往前彈跳滑動還伴隨喀喀聲？物理治療師介紹上腓骨支持帶修復與肌腱溝穩定訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/heel-spur" class="topic-card" data-title="足跟骨刺（照 X 光發現骨刺是痛的元兇嗎？迷思破解）" data-keywords="足跟骨刺 X光 骨刺 鈣化 足底筋膜炎 迷思 避震鞋墊 牽引">
+              <div>
+                <div class="card-title">足跟骨刺與疼痛迷思破解</div>
+                <div class="card-desc">腳後跟痛去照 X 光看到長了一根骨刺，嚇得以為要開刀敲掉？物理治療實證揭露骨刺真相：90% 的疼痛與骨刺無關，而是周圍軟組織發炎！</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/tarsal-tunnel-syndrome" class="topic-card" data-title="跗骨隧道症候群（腳底內側麻木、針刺感與脛神經卡壓）" data-keywords="跗骨隧道 脛神經 腳底麻 針刺感 內踝 扁平足 屈肌支持帶 夜間麻">
+              <div>
+                <div class="card-title">跗骨隧道症候群腳底麻</div>
+                <div class="card-desc">腳底板常常像有成群螞蟻在爬、麻木發木甚至像火燒一樣？物理治療師解析內踝跗骨隧道內的脛神經卡壓與神經滑動減壓技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/shin-splints-mtss" class="topic-card" data-title="內側脛骨壓力症候群（MTSS 跑步小腿內側骨頭酸痛）" data-keywords="內側脛骨壓力症候群 MTSS 跑步小腿痛 骨膜炎 疲勞性骨折 跑姿 步頻">
+              <div>
+                <div class="card-title">內側脛骨壓力症候群MTSS</div>
+                <div class="card-desc">剛開始跑步幾週，小腿前內側骨頭邊緣一碰就痛得跳起來？物理治療師解密脛骨骨膜牽拉受力與步頻調整 180 原則。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/calf-muscle-cramp" class="topic-card" data-title="小腿抽筋（半夜突發小腿肚痙攣劇痛自救與電解質補給）" data-keywords="小腿抽筋 半夜抽筋 肌肉痙攣 腓腸肌 扳腳趾 電解質 鎂離子 熱敷">
+              <div>
+                <div class="card-title">小腿抽筋急性自救與預防</div>
+                <div class="card-desc">半夜睡得正香，小腿肚突然劇烈抽筋縮成一團硬塊、痛到滾下床？物理治療師提供當下 3 秒扳腳趾自救法與日常防抽筋指南。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/retrocalcaneal-bursitis" class="topic-card" data-title="跟骨後滑囊炎（鞋後幫摩擦、腳後跟紅腫凸起與避震）" data-keywords="跟骨後滑囊炎 腳後跟紅腫 鞋後幫摩擦 磨腳 哈格蘭骨凸 冰敷 軟鞋">
+              <div>
+                <div class="card-title">跟骨後滑囊炎後跟紅腫</div>
+                <div class="card-desc">新鞋後跟太硬太挺，把腳後跟上方磨出一顆紅紅腫腫的硬包、一碰鞋子就痛？物理治療師解析滑囊受擠壓發炎機轉與護跟防護。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/turf-toe" class="topic-card" data-title="草皮腳趾（第一蹠趾關節過度向上背屈扭傷與固定保護）" data-keywords="草皮腳趾 Turf Toe 大拇趾關節 扭傷 人工草皮 推蹬痛 碳纖維板 冰敷">
+              <div>
+                <div class="card-title">草皮腳趾大拇趾扭傷</div>
+                <div class="card-desc">踢球或衝刺時腳趾被地面狠狠卡住並過度向上折起，大拇趾根部腫痛無法推蹬？物理治療師介紹蹠板複合體韌帶分級與硬底鞋保護。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/sesamoiditis" class="topic-card" data-title="種子骨炎（前腳掌大拇趾根部踩地鑽心痛與減壓墊）" data-keywords="種子骨炎 大腳趾根部踩地痛 蹠骨頭 跑步 芭蕾舞 減壓墊 避震 物理治療">
+              <div>
+                <div class="card-title">種子骨炎前掌踩地痛</div>
+                <div class="card-desc">走路只要前腳掌大拇趾球踩到地就一陣鑽心痛，像直接踩在小石子上一樣？物理治療師剖析兩顆豌豆大小種子骨的承重力學與挖洞減壓法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/compartment-syndrome-chronic" class="topic-card" data-title="小腿慢性腔室症候群（跑步特定時間小腿發脹硬如石頭）" data-keywords="慢性腔室症候群 小腿發脹 硬如石頭 跑步停下來就好 筋膜間隙 減壓">
+              <div>
+                <div class="card-title">小腿慢性腔室症候群</div>
+                <div class="card-desc">每次跑步剛好跑到第 15 分鐘，雙側小腿肚就發脹發硬得像石頭一樣快要爆炸，但一停下來走動十幾分鐘就完全恢復正常？</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/overpronation-gait" class="topic-card" data-title="足部過度內旋步態（著地塌陷膝蓋內夾與動力鏈代償）" data-keywords="過度內旋 旋前 步態 足弓塌陷 膝蓋內扣 鞋底內側磨損 脛後肌 短足運動">
+              <div>
+                <div class="card-title">足部過度內旋步態矯正</div>
+                <div class="card-desc">走路時腳跟著地後腳掌像爛泥一樣向內側大面積塌倒，膝蓋不由自主跟著往內轉？物理治療師剖析過度內旋對上肢動力鏈的破壞與校正。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/supination-underpronation" class="topic-card" data-title="足部過度外翻步態（高弓剛性足著地衝擊過大與減震）" data-keywords="過度外翻 旋後 高足弓 避震差 鞋底外側磨損 翻船 緩震跑鞋 筋膜放鬆">
+              <div>
+                <div class="card-title">足部過度外翻步態調整</div>
+                <div class="card-desc">走路踩地時重量全部落在腳掌外側邊緣，鞋底外側磨損極度誇張？物理治療師解密剛性足底吸震不足機轉與緩衝活動度提升。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+      
+        <div class="category-block" data-cat="ergonomics-sports">
+          <div class="cat-title">🏋️ 辦公人體工學與運動</div>
+          <div class="topics-grid">
+            
+            <a href="/topics/slow-jogging-knee-health" class="topic-card" data-title="超慢跑傷膝蓋嗎？（步頻 180 受力科學與正確跑姿指南）" data-keywords="超慢跑 傷膝蓋嗎 步頻180 節拍器 前腳掌著地 微笑速度 微屈膝 護膝">
+              <div>
+                <div class="card-title">超慢跑正確姿勢與膝蓋保護</div>
+                <div class="card-desc">風靡全台的「超慢跑」到底會不會傷膝蓋軟骨？物理治療師以運動生物力學解析步頻 180、中前足著地與微屈膝減震黃金準則。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/office-ergonomic-setup" class="topic-card" data-title="辦公室人體工學坐姿（電腦螢幕高度與座椅調整黃金比例）" data-keywords="人體工學坐姿 電腦螢幕高度 辦公椅調整 90度原則 腰靠 視線平視 富貴包">
+              <div>
+                <div class="card-title">辦公人體工學黃金比例</div>
+                <div class="card-desc">每天在辦公桌前坐滿 8 小時腰酸背痛脖子斷？物理治療師提供「三個 90 度」人體工學設定手冊，打造零痠痛辦公環境。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/squat-biomechanics-guide" class="topic-card" data-title="深蹲膝蓋能過腳尖嗎？（運動力學受力解析與臀部主導技巧）" data-keywords="深蹲 膝蓋過腳尖 髖鉸鏈 髕骨股骨壓力 臀大肌 腳踝活動度 正確深蹲">
+              <div>
+                <div class="card-title">深蹲膝蓋過腳尖受力解析</div>
+                <div class="card-desc">教練說深蹲膝蓋千萬不能過腳尖，骨科醫師又說可以過？物理治療師用關節力矩解析真相，教你找出個人解剖構造的最舒適蹲姿。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/deadlift-back-protection" class="topic-card" data-title="硬舉如何避免閃腰？（下背保護、腹內壓啟動與髖鉸鏈重訓）" data-keywords="硬舉 閃腰 腹內壓 髖鉸鏈 圓背 瓦式呼吸 豎脊肌 臀大肌 重訓安全">
+              <div>
+                <div class="card-title">硬舉下背保護與腹內壓</div>
+                <div class="card-desc">每次做槓鈴硬舉隔天下背就痛到像要斷掉？物理治療師解析硬舉閃腰兩大死穴（圓背拉起與離身體太遠），提供脊椎中立保護計畫。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/standing-desk-ergonomics" class="topic-card" data-title="升降桌站著上班對腰好嗎？（站姿防疲勞原則與抗疲勞墊）" data-keywords="升降桌 站著上班 腰痛 靜脈曲張 抗疲勞墊 站坐交替 足底筋膜 姿勢">
+              <div>
+                <div class="card-title">升降桌站姿防疲勞原則</div>
+                <div class="card-desc">買了電動升降桌整天站著上班，結果腰沒好反而腳跟痛、小腿發脹？物理治療師解密「站坐交替黃金比例」與下肢抗疲勞技巧。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/elderly-fall-prevention-balance" class="topic-card" data-title="長輩防跌平衡感訓練（單腳站立、下肢肌力與居家防滑）" data-keywords="長輩防跌 平衡感訓練 跌倒 骨折 單腳站立 下肢肌力 防滑 扶手 銀髮族">
+              <div>
+                <div class="card-title">長輩防跌與平衡訓練</div>
+                <div class="card-desc">長輩跌倒一次健康往往急轉直下！物理治療實證解析預防銀髮族跌倒三大支柱：股四頭肌力量、本體感覺平衡與居家環境安全改造。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/sarcopenia-elderly-exercise" class="topic-card" data-title="肌少症運動指引（銀髮族阻力訓練、蛋白質與活力生活）" data-keywords="肌少症 阻力訓練 銀髮族 蛋白質 握力 走路變慢 椅子起立 長輩運動">
+              <div>
+                <div class="card-title">肌少症銀髮族阻力運動</div>
+                <div class="card-desc">年紀大了手擰不開寶特瓶蓋、走路越來越慢甚至雙腿消瘦變細？物理治療師剖析肌少症自我檢測（量小腿圍）與漸進式無痛肌力訓練。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/mouse-hand-wrist-rest" class="topic-card" data-title="滑鼠手人體工學配置（垂直滑鼠、手腕支撐與防腕隧道）" data-keywords="滑鼠手 垂直滑鼠 鍵盤手托 腕隧道 手腕懸空 人體工學 伸肌群 手腕痛">
+              <div>
+                <div class="card-title">滑鼠手人體工學配置</div>
+                <div class="card-desc">整天抓著滑鼠手腕像被火燒、手掌外側長出厚繭？物理治療師教你挑選適合自己掌型的垂直滑鼠，告別手腕懸空與前臂扭轉。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/dual-monitor-neck-strain" class="topic-card" data-title="雙螢幕脖子痠痛（擺放角度人體工學與斜視預防）" data-keywords="雙螢幕 脖子痠痛 主副螢幕 旋轉角度 人體工學 頸椎小面關節 視線">
+              <div>
+                <div class="card-title">雙螢幕人體工學擺放配置</div>
+                <div class="card-desc">用雙螢幕上班後單側脖子老是轉不過去特別痛？物理治療師解密主副螢幕擺設黃金配置，終結單側頸椎過度扭轉代償。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/lumbar-cushion-selection" class="topic-card" data-title="久坐護腰靠墊有用嗎？（正確支撐位置、硬度挑選指南）" data-keywords="護腰靠墊 人體工學靠枕 久坐 支撐位置 記憶棉 腰椎前凸 辦公椅">
+              <div>
+                <div class="card-title">久坐護腰靠墊挑選與擺放</div>
+                <div class="card-desc">買了一堆靠墊椅子後面塞得滿滿的，為什麼腰還是痠？物理治療師剖析腰靠擺放位置（腰椎第 3~5 節）與厚度挑選關鍵。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/mattress-pillow-sleep-posture" class="topic-card" data-title="睡醒腰酸背痛（床墊軟硬度挑選與枕頭高度黃金指引）" data-keywords="床墊軟硬度 枕頭高度 睡醒腰酸 側睡 仰睡 獨立筒 頸椎弧度 睡眠力學">
+              <div>
+                <div class="card-title">床墊枕頭挑選與睡姿指南</div>
+                <div class="card-desc">睡前好好的、一早醒來全身骨頭像散架一樣痠痛？物理治療師以脊椎力學解析床墊支撐力、枕頭高度與仰睡側睡減壓擺位。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/foam-roller-myofascial-release" class="topic-card" data-title="滾筒放鬆真能消除痠痛嗎？（正確滾動頻率與四大避雷禁忌）" data-keywords="滾筒放鬆 筋膜放鬆 泡棉滾筒 激痛點 避雷 越滾越痛 運動後放鬆">
+              <div>
+                <div class="card-title">滾筒筋膜放鬆正確技巧</div>
+                <div class="card-desc">拿著滾筒在身上死滾活滾痛到飆淚，隔天全身黑青發炎？物理治療師解讀肌筋膜神經抑制原理，教你「微痛、慢速、避開骨頭」的專業放鬆法。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/massage-gun-safety" class="topic-card" data-title="筋膜槍使用禁忌（哪些身體危險部位千萬不能打？）" data-keywords="筋膜槍 禁忌部位 頸動脈 膕窩 骨頭 神經 震動按摩 肌肉放鬆 安全">
+              <div>
+                <div class="card-title">筋膜槍使用禁忌與安全指引</div>
+                <div class="card-desc">筋膜槍拿起來全身亂震一通，差點震出中風或關節發炎？物理治療師列出「人體五大筋膜槍絕對禁區」，守護居家震動放鬆安全。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/warm-up-dynamic-stretch" class="topic-card" data-title="運動前暖身與拉筋（動態伸展 vs 靜態拉筋正確時機）" data-keywords="動態伸展 靜態拉筋 運動前暖身 爆發力 運動後放鬆 關節活動度 防受傷">
+              <div>
+                <div class="card-title">運動前後伸展與暖身時機</div>
+                <div class="card-desc">運動前做劈腿靜態拉筋反而害肌肉無力受傷？物理治療師揭曉運動科學實證：運動前動態伸展啟動、運動後靜態拉伸放鬆黃金準則。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/core-stability-mcgill-big-3" class="topic-card" data-title="麥吉爾三動作（McGill Big 3 脊椎生物力學最安全的黃金核心）" data-keywords="麥吉爾三動作 McGill Big 3 脊椎中立 捲腹 側棒式 鳥狗式 腰痛復健 核心">
+              <div>
+                <div class="card-title">麥吉爾三大黃金核心動作</div>
+                <div class="card-desc">想練核心但做仰臥起坐腰越練越痛？加拿大脊椎力學大師麥吉爾（Stuart McGill）證實三大動作能零壓迫腰椎、打造鋼鐵脊椎穩定度！</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/running-cadence-injury" class="topic-card" data-title="跑步步頻 180 原則（加快步頻如何減少 20% 膝蓋落地衝擊）" data-keywords="跑步步頻 180 跑姿 落地衝擊 煞車剪力 跨大步 膝蓋痛 跑步經濟性">
+              <div>
+                <div class="card-title">跑步步頻180原則防傷</div>
+                <div class="card-desc">跑步總覺得每一步像重石砸地、膝蓋震得發痛？運動醫學研究證實：將步頻提升至 175~180 步/分，能立竿見影減少 20% 膝關節衝擊力！</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/backpack-shoulder-neck-weight" class="topic-card" data-title="背包過重與高低肩（雙肩包挑選、背帶長度與孩童脊椎保健）" data-keywords="雙肩包 單肩包 背包過重 高低肩 脊椎側彎 學生書包 護脊 背帶調整">
+              <div>
+                <div class="card-title">背包過重與高低肩防範</div>
+                <div class="card-desc">書包電腦包像磚頭一樣重，背久了整個人駝背向前傾甚至高低肩？物理治療師提供「背包重量不超過體重 10%」安全守則與背帶調整指南。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+            
+            <a href="/topics/driving-low-back-comfort" class="topic-card" data-title="長途開車腰痠背痛（汽車座椅角度、腰靠支撐與踏板距離）" data-keywords="開車腰痠 長途駕駛 汽車座椅調整 腰靠 踏板距離 塞車 椎間盤壓力 頸椎">
+              <div>
+                <div class="card-title">長途開車腰痠人體工學調整</div>
+                <div class="card-desc">塞車在高速公路上兩小時，下車那一瞬間腰挺不直、右側屁股整片發麻？物理治療師解讀汽車震動對椎間盤的累積衝擊與駕駛座最佳設定。</div>
+              </div>
+              <div class="card-footer">
+                <span>實證衛教指引</span>
+                <span>閱讀專題 ➔</span>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+    </div>
+  </div>
+
+  <script>
+    let currentCat = 'all';
+
+    function setCategory(cat, btn) {
+      currentCat = cat;
+      document.querySelectorAll('.filter-pills .pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      filterTopics();
+    }
+
+    function filterTopics() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const blocks = document.querySelectorAll('.category-block');
+
+      blocks.forEach(block => {
+        const blockCat = block.getAttribute('data-cat');
+        const catMatch = (currentCat === 'all' || currentCat === blockCat);
+        const cards = block.querySelectorAll('.topic-card');
+        let hasVisibleCard = false;
+
+        cards.forEach(card => {
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const kw = (card.getAttribute('data-keywords') || '').toLowerCase();
+          const textMatch = (!q || title.includes(q) || kw.includes(q));
+
+          if (catMatch && textMatch) {
+            card.style.display = 'flex';
+            hasVisibleCard = true;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        block.style.display = hasVisibleCard ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

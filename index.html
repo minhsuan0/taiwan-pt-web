@@ -2666,6 +2666,15 @@
 
   <!-- 底部拇指黃金熱區 (Thumb Zone) · 溫暖支持與預約評估 -->
   <div class="drawer-footer-zone">
+    <!-- 📚 實證疼痛百科（百大專題） -->
+    <a href="/topics/" class="drawer-action-btn" style="text-decoration:none;">
+      <div class="btn-left">
+        <div class="btn-icon">📚</div>
+        <span>實證疼痛百科（百大專題）</span>
+      </div>
+      <span class="btn-line-badge" style="color:#007AFF;">專題 ↗</span>
+    </a>
+
     <!-- 請喝咖啡 -->
     <button type="button" class="drawer-action-btn" onclick="closeHistoryDrawer(); openJkoModal();">
       <div class="btn-left">
@@ -2990,6 +2999,12 @@
               <div class="screener-card-name">早晨足底刺痛快篩</div>
               <div class="screener-card-desc">下床第一步踩地痛 · 腳跟緊繃 · 扁平足</div>
             </button>
+          </div>
+          <div style="text-align:center; margin-top:0.75rem;">
+            <a href="/topics/" style="font-size:0.78rem; color:#007AFF; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">
+              <span>📚 查看全部 104 篇常見症狀實證百科</span>
+              <span>➔</span>
+            </a>
           </div>
         </div>
       </div>
@@ -5355,6 +5370,26 @@
     if (banner) banner.classList.remove('show');
     localStorage.setItem('tw_pt_pwa_dismissed', '1');
   }
+
+  // ── 🔗 百大專題導流：支援 ?q= 參數自動填入並啟動實證對話 ──────────
+  window.addEventListener('DOMContentLoaded', () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const q = urlParams.get('q');
+      if (q && q.trim()) {
+        const input = document.getElementById('input');
+        if (input) {
+          input.value = q.trim();
+          updateActionButtonState();
+          setTimeout(() => {
+            sendMessage();
+          }, 350);
+        }
+      }
+    } catch (e) {
+      console.warn('[URL Query Auto-fill]', e);
+    }
+  });
 
 </script>
 
