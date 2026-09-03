@@ -3361,8 +3361,8 @@
     text = text.replace(/^\s*[\*\-]\s+(.+)$/gm, '• $1');
     text = text.replace(/^\s*\*\s*/gm, '• ');
 
-    // 5. 處理 Markdown 連結 [文字](網址) ➔ 文字 (網址)
-    text = text.replace(/\[(.*?)\]\((https?:\/\/[^\)]+)\)/g, '$1 ($2)');
+    // 5. 處理 Markdown 連結 [文字](網址) ➔ 文字 (網址)（支援全形半形括號）
+    text = text.replace(/\[(.*?)\][\(（]\s*([^\)\s（）]+)\s*[\)）]/g, '$1 ($2)');
 
     // 6. 整理分隔線
     text = text.replace(/^\s*---+\s*$/gm, '───────────────');
@@ -4389,12 +4389,23 @@
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/`(.+?)`/g, '<code>$1</code>')
-      // Markdown 連結 [text](url)
-      .replace(/\[(.+?)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-      // 裸露 URL
-      .replace(/(^|[\s])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>')
+      // Markdown 格式連結 [文字](網址) 與 [文字]（網址），支援全形半形括號、相對與絕對路徑
+      .replace(/\[([^\]]+)\][\(（]\s*([^\)\s（）]+)\s*[\)）]/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
       // 清理任何殘留的孤立 # 字符
       .replace(/#{2,}/g, '');
+
+    // 處理內文中任何裸露的 URL（支援全形冒號、括號、中文標點等任意中文字符前後文）
+    const aPlaceholders = [];
+    html = html.replace(/<a\b[^>]*>[\s\S]*?<\/a>/gi, (match) => {
+      aPlaceholders.push(match);
+      return `___A_HOLDER_${aPlaceholders.length - 1}___`;
+    });
+    html = html.replace(/(https?:\/\/[^\s<>"'\(\)（）「」『』【】、，。；！？]+)/g, (match, url) => {
+      const cleanUrl = url.replace(/[\.\,\;\:\!\?]+$/, '');
+      const trailing = url.slice(cleanUrl.length);
+      return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${cleanUrl}</a>${trailing}`;
+    });
+    html = html.replace(/___A_HOLDER_(\d+)___/g, (match, idx) => aPlaceholders[parseInt(idx, 10)] || '');
 
     // 將非標籤間的換行轉為 <br>
     html = html.replace(/\n/g, '<br>');
@@ -5500,6 +5511,24 @@
       }
     } catch (e) {
       console.warn('[URL Query Auto-fill]', e);
+    }
+  });
+
+  // ── 🌐 全域超連結點擊增強（完美解決 iOS Standalone PWA、行動端 WebView 外跳限制）──────
+  window.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+    // 若為外部網址（如 LINE 諮詢、PubMed 文獻等）
+    if (/^https?:\/\//i.test(href)) {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (isStandalone) {
+        // 在 iOS PWA standalone 模式下，直接 window.open 或轉址以順利跳出或開啟原生 App（如 LINE）
+        e.preventDefault();
+        window.open(href, '_blank') || (window.location.href = href);
+      }
     }
   });
 
