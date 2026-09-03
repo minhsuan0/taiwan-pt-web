@@ -188,7 +188,74 @@
       color: var(--text-muted);
       line-height: 1.55;
     }
-    
+
+    /* ── 延伸相關專題推薦網 ── */
+    .related-section {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .related-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .related-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .related-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .related-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .related-card {
+      background: var(--card-bg);
+      border-radius: 0.85rem;
+      padding: 0.9rem 1rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .related-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .related-card-badge {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .related-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .related-card-arrow {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-align: right;
+      margin-top: 0.1rem;
+    }
+
     /* ── CTA Action Bar ── */
     .cta-container {
       margin-top: 1.5rem;
@@ -327,6 +394,34 @@
       
     </div>
     
+
+    <!-- 相關實證推薦專題（內部連結網絡） -->
+    <div class="related-section">
+      <div class="related-header">
+        <span class="related-title">📚 延伸閱讀：相關實證專題</span>
+        <span class="related-sub">同部位動作與避險指引</span>
+      </div>
+      <div class="related-grid">
+        
+        <a href="/topics/knee-osteoarthritis" class="related-card">
+          <div class="related-card-badge">🏃 退化性膝關節炎</div>
+          <div class="related-card-desc">下樓梯膝蓋痠軟無力、久坐站起來膝頭僵硬？物理治療國際指引證實股四頭肌肌力訓練能為關節減震 30%，延緩關節置換。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/dynamic-knee-valgus" class="related-card">
+          <div class="related-card-badge">🏃 深蹲膝蓋內扣矯正</div>
+          <div class="related-card-desc">深蹲蹲到底要站起來時，膝蓋不由自主向內夾了一下？物理治療師剖析下肢動力鏈連鎖反應（足弓塌陷＋臀肌失憶）與彈力帶矯正訓練。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/greater-trochanteric-pain-syndrome" class="related-card">
+          <div class="related-card-badge">🏃 大轉子疼痛症候群</div>
+          <div class="related-card-desc">晚上側睡壓到骨盆外側骨頭痛到醒過來，走久了大腿外側上方酸到無力？物理治療師說明臀中肌附著點減壓與側向承重肌力重建。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+      </div>
+    </div>
 
     <!-- 雙向導流呼叫行動 -->
     <div class="cta-container">

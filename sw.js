@@ -2,7 +2,7 @@
  * Service Worker for 台灣物理治療實證助手 (PWA)
  */
 
-const CACHE_NAME = 'taiwan-pt-v6.3';
+const CACHE_NAME = 'taiwan-pt-v6.4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

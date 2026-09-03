@@ -188,7 +188,74 @@
       color: var(--text-muted);
       line-height: 1.55;
     }
-    
+
+    /* ── 延伸相關專題推薦網 ── */
+    .related-section {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .related-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .related-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .related-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .related-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .related-card {
+      background: var(--card-bg);
+      border-radius: 0.85rem;
+      padding: 0.9rem 1rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .related-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .related-card-badge {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .related-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .related-card-arrow {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-align: right;
+      margin-top: 0.1rem;
+    }
+
     /* ── CTA Action Bar ── */
     .cta-container {
       margin-top: 1.5rem;
@@ -328,6 +395,34 @@
       
     </div>
     
+
+    <!-- 相關實證推薦專題（內部連結網絡） -->
+    <div class="related-section">
+      <div class="related-header">
+        <span class="related-title">📚 延伸閱讀：相關實證專題</span>
+        <span class="related-sub">同部位動作與避險指引</span>
+      </div>
+      <div class="related-grid">
+        
+        <a href="/topics/scoliosis-adult-exercise" class="related-card">
+          <div class="related-card-badge">🪑 成人脊椎側彎姿勢調理</div>
+          <div class="related-card-desc">照鏡子發現明顯高低肩、兩側腰線不對稱，站久了一邊背特別痠？物理治療實證解析成人退化性側彎特徵與對稱性核心穩定強化。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/degenerative-disc-disease" class="related-card">
+          <div class="related-card-badge">🪑 腰椎退化性關節炎與骨刺</div>
+          <div class="related-card-desc">早晨起床下背硬邦邦，要稍微走一走熱身才慢慢活動開來？物理治療實證解析長骨刺的生理代償機制與安全關節活動運動指引。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/lumbar-disc-herniation" class="related-card">
+          <div class="related-card-badge">🪑 腰椎椎間盤突出與坐骨神經痛</div>
+          <div class="related-card-desc">彎腰搬重物突然閃到腰，隨後屁股與大腿後側如觸電般麻痛？物理治療實證解析椎間盤髓核突出減壓機制與麥肯基伸展指引。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+      </div>
+    </div>
 
     <!-- 雙向導流呼叫行動 -->
     <div class="cta-container">

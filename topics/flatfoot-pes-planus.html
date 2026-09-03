@@ -188,7 +188,74 @@
       color: var(--text-muted);
       line-height: 1.55;
     }
-    
+
+    /* ── 延伸相關專題推薦網 ── */
+    .related-section {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .related-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .related-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .related-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .related-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .related-card {
+      background: var(--card-bg);
+      border-radius: 0.85rem;
+      padding: 0.9rem 1rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .related-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .related-card-badge {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .related-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .related-card-arrow {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-align: right;
+      margin-top: 0.1rem;
+    }
+
     /* ── CTA Action Bar ── */
     .cta-container {
       margin-top: 1.5rem;
@@ -327,6 +394,34 @@
       
     </div>
     
+
+    <!-- 相關實證推薦專題（內部連結網絡） -->
+    <div class="related-section">
+      <div class="related-header">
+        <span class="related-title">📚 延伸閱讀：相關實證專題</span>
+        <span class="related-sub">同部位動作與避險指引</span>
+      </div>
+      <div class="related-grid">
+        
+        <a href="/topics/posterior-tibial-tendon-dysfunction" class="related-card">
+          <div class="related-card-badge">🦶 脛後肌肌腱失能內踝痛</div>
+          <div class="related-card-desc">內側腳踝後方總是痠痛腫脹，原本正常的足弓一年比一年塌陷？物理治療實證解析成人後天扁平足頭號元凶脛後肌與離心強化。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/overpronation-gait" class="related-card">
+          <div class="related-card-badge">🦶 足部過度內旋步態矯正</div>
+          <div class="related-card-desc">走路時腳跟著地後腳掌像爛泥一樣向內側大面積塌倒，膝蓋不由自主跟著往內轉？物理治療師剖析過度內旋對上肢動力鏈的破壞與校正。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/high-arched-foot-pes-cavus" class="related-card">
+          <div class="related-card-badge">🦶 高足弓減震不良與長繭</div>
+          <div class="related-card-desc">腳掌足弓高高拱起像石拱橋，前腳掌底部跟腳後跟特別容易長厚厚的繭甚至踩地痛？物理治療師解析剛性高足弓避震差與減壓技巧。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+      </div>
+    </div>
 
     <!-- 雙向導流呼叫行動 -->
     <div class="cta-container">

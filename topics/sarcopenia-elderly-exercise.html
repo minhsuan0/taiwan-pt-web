@@ -188,7 +188,74 @@
       color: var(--text-muted);
       line-height: 1.55;
     }
-    
+
+    /* ── 延伸相關專題推薦網 ── */
+    .related-section {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .related-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .related-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .related-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .related-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .related-card {
+      background: var(--card-bg);
+      border-radius: 0.85rem;
+      padding: 0.9rem 1rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .related-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .related-card-badge {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .related-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .related-card-arrow {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-align: right;
+      margin-top: 0.1rem;
+    }
+
     /* ── CTA Action Bar ── */
     .cta-container {
       margin-top: 1.5rem;
@@ -327,6 +394,34 @@
       
     </div>
     
+
+    <!-- 相關實證推薦專題（內部連結網絡） -->
+    <div class="related-section">
+      <div class="related-header">
+        <span class="related-title">📚 延伸閱讀：相關實證專題</span>
+        <span class="related-sub">同部位動作與避險指引</span>
+      </div>
+      <div class="related-grid">
+        
+        <a href="/topics/elderly-fall-prevention-balance" class="related-card">
+          <div class="related-card-badge">🏋️ 長輩防跌與平衡訓練</div>
+          <div class="related-card-desc">長輩跌倒一次健康往往急轉直下！物理治療實證解析預防銀髮族跌倒三大支柱：股四頭肌力量、本體感覺平衡與居家環境安全改造。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/slow-jogging-knee-health" class="related-card">
+          <div class="related-card-badge">🏋️ 超慢跑正確姿勢與膝蓋保護</div>
+          <div class="related-card-desc">風靡全台的「超慢跑」到底會不會傷膝蓋軟骨？物理治療師以運動生物力學解析步頻 180、中前足著地與微屈膝減震黃金準則。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/office-ergonomic-setup" class="related-card">
+          <div class="related-card-badge">🏋️ 辦公人體工學黃金比例</div>
+          <div class="related-card-desc">每天在辦公桌前坐滿 8 小時腰酸背痛脖子斷？物理治療師提供「三個 90 度」人體工學設定手冊，打造零痠痛辦公環境。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+      </div>
+    </div>
 
     <!-- 雙向導流呼叫行動 -->
     <div class="cta-container">

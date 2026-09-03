@@ -188,7 +188,74 @@
       color: var(--text-muted);
       line-height: 1.55;
     }
-    
+
+    /* ── 延伸相關專題推薦網 ── */
+    .related-section {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .related-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .related-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .related-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .related-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .related-card {
+      background: var(--card-bg);
+      border-radius: 0.85rem;
+      padding: 0.9rem 1rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .related-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .related-card-badge {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .related-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .related-card-arrow {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-align: right;
+      margin-top: 0.1rem;
+    }
+
     /* ── CTA Action Bar ── */
     .cta-container {
       margin-top: 1.5rem;
@@ -327,6 +394,34 @@
       
     </div>
     
+
+    <!-- 相關實證推薦專題（內部連結網絡） -->
+    <div class="related-section">
+      <div class="related-header">
+        <span class="related-title">📚 延伸閱讀：相關實證專題</span>
+        <span class="related-sub">同部位動作與避險指引</span>
+      </div>
+      <div class="related-grid">
+        
+        <a href="/topics/forward-head-posture" class="related-card">
+          <div class="related-card-badge">💆 頸椎前傾與富貴包</div>
+          <div class="related-card-desc">長時間低頭滑手機造成烏龜頸與富貴包？物理治療師解析頸椎力學，提供深層頸屈肌收縮與胸椎活動度自我舒緩指引。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/scapular-dyskinesis" class="related-card">
+          <div class="related-card-badge">💆 肩胛骨動作障礙與翼狀肩胛</div>
+          <div class="related-card-desc">手臂抬起時背後肩胛骨翹起來像小翅膀，背部膏肓穴深處老是痠痛不已？物理治療師剖析肩胛胸壁節律失衡與前鋸肌激活運動。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+
+        <a href="/topics/cervical-radiculopathy" class="related-card">
+          <div class="related-card-badge">💆 頸椎神經根壓迫與手麻</div>
+          <div class="related-card-desc">頸部痠痛延伸至手臂甚至手指發麻？物理治療師說明頸椎神經根病變的減壓原則、神經鬆動術與日常避險姿勢。</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>
+      </div>
+    </div>
 
     <!-- 雙向導流呼叫行動 -->
     <div class="cta-container">

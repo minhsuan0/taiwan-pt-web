@@ -28,10 +28,42 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+// ── 智能關聯推薦運算（同部位、關鍵字重疊度評分） ────────
+function getRelatedTopics(currentTopic, allTopics) {
+  const sameCat = allTopics.filter(t => t.category === currentTopic.category && t.slug !== currentTopic.slug);
+  const currentTokens = (currentTopic.keyword + ' ' + currentTopic.title).split(/[,、\s]+/);
+
+  const scored = sameCat.map(t => {
+    let score = 0;
+    const targetText = t.title + ' ' + t.keyword + ' ' + t.description;
+    currentTokens.forEach(token => {
+      if (token.length >= 2 && targetText.includes(token)) {
+        score += 2;
+      }
+    });
+    return { topic: t, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  const result = scored.slice(0, 3).map(s => s.topic);
+
+  // 若不足 3 篇，以同分類其他題目補足
+  if (result.length < 3) {
+    for (const t of sameCat) {
+      if (!result.some(r => r.slug === t.slug)) {
+        result.push(t);
+        if (result.length === 3) break;
+      }
+    }
+  }
+  return result;
+}
+
 // ── 1. 產生 104 篇個別 SEO 專題頁面 ─────────────────────
 TOPICS.forEach((topic) => {
   const cat = CATEGORIES[topic.category] || { name: '肌骨健康', icon: '🩺' };
   const pageUrl = `${BASE_URL}/topics/${topic.slug}`;
+  const relatedTopics = getRelatedTopics(topic, TOPICS);
 
   // Schema.org FAQPage
   const faqSchema = {
@@ -266,7 +298,74 @@ TOPICS.forEach((topic) => {
       color: var(--text-muted);
       line-height: 1.55;
     }
-    
+
+    /* ── 延伸相關專題推薦網 ── */
+    .related-section {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .related-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .related-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .related-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .related-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .related-card {
+      background: var(--card-bg);
+      border-radius: 0.85rem;
+      padding: 0.9rem 1rem;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .related-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .related-card-badge {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .related-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .related-card-arrow {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-align: right;
+      margin-top: 0.1rem;
+    }
+
     /* ── CTA Action Bar ── */
     .cta-container {
       margin-top: 1.5rem;
@@ -398,6 +497,25 @@ TOPICS.forEach((topic) => {
       `).join('\n      ')}
     </div>
     ` : ''}
+
+    <!-- 相關實證推薦專題（內部連結網絡） -->
+    <div class="related-section">
+      <div class="related-header">
+        <span class="related-title">📚 延伸閱讀：相關實證專題</span>
+        <span class="related-sub">同部位動作與避險指引</span>
+      </div>
+      <div class="related-grid">
+        ${relatedTopics.map(rel => {
+          const relCat = CATEGORIES[rel.category] || { icon: '🩺' };
+          return `
+        <a href="/topics/${rel.slug}" class="related-card">
+          <div class="related-card-badge">${relCat.icon} ${escapeHtml(rel.shortName)}</div>
+          <div class="related-card-desc">${escapeHtml(rel.description)}</div>
+          <div class="related-card-arrow">閱讀指引 ➔</div>
+        </a>`;
+        }).join('\n')}
+      </div>
+    </div>
 
     <!-- 雙向導流呼叫行動 -->
     <div class="cta-container">
