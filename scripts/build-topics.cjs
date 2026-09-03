@@ -84,6 +84,7 @@ TOPICS.forEach((topic) => {
   <title>${escapeHtml(topic.title)} | 臺灣物理治療實證助手</title>
   <meta name="description" content="${escapeHtml(topic.description)}">
   <meta name="keywords" content="${escapeHtml(topic.keyword)}">
+  <meta name="google-site-verification" content="4FE8VjPYT4NzDNajbYPiakW30hZDkauPCJ14JmDDrEo">
   <link rel="canonical" href="${pageUrl}">
   
   <!-- Open Graph / Facebook -->
@@ -407,6 +408,7 @@ const indexHtml = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>百大常見疼痛與肌骨問題實證百科 | 臺灣物理治療實證助手</title>
   <meta name="description" content="全台灣百大常見疼痛、肌肉拉傷、關節退化與辦公人體工學實證百科目錄。由物理治療團隊依據國際醫學臨床指引建立。">
+  <meta name="google-site-verification" content="4FE8VjPYT4NzDNajbYPiakW30hZDkauPCJ14JmDDrEo">
   <link rel="canonical" href="${BASE_URL}/topics/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
   <meta name="theme-color" content="#007AFF" media="(prefers-color-scheme: light)">
