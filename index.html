@@ -3915,9 +3915,11 @@
   }
 
   function shareToLine() {
-    const shareUrl = encodeURIComponent(`https://taiwan-pt-web.vercel.app`);
-    const previewSummary = currentShareText ? currentShareText.substring(0, 200).replace(/[#*`_]/g, '').trim() : '';
-    const text = encodeURIComponent(`【臺灣物理治療實證衛教】${currentShareTopic}\n\n${previewSummary}...\n\n完整實證指引：`);
+    const qParam = currentShareTopic ? `?q=${encodeURIComponent(currentShareTopic)}` : '';
+    const shareUrl = encodeURIComponent(`https://taiwan-pt-web.vercel.app/${qParam}`);
+    const previewSummary = currentShareText ? currentShareText.substring(0, 160).replace(/[#*`_]/g, '').trim() : '';
+    const topicTitle = currentShareTopic ? `【物理治療實證】${currentShareTopic}` : '【臺灣物理治療實證助手】';
+    const text = encodeURIComponent(`${topicTitle}\n\n${previewSummary}...\n\n點開連結查看完整實證衛教指引：`);
     window.open(`https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${text}`, '_blank');
   }
 
