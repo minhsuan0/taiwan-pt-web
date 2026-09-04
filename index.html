@@ -1046,13 +1046,30 @@
         opacity: 0;
       }
     }
+    .sheet-grabber-bar-area {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.65rem 0 0.35rem;
+      cursor: grab;
+      touch-action: none;
+      flex-shrink: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
     .sheet-grabber-bar {
       width: 38px;
       height: 4.5px;
       border-radius: 2.5px;
       background: rgba(60, 60, 67, 0.3);
-      margin: 0.6rem auto 0.25rem;
+      margin: 0 auto;
       flex-shrink: 0;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .sheet-grabber-bar-area:active .sheet-grabber-bar {
+      background: rgba(60, 60, 67, 0.55);
+      transform: scaleX(1.12);
     }
     .evidence-sheet-header {
       display: flex;
@@ -2916,6 +2933,9 @@
       }
       .sheet-grabber-bar {
         background: rgba(255, 255, 255, 0.28);
+      }
+      .sheet-grabber-bar-area:active .sheet-grabber-bar {
+        background: rgba(255, 255, 255, 0.55);
       }
       .evidence-sheet-header {
         border-bottom-color: #2c2c2e;
@@ -5358,6 +5378,12 @@
     const modal = document.getElementById('evidence-modal');
     if (modal) {
       isEvidenceClosing = false;
+      modal.style.backgroundColor = '';
+      const card = modal.querySelector('.evidence-sheet-card');
+      if (card) {
+        card.style.transform = '';
+        card.style.transition = '';
+      }
       modal.classList.remove('closing');
       modal.classList.add('show');
       document.body.style.overflow = 'hidden';
@@ -5369,6 +5395,12 @@
     if (!modal || isEvidenceClosing || !modal.classList.contains('show')) return;
     triggerHaptic('light');
     isEvidenceClosing = true;
+    const card = modal.querySelector('.evidence-sheet-card');
+    if (card) {
+      card.style.transform = '';
+      card.style.transition = '';
+    }
+    modal.style.backgroundColor = '';
     modal.classList.add('closing');
     modal.classList.remove('show');
     setTimeout(() => {
@@ -5383,6 +5415,189 @@
       closeEvidenceModal();
     }
   }
+
+  // ── 實證研究彈窗 Swipe Down to Dismiss 手勢互動 ─────────────────
+  (function initEvidenceSheetSwipe() {
+    let startY = 0;
+    let currentY = 0;
+    let startTime = 0;
+    let isDragging = false;
+    let isHeaderOrGrabber = false;
+    let sheetCard = null;
+    let sheetBody = null;
+    let modalEl = null;
+
+    function getElements() {
+      if (typeof document === 'undefined') return false;
+      if (!modalEl) modalEl = document.getElementById('evidence-modal');
+      if (!sheetCard && modalEl && typeof modalEl.querySelector === 'function') {
+        const found = modalEl.querySelector('.evidence-sheet-card');
+        if (found && typeof found.addEventListener === 'function') {
+          sheetCard = found;
+        }
+      }
+      if (!sheetBody && modalEl && typeof modalEl.querySelector === 'function') {
+        const found = modalEl.querySelector('.evidence-sheet-body');
+        if (found && typeof found.addEventListener === 'function') {
+          sheetBody = found;
+        }
+      }
+      return !!(modalEl && sheetCard && typeof sheetCard.addEventListener === 'function');
+    }
+
+    function handleStart(clientY, target) {
+      if (!getElements() || !modalEl.classList.contains('show') || isEvidenceClosing) return;
+
+      // 若點擊的是互動元件（關閉鈕、原文連結、量尺刻度按鈕），不攔截手勢
+      if (target && target.closest('button, a, .modal-close-btn, .evidence-pubmed-btn, .scale-step')) {
+        return;
+      }
+
+      isHeaderOrGrabber = !!(target && target.closest('.sheet-grabber-bar-area, .sheet-grabber-bar, .evidence-sheet-header'));
+
+      // 若在內文區塊，必須滾動位置在最頂部（scrollTop <= 0）才允許手勢關閉
+      if (!isHeaderOrGrabber) {
+        if (sheetBody && sheetBody.scrollTop > 0) {
+          return;
+        }
+      }
+
+      startY = clientY;
+      currentY = clientY;
+      startTime = Date.now();
+      isDragging = true;
+    }
+
+    function handleMove(clientY, e) {
+      if (!isDragging || !sheetCard) return;
+
+      const deltaY = clientY - startY;
+
+      // 向上滑動時
+      if (deltaY < 0) {
+        if (!isHeaderOrGrabber) {
+          // 內文向上滾動交由瀏覽器正常處理
+          isDragging = false;
+          sheetCard.style.transform = '';
+          sheetCard.style.transition = '';
+          return;
+        }
+        // Header 向上推微幅阻尼
+        sheetCard.style.transition = 'none';
+        sheetCard.style.transform = `translateY(${deltaY * 0.15}px)`;
+        return;
+      }
+
+      // 若在內文區且內文有滾動，不攔截
+      if (!isHeaderOrGrabber && sheetBody && sheetBody.scrollTop > 0) {
+        isDragging = false;
+        return;
+      }
+
+      // 下拉時攔截預設行為
+      if (e && e.cancelable) {
+        e.preventDefault();
+      }
+
+      // 即時隨手指下移
+      sheetCard.style.transition = 'none';
+      sheetCard.style.transform = `translateY(${deltaY}px)`;
+
+      // 背景遮罩微幅變淡
+      if (modalEl) {
+        const dim = Math.max(0.15, 1 - (deltaY / 400));
+        modalEl.style.backgroundColor = `rgba(0, 0, 0, ${0.45 * dim})`;
+      }
+    }
+
+    function handleEnd(clientY) {
+      if (!isDragging || !sheetCard) return;
+      isDragging = false;
+
+      const deltaY = clientY - startY;
+      const elapsed = Math.max(Date.now() - startTime, 1);
+      const velocity = deltaY / elapsed; // px per ms
+
+      // 判斷下拉關閉門檻：下滑超過 75px，或具備向下快速滑動（flick：速度 > 0.4px/ms 且位移 > 25px）
+      if (deltaY > 75 || (deltaY > 25 && velocity > 0.4)) {
+        sheetCard.style.transition = 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
+        sheetCard.style.transform = 'translateY(100%)';
+        if (modalEl) modalEl.style.backgroundColor = '';
+        setTimeout(() => {
+          closeEvidenceModal();
+        }, 150);
+      } else {
+        // 未達門檻，平滑回彈原位
+        sheetCard.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1)';
+        sheetCard.style.transform = '';
+        if (modalEl) modalEl.style.backgroundColor = '';
+        setTimeout(() => {
+          if (sheetCard) sheetCard.style.transition = '';
+        }, 250);
+      }
+    }
+
+    function setupListeners() {
+      if (!getElements()) return;
+
+      // Touch Events (手機觸控)
+      sheetCard.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          handleStart(e.touches[0].clientY, e.target);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        if (e.touches && e.touches.length === 1) {
+          currentY = e.touches[0].clientY;
+          handleMove(e.touches[0].clientY, e);
+        }
+      }, { passive: false });
+
+      window.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        const touch = e.changedTouches ? e.changedTouches[0] : null;
+        handleEnd(touch ? touch.clientY : currentY);
+      }, { passive: true });
+
+      window.addEventListener('touchcancel', () => {
+        if (isDragging) {
+          handleEnd(currentY);
+        }
+      }, { passive: true });
+
+      // Pointer Events (桌機滑鼠拖曳與觸控筆)
+      sheetCard.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        handleStart(e.clientY, e.target);
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        currentY = e.clientY;
+        handleMove(e.clientY, e);
+      });
+
+      window.addEventListener('pointerup', (e) => {
+        if (isDragging) {
+          handleEnd(e.clientY);
+        }
+      });
+
+      window.addEventListener('pointercancel', () => {
+        if (isDragging) {
+          handleEnd(currentY);
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupListeners);
+    } else {
+      setupListeners();
+    }
+  })();
 
   // ── 歷史紀錄側邊欄控制（OpenEvidence Style）─────────────────
   function openHistoryDrawer() {
@@ -6388,7 +6603,9 @@
   <div id="evidence-modal" class="modal-backdrop" onclick="handleEvidenceBackdropClick(event)">
     <div class="evidence-sheet-card" onclick="event.stopPropagation()">
       <!-- Apple Sheet Grabber / Pull Handle -->
-      <div class="sheet-grabber-bar"></div>
+      <div class="sheet-grabber-bar-area" id="sheet-grabber-area">
+        <div class="sheet-grabber-bar"></div>
+      </div>
 
       <!-- Header -->
       <div class="evidence-sheet-header">
