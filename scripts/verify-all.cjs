@@ -190,6 +190,22 @@ assert(renderedNestedHtml.includes('evidence-badge level-a'), '含括號期刊�
 const cleanedEvidenceClip = cleanMarkdownForClipboard(testEvidenceMd);
 assert(cleanedEvidenceClip.includes('[Level A 實證') && !cleanedEvidenceClip.includes('evidence:'), 'cleanMarkdownForClipboard 成功清洗實證語法為簡明標籤');
 
+// 測試容錯：文獻連結標題內帶（Level A 系統性回顧）亦能正確解析為徽章
+const testLinkWithLevel = '* 國際醫學實證研究：[核心穩定訓練對於慢性下背痛的疼痛緩解與功能改善效果（Level A 系統性回顧）](https://pubmed.ncbi.nlm.nih.gov/33606281/)';
+const renderedLinkHtml = md(testLinkWithLevel);
+assert(renderedLinkHtml.includes('evidence-badge level-a'), '連結標題內嵌 Level A 成功解析為徽章');
+assert(renderedLinkHtml.includes('https://pubmed.ncbi.nlm.nih.gov/33606281/'), '連結目標 URL 保留且有效');
+
+// 測試容錯：內文方括號文字 [Level A 臨床指引]
+const testBracketLevel = '3. 鳥狗式：訓練核心穩定度 [Level A 臨床指引]';
+const renderedBracketHtml = md(testBracketLevel);
+assert(renderedBracketHtml.includes('evidence-badge level-a'), '方括號 [Level A 臨床指引] 成功解析為徽章');
+
+// 測試容錯：內文圓括號文字（Level A 系統性回顧）
+const testParenLevel = '4. 麥肯基伸展（Level A 系統性回顧）能有效減輕疼痛';
+const renderedParenHtml = md(testParenLevel);
+assert(renderedParenHtml.includes('evidence-badge level-a'), '圓括號（Level A 系統性回顧）成功解析為徽章');
+
 
 console.log('\n====================================================');
 if (failureCount === 0) {
