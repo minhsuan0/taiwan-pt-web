@@ -158,6 +158,23 @@ assert(typeof submitScreenerCustom === 'function', 'submitScreenerCustom 函式�
 assert(htmlCode.includes('screener-custom-btn'), '具備快篩自填按鈕樣式');
 assert(htmlCode.includes('screener-custom-input'), '具備快篩自填文字輸入框');
 
+// ── 測試 7：實證等級微膠囊與毛玻璃實證抽屜機制 ─────────
+console.log('\n--- 測試 7：實證等級微膠囊與毛玻璃實證抽屜機制 ---');
+assert(typeof openEvidenceModal === 'function', 'openEvidenceModal 函式存在且為有效函式');
+assert(typeof closeEvidenceModal === 'function', 'closeEvidenceModal 函式存在且為有效函式');
+assert(typeof switchEvidenceScaleLevel === 'function', 'switchEvidenceScaleLevel 函式存在且為有效函式');
+assert(htmlCode.includes('id="evidence-modal"'), '具備實證等級 Modal DOM');
+assert(htmlCode.includes('evidence-scale-track'), '具備三段式實證量尺 DOM');
+
+const testEvidenceMd = '動作建議：調整深蹲角度至不卡不痛。[🟢 Level A · 2023 ↗](evidence:A|2023|測試論文|白話結論|JOSPT|https://pubmed.ncbi.nlm.nih.gov/31475628/) 還有日常活動 [🟡 Level B · 2022 ↗]';
+const renderedEvidenceHtml = md(testEvidenceMd);
+assert(renderedEvidenceHtml.includes('evidence-badge level-a'), 'md 成功將 rich evidence 解析為 level-a 徽章');
+assert(renderedEvidenceHtml.includes('evidence-badge level-b'), 'md 成功將 standalone evidence 解析為 level-b 徽章');
+assert(!renderedEvidenceHtml.match(/<button/g), '實證徽章內部無非法 button 標籤');
+
+const cleanedEvidenceClip = cleanMarkdownForClipboard(testEvidenceMd);
+assert(cleanedEvidenceClip.includes('[Level A 實證') && !cleanedEvidenceClip.includes('evidence:'), 'cleanMarkdownForClipboard 成功清洗實證語法為簡明標籤');
+
 
 console.log('\n====================================================');
 if (failureCount === 0) {

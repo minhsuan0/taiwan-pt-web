@@ -485,6 +485,79 @@
       border-color: #007AFF;
     }
 
+    /* 🩺 Apple Squircle 行內實證等級微膠囊 */
+    .evidence-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.22rem;
+      padding: 0.12rem 0.44rem;
+      border-radius: 0.38rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Text", system-ui, sans-serif;
+      text-decoration: none !important;
+      margin: 0 0.18rem;
+      vertical-align: 0.06rem;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+    .evidence-badge .dot {
+      font-size: 0.55rem;
+      line-height: 1;
+      transform: translateY(-0.5px);
+    }
+    .evidence-badge .arr {
+      font-size: 0.65rem;
+      opacity: 0.65;
+      font-weight: 700;
+      margin-left: 0.05rem;
+      transition: transform 0.15s ease;
+    }
+    .evidence-badge:hover .arr {
+      transform: translate(1px, -1px);
+      opacity: 1;
+    }
+    .evidence-badge:active {
+      transform: scale(0.96);
+    }
+
+    /* Level A: 綠燈 / 最高實證 */
+    .evidence-badge.level-a {
+      background: rgba(52, 199, 89, 0.12);
+      color: #1a8738;
+      border: 0.5px solid rgba(52, 199, 89, 0.35);
+    }
+    .evidence-badge.level-a:hover {
+      background: rgba(52, 199, 89, 0.2);
+      border-color: rgba(52, 199, 89, 0.5);
+    }
+
+    /* Level B: 橘燈 / 良好支持 */
+    .evidence-badge.level-b {
+      background: rgba(255, 149, 0, 0.12);
+      color: #c96d00;
+      border: 0.5px solid rgba(255, 149, 0, 0.35);
+    }
+    .evidence-badge.level-b:hover {
+      background: rgba(255, 149, 0, 0.2);
+      border-color: rgba(255, 149, 0, 0.5);
+    }
+
+    /* Level C: 灰燈 / 專家指引 */
+    .evidence-badge.level-c {
+      background: rgba(142, 142, 147, 0.12);
+      color: #555558;
+      border: 0.5px solid rgba(142, 142, 147, 0.32);
+    }
+    .evidence-badge.level-c:hover {
+      background: rgba(142, 142, 147, 0.2);
+      border-color: rgba(142, 142, 147, 0.5);
+    }
+
     /* 💡 智慧延伸追問區塊 (Smart Follow-up Questions - Placed outside the bubble) */
     .followup-container {
       width: 100%;
@@ -897,6 +970,164 @@
       font-weight: 600;
       display: inline-block;
       margin-bottom: 0.15rem;
+    }
+
+    /* ── 🩺 國際臨床實證等級與白話依據 Modal Styles ──────── */
+    .evidence-modal-body {
+      padding: 1.1rem 1.3rem 1.4rem;
+      max-height: 75vh;
+      overflow-y: auto;
+    }
+    .evidence-scale-container {
+      margin-bottom: 1rem;
+    }
+    .scale-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #636366;
+    }
+    .evidence-scale-track {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #f2f2f7;
+      border-radius: 0.75rem;
+      padding: 0.25rem;
+      margin: 0.45rem 0 0.65rem;
+    }
+    .scale-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.45rem 0.2rem;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      background: transparent;
+      user-select: none;
+    }
+    .scale-step.active {
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .scale-step-top {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .scale-step.step-a .scale-step-top { color: #1a8738; }
+    .scale-step.step-b .scale-step-top { color: #c96d00; }
+    .scale-step.step-c .scale-step-top { color: #555558; }
+    .scale-step:not(.active) { opacity: 0.55; }
+    .scale-step-sub {
+      font-size: 0.68rem;
+      color: #8e8e93;
+      margin-top: 0.1rem;
+    }
+    .scale-step.active .scale-step-sub {
+      color: #3a3a3c;
+      font-weight: 600;
+    }
+    .scale-desc-box {
+      background: rgba(0, 122, 255, 0.05);
+      border: 1px solid rgba(0, 122, 255, 0.16);
+      border-radius: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    .scale-desc-title {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      font-size: 0.85rem;
+    }
+    .scale-desc-dot.level-a { color: #1a8738; }
+    .scale-desc-dot.level-b { color: #c96d00; }
+    .scale-desc-dot.level-c { color: #555558; }
+    .scale-desc-tag {
+      font-size: 0.68rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.3rem;
+      font-weight: 600;
+      margin-left: auto;
+    }
+    .scale-desc-tag.level-a { background: rgba(52, 199, 89, 0.15); color: #1a8738; }
+    .scale-desc-tag.level-b { background: rgba(255, 149, 0, 0.15); color: #c96d00; }
+    .scale-desc-tag.level-c { background: rgba(142, 142, 147, 0.15); color: #555558; }
+    .scale-desc-text {
+      margin: 0;
+      color: #3a3a3c;
+      font-size: 0.8rem;
+    }
+    .evidence-detail-card {
+      background: #f9f9fb;
+      border: 1px solid #e5e5ea;
+      border-radius: 0.85rem;
+      padding: 0.85rem 1rem;
+      margin-top: 0.85rem;
+    }
+    .detail-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #636366;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+    .detail-content {
+      font-size: 0.86rem;
+      font-weight: 500;
+      color: #1c1c1e;
+      line-height: 1.55;
+    }
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+      padding-top: 0.65rem;
+      border-top: 0.5px solid #e5e5ea;
+    }
+    .meta-label {
+      font-size: 0.7rem;
+      color: #8e8e93;
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+    .meta-val {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1c1c1e;
+    }
+    .detail-paper-title {
+      font-size: 0.78rem;
+      color: #636366;
+      line-height: 1.45;
+    }
+    .evidence-pubmed-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      background: #007aff;
+      color: #ffffff !important;
+      padding: 0.65rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none !important;
+      transition: background 0.15s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .evidence-pubmed-btn:hover {
+      background: #0062cc;
     }
 
     /* ── JKO Coffee Modal Styles ────────────────────────── */
@@ -2141,6 +2372,32 @@
         border-color: #00c7be;
       }
 
+      /* Dark Mode Evidence Badges */
+      .evidence-badge.level-a {
+        background: rgba(52, 199, 89, 0.22);
+        color: #34c759;
+        border-color: rgba(52, 199, 89, 0.45);
+      }
+      .evidence-badge.level-a:hover {
+        background: rgba(52, 199, 89, 0.32);
+      }
+      .evidence-badge.level-b {
+        background: rgba(255, 149, 0, 0.22);
+        color: #ff9f0a;
+        border-color: rgba(255, 149, 0, 0.45);
+      }
+      .evidence-badge.level-b:hover {
+        background: rgba(255, 149, 0, 0.32);
+      }
+      .evidence-badge.level-c {
+        background: rgba(142, 142, 147, 0.22);
+        color: #aeaeb2;
+        border-color: rgba(142, 142, 147, 0.45);
+      }
+      .evidence-badge.level-c:hover {
+        background: rgba(142, 142, 147, 0.32);
+      }
+
       /* Smart Follow-up Questions Box */
       .followup-box {
         background: #1c1c1e;
@@ -2508,6 +2765,41 @@
       .modal-close-btn:hover {
         background: #3A3A3C;
         color: #FFFFFF;
+      }
+      /* Evidence Modal Dark Mode */
+      .evidence-scale-track {
+        background: #2c2c2e;
+      }
+      .scale-step.active {
+        background: #1c1c1e;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      .scale-step.active .scale-step-sub {
+        color: #aeaeb2;
+      }
+      .scale-desc-box {
+        background: rgba(0, 199, 190, 0.08);
+        border-color: rgba(0, 199, 190, 0.25);
+      }
+      .scale-desc-text {
+        color: #d1d1d6;
+      }
+      .scale-desc-tag.level-a { background: rgba(52, 199, 89, 0.25); color: #34c759; }
+      .scale-desc-tag.level-b { background: rgba(255, 149, 0, 0.25); color: #ff9f0a; }
+      .scale-desc-tag.level-c { background: rgba(142, 142, 147, 0.25); color: #aeaeb2; }
+      .evidence-detail-card {
+        background: #2c2c2e;
+        border-color: #38383a;
+      }
+      .detail-content,
+      .meta-val {
+        color: #f2f2f7;
+      }
+      .detail-paper-title {
+        color: #aeaeb2;
+      }
+      .detail-meta-grid {
+        border-top-color: #38383a;
       }
       /* Feedback Modal Dark Mode */
       .feedback-subtext {
@@ -3360,6 +3652,10 @@
     // 4. 轉換項目清單 (* 或 -) 為乾淨的圓點 (•)
     text = text.replace(/^\s*[\*\-]\s+(.+)$/gm, '• $1');
     text = text.replace(/^\s*\*\s*/gm, '• ');
+
+    // 4.5 整理實證等級微膠囊為簡潔文字標註（複製時乾淨好讀）
+    text = text.replace(/\[\s*(?:[🟢🟡⚪]\s*)?Level\s*([A-C])[^\]]*\][\(（]\s*evidence:[^\)）]+[\)）]/giu, '[Level $1 實證]');
+    text = text.replace(/\[\s*(?:[🟢🟡⚪]\s*)?Level\s*([A-C])\s*[·\-\s]\s*(\d{4})[^\]]*\]/giu, '[Level $1 實證 · $2]');
 
     // 5. 處理 Markdown 連結 [文字](網址) ➔ 文字 (網址)（支援全形半形括號）
     text = text.replace(/\[(.*?)\][\(（]\s*([^\)\s（）]+)\s*[\)）]/g, '$1 ($2)');
@@ -4388,7 +4684,32 @@
       // 粗體、斜體、行內程式碼
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`(.+?)`/g, '<code>$1</code>')
+      // 🩺 1. 完整 Rich Evidence 語法：[文字](evidence:A|2023|Title|Conclusion|Journal|Url)
+      .replace(/\[([^\]]*Level\s*([A-C]|專家指引)[^\]]*)\][\(（]\s*evidence:([^\|\)\s（）]+)\|([^\|\)\s（）]*)\|([^\|\)\s（）]*)\|([^\|\)\s（）]*)\|([^\|\)\s（）]*)\|?([^\)\s（）]*)\s*[\)）]/giu,
+        (match, label, level, lvlArg, year, title, conclusion, journal, url) => {
+          const cleanLevel = (lvlArg || level || 'A').toUpperCase().trim();
+          const levelClass = cleanLevel === 'A' ? 'level-a' : cleanLevel === 'B' ? 'level-b' : 'level-c';
+          const cleanYear = year || '2023';
+          const cleanTitle = title || '物理治療臨床實踐指引';
+          const cleanConclusion = conclusion || '依據臨床實證指南，在無痛範圍內調整活動度可加速組織修復。';
+          const cleanJournal = journal || '臨床實證醫學指引';
+          const cleanUrl = url || '';
+
+          return `<a href="javascript:void(0)" class="evidence-badge ${levelClass}" data-level="${cleanLevel}" data-year="${cleanYear}" data-title="${encodeURIComponent(cleanTitle)}" data-conclusion="${encodeURIComponent(cleanConclusion)}" data-journal="${encodeURIComponent(cleanJournal)}" data-url="${encodeURIComponent(cleanUrl)}" onclick="openEvidenceModal(this)"><span class="dot">●</span><span class="txt">Level ${cleanLevel} · ${cleanYear}</span><span class="arr">↗</span></a>`;
+        }
+      )
+      // 🩺 2. 簡潔 Standalone Evidence 標籤：[🟢 Level A · 2023 ↗] 或 [Level B · 2022]
+      .replace(/\[\s*(?:[🟢🟡⚪]\s*)?Level\s*([A-C])\s*[·\-\s]\s*(\d{4})\s*(?:[↗\^])?\s*\]/giu,
+        (match, level, year) => {
+          const cleanLevel = level.toUpperCase().trim();
+          const levelClass = cleanLevel === 'A' ? 'level-a' : cleanLevel === 'B' ? 'level-b' : 'level-c';
+          const defaultTitle = cleanLevel === 'A' ? '國際臨床實踐指南 (Clinical Practice Guideline)' : cleanLevel === 'B' ? '臨床對照試驗與前瞻性世代研究' : '物理治療臨床專家實務共識指引';
+          const defaultConclusion = cleanLevel === 'A' ? '經跨國多中心人體試驗與統合分析證實，具最高等級科學背書，臨床優先採用。' : cleanLevel === 'B' ? '多數臨床觀察與對照研究支持，具良好參考力與動作改善效果。' : '由執業物理治療師依據臨床經驗與操作手冊制定，適合個人化調整。';
+          const defaultJournal = cleanLevel === 'A' ? 'JOSPT / Cochrane Review' : cleanLevel === 'B' ? 'BJSM / PTJ' : 'Taiwan PT 臨床共識';
+
+          return `<a href="javascript:void(0)" class="evidence-badge ${levelClass}" data-level="${cleanLevel}" data-year="${year}" data-title="${encodeURIComponent(defaultTitle)}" data-conclusion="${encodeURIComponent(defaultConclusion)}" data-journal="${encodeURIComponent(defaultJournal)}" data-url="" onclick="openEvidenceModal(this)"><span class="dot">●</span><span class="txt">Level ${cleanLevel} · ${year}</span><span class="arr">↗</span></a>`;
+        }
+      )
       // Markdown 格式連結 [文字](網址) 與 [文字]（網址），支援全形半形括號、相對與絕對路徑
       .replace(/\[([^\]]+)\][\(（]\s*([^\)\s（）]+)\s*[\)）]/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
       // 清理任何殘留的孤立 # 字符
@@ -4766,6 +5087,115 @@
   function handleDisclaimerBackdropClick(e) {
     if (e.target.id === 'disclaimer-modal') {
       closeDisclaimerModal();
+    }
+  }
+
+  // ── 🩺 國際臨床實證等級與白話依據 Modal 控制 ───────────────
+  const EVIDENCE_LEVEL_DEFINITIONS = {
+    'A': {
+      title: 'Level A（最高實證等級）',
+      tag: '最高實證 · 優先推薦',
+      badgeClass: 'level-a',
+      desc: '由多項高品質大規模隨機對照人體試驗 (RCT)、系統性文獻回顧 (Systematic Review) 或國際臨床實踐指南 (Clinical Practice Guidelines, CPG) 一致證實。科學證據力最高，臨床上強烈推薦優先採用。'
+    },
+    'B': {
+      title: 'Level B（中高實證等級）',
+      tag: '良好支持 · 具體依據',
+      badgeClass: 'level-b',
+      desc: '具對照組之臨床試驗 (Controlled Trials)、前瞻性世代研究 (Cohort Study) 或高品質動作力學分析支持。多數研究證實具顯著正面效果，具備良好臨床參考力。'
+    },
+    'C': {
+      title: 'Level C（專家實務指引）',
+      tag: '專家共識 · 實務指引',
+      badgeClass: 'level-c',
+      desc: '由執業物理治療師團隊、醫學會依據臨床實務操作經驗與專家共識指引制定。適合在缺乏大規模人體試驗或個別身體代償差異大時，作為個人化動作調整的依據。'
+    }
+  };
+
+  let currentSelectedEvidenceLevel = 'A';
+
+  function switchEvidenceScaleLevel(level) {
+    level = (level || 'A').toUpperCase();
+    if (!['A', 'B', 'C'].includes(level)) level = 'A';
+    currentSelectedEvidenceLevel = level;
+
+    // 更新三段式量尺 active 狀態
+    ['a', 'b', 'c'].forEach(l => {
+      const stepEl = document.getElementById(`scale-step-${l}`);
+      if (stepEl) {
+        if (l === level.toLowerCase()) {
+          stepEl.classList.add('active');
+        } else {
+          stepEl.classList.remove('active');
+        }
+      }
+    });
+
+    // 更新白話定義說明卡
+    const info = EVIDENCE_LEVEL_DEFINITIONS[level];
+    const descEl = document.getElementById('evidence-scale-desc');
+    if (descEl && info) {
+      descEl.innerHTML = `
+        <div class="scale-desc-title">
+          <span class="scale-desc-dot ${info.badgeClass}">●</span>
+          <span>${escapeHtml(info.title)}</span>
+          <span class="scale-desc-tag ${info.badgeClass}">${escapeHtml(info.tag)}</span>
+        </div>
+        <p class="scale-desc-text">${escapeHtml(info.desc)}</p>
+      `;
+    }
+  }
+
+  function openEvidenceModal(badgeEl) {
+    if (!badgeEl) return;
+    triggerHaptic('light');
+
+    const level = badgeEl.getAttribute('data-level') || 'A';
+    const year = badgeEl.getAttribute('data-year') || '';
+    const title = decodeURIComponent(badgeEl.getAttribute('data-title') || '');
+    const conclusion = decodeURIComponent(badgeEl.getAttribute('data-conclusion') || '');
+    const journal = decodeURIComponent(badgeEl.getAttribute('data-journal') || '');
+    const url = decodeURIComponent(badgeEl.getAttribute('data-url') || '');
+
+    // 填入資料與切換量尺刻度
+    switchEvidenceScaleLevel(level);
+
+    const concEl = document.getElementById('evidence-modal-conclusion');
+    if (concEl) concEl.textContent = conclusion || '依據國際臨床實證指引，維持規律溫和活動與無痛原則可加速功能恢復。';
+
+    const yearEl = document.getElementById('evidence-modal-year');
+    if (yearEl) yearEl.textContent = year ? `${year} 年` : '最新實踐指引';
+
+    const journalEl = document.getElementById('evidence-modal-journal');
+    if (journalEl) journalEl.textContent = journal || '國際物理治療與醫學臨床指引';
+
+    const titleEl = document.getElementById('evidence-modal-title');
+    if (titleEl) titleEl.textContent = title || '物理治療動作控制與臨床處置指南';
+
+    const linkWrapEl = document.getElementById('evidence-modal-link-wrap');
+    const urlEl = document.getElementById('evidence-modal-url');
+    if (linkWrapEl && urlEl) {
+      if (url && url.startsWith('http')) {
+        urlEl.href = url;
+        linkWrapEl.style.display = 'block';
+      } else {
+        linkWrapEl.style.display = 'none';
+      }
+    }
+
+    const modal = document.getElementById('evidence-modal');
+    if (modal) {
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeEvidenceModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('evidence-modal');
+    if (modal) {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
     }
   }
 
@@ -5718,6 +6148,83 @@
       <!-- 題目與選項渲染容器 -->
       <div id="screener-question-container">
         <!-- Dynamically rendered by renderScreenerStep() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 🩺 國際臨床實證等級與白話依據 Modal -->
+  <div id="evidence-modal" class="modal-backdrop" onclick="if(event.target===this)closeEvidenceModal()">
+    <div class="modal-card" style="max-width:440px; box-sizing:border-box; text-align:left;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem;">🩺</span>
+          <span class="modal-title" style="font-size:1.05rem; font-weight:700;">國際臨床實證依據</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeEvidenceModal()" aria-label="關閉">✕</button>
+      </div>
+
+      <div class="evidence-modal-body">
+        <!-- 1. 三段式等級量尺 (可切換看說明，解答「ABC怎麼分」) -->
+        <div class="evidence-scale-container">
+          <div class="scale-label">實證等級量尺（點擊可查看各級定義）：</div>
+          <div class="evidence-scale-track">
+            <div class="scale-step step-a" id="scale-step-a" onclick="switchEvidenceScaleLevel('A')">
+              <div class="scale-step-top">
+                <span class="scale-desc-dot level-a">●</span>
+                <span>Level A</span>
+              </div>
+              <div class="scale-step-sub">最高實證</div>
+            </div>
+            <div class="scale-step step-b" id="scale-step-b" onclick="switchEvidenceScaleLevel('B')">
+              <div class="scale-step-top">
+                <span class="scale-desc-dot level-b">●</span>
+                <span>Level B</span>
+              </div>
+              <div class="scale-step-sub">良好依據</div>
+            </div>
+            <div class="scale-step step-c" id="scale-step-c" onclick="switchEvidenceScaleLevel('C')">
+              <div class="scale-step-top">
+                <span class="scale-desc-dot level-c">●</span>
+                <span>Level C</span>
+              </div>
+              <div class="scale-step-sub">專家指引</div>
+            </div>
+          </div>
+          <!-- 動態說明卡 -->
+          <div class="scale-desc-box" id="evidence-scale-desc">
+            <!-- Dynamically populated by switchEvidenceScaleLevel -->
+          </div>
+        </div>
+
+        <!-- 2. 本條白話臨床結論卡 -->
+        <div class="evidence-detail-card">
+          <span class="detail-label">📌 繁中白話研究結論</span>
+          <div class="detail-content" id="evidence-modal-conclusion">--</div>
+          
+          <div class="detail-meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">📅 發表年份</span>
+              <span class="meta-val" id="evidence-modal-year">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">🏛️ 來源期刊 / 指引</span>
+              <span class="meta-val" id="evidence-modal-journal">--</span>
+            </div>
+          </div>
+
+          <div style="margin-top:0.75rem;">
+            <span class="detail-label">📄 論文主題與文獻出處</span>
+            <div class="detail-paper-title" id="evidence-modal-title">--</div>
+          </div>
+        </div>
+
+        <!-- 3. PubMed 原文外跳按鈕（若有 URL 則顯示） -->
+        <div id="evidence-modal-link-wrap" style="margin-top:1rem;">
+          <a id="evidence-modal-url" href="#" target="_blank" rel="noopener noreferrer" class="evidence-pubmed-btn">
+            <span>在 NCBI PubMed 查看原始研究</span>
+            <span style="font-size:0.9rem;">↗</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
