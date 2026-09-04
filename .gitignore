@@ -4,3 +4,5 @@ dist/
 .vercel/
 .DS_Store
 *.log
+scratch/
+scripts/_comparison_result.json

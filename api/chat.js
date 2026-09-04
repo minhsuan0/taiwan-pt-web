@@ -1,4 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { PT_CORPUS } from '../lib/rag/corpus.js';
+import { hybridSearch } from '../lib/rag/vector-search.js';
+import { expandQuery, buildHybridQueryString } from '../lib/rag/query-expander.js';
+import { rerank, formatForPrompt } from '../lib/rag/reranker.js';
 
 export const config = {
   runtime: 'edge',
@@ -110,7 +114,7 @@ const SYSTEM_PROMPT = `# Role Definition
      1. 負荷調節：...
      2. 動作控制：...
      3. 日常姿勢調整：...
-     ），【嚴格禁止使用無編號項目符號（•、* 或 -）】，以確保前端呈現清晰醒目的 Apple 藍色數字圓標清單！
+     ），【嚴格禁止使用無編號項目符號（•、* 或 -）】，以確保前端呈現清晰醒目的 Apple 藍色數字圓標清單！若下方有「精選實證段落」，請務必在每個動作中自然融入其精確的動作參數（每週頻率、建議組數與次數、維持秒數、負荷強度、禁忌動作），確保指導具備臨床可執行性與精準度。
 4. 【大眾化高品質實證依據（臨床指引 Guideline / 系統性回顧優先，嚴格把關相關性）】：
    - 【文獻相關性絕對優先（嚴格執行）】：
      * 只有當下方「即時查詢結果」中的論文主題，與使用者提問的【特定身體部位 / 具體受傷病症】「高度吻合切題」時，才能引用！
@@ -379,19 +383,70 @@ export default async function handler(req) {
     }
   }
 
-  // ① 平行查詢工具（限時 3.5s 保證不超時）
+  // ── RAG 四大進階優化策略 ──────────────────────────────────────
   let toolContext = '';
   try {
-    const toolPromise = searchPubmedDirect(message);
-    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 2200));
-    const result = await Promise.race([toolPromise, timeoutPromise]);
-    if (result) {
-      toolContext = "\n\n--- 即時查詢結果（請根據以下真實論文資料回答與引用，嚴禁編造不存在的 PMID）---\n" + JSON.stringify(result, null, 2);
+    // 策略 2：查詢擴寫（LLM / 靜態降級）
+    const expanded = await expandQuery(message, apiKey, 500);
+
+    // 非臨床行政問題直接略過文獻檢索
+    if (!expanded?.is_admin_query) {
+      // 策略 1：混合檢索（TF-IDF Dense + BM25 + RRF）
+      const hybridQuery = buildHybridQueryString(expanded, message) || message;
+      const candidates = hybridSearch(hybridQuery, PT_CORPUS, 15);
+
+      // 策略 3：重排機制（Cross-Encoder + 實證金字塔加權）
+      const reranked = rerank(hybridQuery, candidates, 4);
+
+      // 策略 4：結構化切塊注入（含 PICO + FITT 動作參數與禁忌）
+      if (reranked.length > 0) {
+        toolContext += '\n\n' + formatForPrompt(reranked);
+      }
+
+      // PubMed 即時補充（限時 1.2s）
+      try {
+        const pubmedQuery = expanded?.pubmed_query;
+        if (pubmedQuery) {
+          const pubmedPromise = (async () => {
+            const esearchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(pubmedQuery)}&retmode=json&retmax=2&sort=relevance`;
+            const esearchRes = await fetch(esearchUrl, { signal: AbortSignal.timeout(1000) });
+            if (!esearchRes.ok) return null;
+            const esearchData = await esearchRes.json();
+            const idList = esearchData.esearchresult?.idlist || [];
+            if (idList.length === 0) return null;
+            const esummaryUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${idList.join(',')}&retmode=json`;
+            const esummaryRes = await fetch(esummaryUrl, { signal: AbortSignal.timeout(1000) });
+            if (!esummaryRes.ok) return null;
+            const esummaryData = await esummaryRes.json();
+            const result = esummaryData.result || {};
+            const articles = idList.map(pmid => {
+              const doc = result[pmid];
+              if (!doc) return null;
+              return { pmid, title: doc.title || 'Untitled', source: doc.source || '', pubdate: doc.pubdate || '', url: `https://pubmed.ncbi.nlm.nih.gov/${pmid}/` };
+            }).filter(Boolean);
+            return articles.length > 0 ? { type: 'PubMed 即時補充論文', articles } : null;
+          })();
+          const pubmedResult = await Promise.race([pubmedPromise, new Promise(r => setTimeout(() => r(null), 1200))]);
+          if (pubmedResult) {
+            toolContext += "\n\n--- 即時查詢結果（請根據以下真實論文資料回答與引用，嚴禁編造不存在的 PMID）---\n" + JSON.stringify(pubmedResult, null, 2);
+          }
+        }
+      } catch {}
     }
-  } catch {}
+  } catch (ragErr) {
+    console.error('[RAG Pipeline Error]', ragErr?.message);
+    try {
+      const toolPromise = searchPubmedDirect(message);
+      const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 1500));
+      const result = await Promise.race([toolPromise, timeoutPromise]);
+      if (result) {
+        toolContext = "\n\n--- 即時查詢結果（請根據以下真實論文資料回答與引用，嚴禁編造不存在的 PMID）---\n" + JSON.stringify(result, null, 2);
+      }
+    } catch {}
+  }
 
   // ② Edge 全串流傳輸（零超時、邊緣毫秒響應）
-  const MODELS = ['gemini-3.5-flash-lite', 'gemini-2.5-flash', 'gemini-3.6-flash'];
+  const MODELS = ['gemini-flash-lite-latest', 'gemini-3.6-flash', 'gemini-flash-latest'];
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const chatHistory = sanitizedHistory.map(m => ({
