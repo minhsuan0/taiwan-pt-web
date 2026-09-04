@@ -104,10 +104,13 @@ assert(renderedHtml.includes('alert-avoid'), '包含應避免動作卡片');
 assert(renderedHtml.includes('alert-consult'), '包含運動物理治療師諮詢大標卡片');
 assert(renderedHtml.includes('md-hr'), '包含標準分隔線');
 
-// 斷言 3：追問清單正確抽離
-assert(parsed.followups && parsed.followups.length === 3, '相關探索問題數量嚴格等於 3');
+// 斷言 3：追問清單正確抽離（支援【相關問題】與【相關探索】）
+assert(parsed.followups && parsed.followups.length === 3, '相關問題/探索問題數量嚴格等於 3');
 assert(parsed.followups[0] === '辦公室久坐時，要怎麼調整坐姿才能減輕屁股和腰部的負擔？', '第一條追問題目文字完全匹配');
-assert(!parsed.body.includes('【相關探索】'), '對話氣泡主體內文中不殘留【相關探索】標題');
+assert(!parsed.body.includes('【相關探索】') && !parsed.body.includes('【相關問題】'), '對話氣泡主體內文中不殘留追問標題');
+
+const parsedQuestions = parseBotResponse('【相關問題】\n* 問題 1\n* 問題 2\n* 問題 3');
+assert(parsedQuestions.followups && parsedQuestions.followups.length === 3, '成功解析【相關問題】格式追問');
 
 // 斷言 4：免責聲明不殘留於氣泡主體
 assert(!parsed.body.includes('免責聲明：'), '對話氣泡主體內文中不包含免責聲明長文');
@@ -158,19 +161,31 @@ assert(typeof submitScreenerCustom === 'function', 'submitScreenerCustom 函式�
 assert(htmlCode.includes('screener-custom-btn'), '具備快篩自填按鈕樣式');
 assert(htmlCode.includes('screener-custom-input'), '具備快篩自填文字輸入框');
 
-// ── 測試 7：實證等級微膠囊與毛玻璃實證抽屜機制 ─────────
-console.log('\n--- 測試 7：實證等級微膠囊與毛玻璃實證抽屜機制 ---');
+// ── 測試 7：實證等級微膠囊與 Apple Bottom Sheet 抽屜機制 ─────────
+console.log('\n--- 測試 7：實證等級微膠囊與 Apple Bottom Sheet 抽屜機制 ---');
 assert(typeof openEvidenceModal === 'function', 'openEvidenceModal 函式存在且為有效函式');
 assert(typeof closeEvidenceModal === 'function', 'closeEvidenceModal 函式存在且為有效函式');
 assert(typeof switchEvidenceScaleLevel === 'function', 'switchEvidenceScaleLevel 函式存在且為有效函式');
 assert(htmlCode.includes('id="evidence-modal"'), '具備實證等級 Modal DOM');
+assert(htmlCode.includes('evidence-sheet-card'), '具備 OpenEvidence/Apple Bottom Sheet DOM 類別');
+assert(htmlCode.includes('sheet-grabber-bar'), '具備 Apple 抽屜下拉指示條 DOM');
 assert(htmlCode.includes('evidence-scale-track'), '具備三段式實證量尺 DOM');
+assert(htmlCode.includes('scale-step.step-c .scale-step-top') && htmlCode.includes('#ffffff !important'), '暗黑模式下 Level C 字體高對比設定存在');
 
 const testEvidenceMd = '動作建議：調整深蹲角度至不卡不痛。[🟢 Level A · 2023 ↗](evidence:A|2023|測試論文|白話結論|JOSPT|https://pubmed.ncbi.nlm.nih.gov/31475628/) 還有日常活動 [🟡 Level B · 2022 ↗]';
 const renderedEvidenceHtml = md(testEvidenceMd);
 assert(renderedEvidenceHtml.includes('evidence-badge level-a'), 'md 成功將 rich evidence 解析為 level-a 徽章');
 assert(renderedEvidenceHtml.includes('evidence-badge level-b'), 'md 成功將 standalone evidence 解析為 level-b 徽章');
 assert(!renderedEvidenceHtml.match(/<button/g), '實證徽章內部無非法 button 標籤');
+assert(!renderedEvidenceHtml.includes('evidence:'), 'HTML 渲染中絕無殘留 raw evidence: 語法');
+assert(!renderedEvidenceHtml.includes('2023 ↗</span>'), '徽章框框內不顯示年份');
+assert(renderedEvidenceHtml.includes('Level A</span>'), '徽章框框內顯示簡潔 Level A');
+
+// 測試期刊含括號（如 Front Med (Lausanne)）絕不發生語法中斷外洩
+const testNestedParen = '深蹲放鬆 [●Level A · 2025 ↗](evidence:A|2025|腰椎間盤突出臨床研究|運動治療顯著緩解疼痛|Front Med (Lausanne)|https://pubmed.ncbi.nlm.nih.gov/40224631/)。';
+const renderedNestedHtml = md(testNestedParen);
+assert(!renderedNestedHtml.includes('evidence:'), '含括號期刊出處之文獻語法不會外洩 raw evidence:');
+assert(renderedNestedHtml.includes('evidence-badge level-a'), '含括號期刊出處之文獻正確解析為 level-a 徽章');
 
 const cleanedEvidenceClip = cleanMarkdownForClipboard(testEvidenceMd);
 assert(cleanedEvidenceClip.includes('[Level A 實證') && !cleanedEvidenceClip.includes('evidence:'), 'cleanMarkdownForClipboard 成功清洗實證語法為簡明標籤');
