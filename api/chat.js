@@ -445,122 +445,6 @@ export default async function handler(req) {
     } catch {}
   }
 
-  // ② Edge 全串流傳輸（零超時、邊緣毫秒響應）
-  // 優先級：gemini-3-flash-preview（速度最快 ~2-4s） -> gemini-3.1-flash-lite（備援 ~4s）
-  const MODELS = ['gemini-3-flash-preview', 'gemini-3.1-flash-lite'];
-  const genAI = new GoogleGenerativeAI(apiKey);
-
-  const chatHistory = sanitizedHistory.map(m => ({
-    role: m.role,
-    parts: [{ text: m.content }],
-  }));
-
-  const userContent = message + toolContext;
-
-  for (const modelName of MODELS) {
-    try {
-      const model = genAI.getGenerativeModel({
-        model: modelName,
-        systemInstruction: SYSTEM_PROMPT,
-        safetySettings: [
-          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
-          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
-          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
-          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 4096,
-        },
-      });
-
-      const chat = model.startChat({ history: chatHistory });
-
-      // 設定 9 秒超時：若模型在 9 秒內未建立連線，立即切換備援模型
-      const streamPromise = chat.sendMessageStream(userContent);
-      const streamTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error(`Stream start timeout (9s) for ${modelName}`)), 9000));
-      const result = await Promise.race([streamPromise, streamTimeout]);
-
-      const iterator = result.stream[Symbol.asyncIterator]();
-      const firstChunkPromise = iterator.next();
-      const firstChunkTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error(`First chunk timeout (8s) for ${modelName}`)), 8000));
-      const firstChunkResult = await Promise.race([firstChunkPromise, firstChunkTimeout]);
-
-      if (!firstChunkResult || firstChunkResult.done) {
-        throw new Error('Empty stream response');
-      }
-
-      const encoder = new TextEncoder();
-      let fullResponseText = '';
-
-      const readableStream = new ReadableStream({
-        async start(controller) {
-          try {
-            // 處理首個 Token
-            let firstText = '';
-            try {
-              firstText = firstChunkResult.value?.text ? firstChunkResult.value.text() : '';
-            } catch {
-              const parts = firstChunkResult.value?.candidates?.[0]?.content?.parts;
-              if (Array.isArray(parts)) {
-                firstText = parts.map(p => p.text || '').join('');
-              }
-            }
-            if (firstText) {
-              const loc = localizeTaiwanese(firstText);
-              fullResponseText += loc;
-              controller.enqueue(encoder.encode(loc));
-            }
-
-            // 串流後續內容
-            while (true) {
-              const { value, done } = await iterator.next();
-              if (done) break;
-              let text = '';
-              try {
-                text = value.text();
-              } catch {
-                const parts = value?.candidates?.[0]?.content?.parts;
-                if (Array.isArray(parts)) {
-                  text = parts.map(p => p.text || '').join('');
-                }
-              }
-              if (text) {
-                const localized = localizeTaiwanese(text);
-                fullResponseText += localized;
-                controller.enqueue(encoder.encode(localized));
-              }
-            }
-
-            // 若串流意外在中間中斷且缺少結尾諮詢區塊，自動補齊完整結尾
-            if (fullResponseText && !fullResponseText.includes('需要運動物理治療師為您詳細評估嗎')) {
-              const closingSupplement = `\n\n---\n\n【需要運動物理治療師為您詳細評估嗎？】\nAI 提供的是普遍實證指引，但每個人身體受力模式與代償機制皆具個別性。本系統由台灣執業物理治療師團隊建立與維護，若想進一步確認個人問題或預約實體一對一評估，歡迎透過本站專屬窗口與物理治療師聯繫：[點此加入駐站物理治療師諮詢窗口 ↗](https://lin.ee/y6VBRuh)`;
-              fullResponseText += closingSupplement;
-              controller.enqueue(encoder.encode(closingSupplement));
-            }
-
-            if (sanitizedHistory.length === 0 && fullResponseText.length > 50) {
-              setDynamicCache(cacheKey, fullResponseText);
-            }
-            controller.close();
-          } catch (streamErr) {
-            console.error(`[Stream Error - ${modelName}]`, streamErr?.message);
-            // 發生異常時自動補齊自癒結尾後關閉，避免客戶端出現殘缺字句
-            if (fullResponseText.length > 100 && !fullResponseText.includes('需要運動物理治療師為您詳細評估嗎')) {
-              const fallbackEnd = `\n\n【你可以這樣做（建議運動與日常調整）】\n• 保持無痛原則：進行任何日常動作或活動時，以不引起刺痛為首要原則。\n• 避免長時間固定同一姿勢，定時起身活動放鬆。\n\n---\n\n【需要運動物理治療師為您詳細評估嗎？】\nAI 提供的是普遍實證指引，但每個人身體受力模式與代償機制皆具個別性。本系統由台灣執業物理治療師團隊建立與維護，若想進一步確認個人問題或預約實體一對一評估，歡迎透過本站專屬窗口與物理治療師聯繫：[點此加入駐站物理治療師諮詢窗口 ↗](https://lin.ee/y6VBRuh)`;
-              controller.enqueue(encoder.encode(fallbackEnd));
-            }
-            controller.close();
-          }
-        },
-      });
-
-      return new Response(readableStream, { headers: streamHeaders });
-    } catch (modelErr) {
-      console.warn(`[Model ${modelName} Failed, Trying Fallback]`, modelErr?.message);
-    }
-  }
-
   // ── 故障自癒：當所有雲端 AI 連線皆不可用時，觸發在地化實證知識庫自癒回覆 ──
   const selfHealingFallback = `【安全篩檢與就醫指引】
 若您目前的不適伴隨以下危險警訊（如劇烈劇痛、夜間痛醒、手腳持續發麻無力、大小便失禁或嚴重外傷後疼痛），請立即至醫院骨科、復健科或神經外科進行面對面專業診斷。
@@ -588,6 +472,93 @@ AI 提供的是普遍實證指引，但每個人身體受力模式與代償機�
 
 `;
 
-  return new Response(selfHealingFallback, { headers: streamHeaders });
+  // ② Edge 全串流傳輸（零超時、邊緣毫秒響應）
+  // 立即回傳 ReadableStream Response，讓 Vercel Edge 在 10ms 內完成交握，絕不觸發 25s 超時
+  const MODELS = ['gemini-3-flash-preview', 'gemini-3.1-flash-lite'];
+  const genAI = new GoogleGenerativeAI(apiKey);
+
+  const chatHistory = sanitizedHistory.map(m => ({
+    role: m.role,
+    parts: [{ text: m.content }],
+  }));
+
+  const userContent = message + toolContext;
+
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      let fullResponseText = '';
+      let success = false;
+
+      for (const modelName of MODELS) {
+        try {
+          const model = genAI.getGenerativeModel({
+            model: modelName,
+            systemInstruction: SYSTEM_PROMPT,
+            safetySettings: [
+              { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+              { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+            ],
+            generationConfig: {
+              temperature: 0.2,
+              maxOutputTokens: 4096,
+            },
+          });
+
+          const chat = model.startChat({ history: chatHistory });
+          
+          // 若特定模型在 9 秒內未建立串流，立即切換備援模型
+          const streamPromise = chat.sendMessageStream(userContent);
+          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error(`Model timeout: ${modelName}`)), 9000));
+          const result = await Promise.race([streamPromise, timeoutPromise]);
+
+          for await (const chunk of result.stream) {
+            let text = '';
+            try {
+              text = chunk.text();
+            } catch {
+              const parts = chunk?.candidates?.[0]?.content?.parts;
+              if (Array.isArray(parts)) {
+                text = parts.map(p => p.text || '').join('');
+              }
+            }
+            if (text) {
+              const localized = localizeTaiwanese(text);
+              fullResponseText += localized;
+              controller.enqueue(encoder.encode(localized));
+            }
+          }
+
+          if (fullResponseText && fullResponseText.length > 20) {
+            success = true;
+            break;
+          }
+        } catch (err) {
+          console.warn(`[Model ${modelName} error]`, err?.message);
+          continue;
+        }
+      }
+
+      if (!success) {
+        // 自癒備援回覆：當雲端 AI 完全斷線或超時，立即串流在地實證知識庫指引
+        controller.enqueue(encoder.encode(selfHealingFallback));
+      } else {
+        if (!fullResponseText.includes('需要運動物理治療師為您詳細評估嗎')) {
+          const closingSupplement = `\n\n---\n\n【需要運動物理治療師為您詳細評估嗎？】\nAI 提供的是普遍實證指引，但每個人身體受力模式與代償機制皆具個別性。本系統由台灣執業物理治療師團隊建立與維護，若想進一步確認個人問題或預約實體一對一評估，歡迎透過本站專屬窗口與物理治療師聯繫：[點此加入駐站物理治療師諮詢窗口 ↗](https://lin.ee/y6VBRuh)`;
+          fullResponseText += closingSupplement;
+          controller.enqueue(encoder.encode(closingSupplement));
+        }
+        if (sanitizedHistory.length === 0 && fullResponseText.length > 50) {
+          setDynamicCache(cacheKey, fullResponseText);
+        }
+      }
+
+      controller.close();
+    },
+  });
+
+  return new Response(stream, { headers: streamHeaders });
 
 }
