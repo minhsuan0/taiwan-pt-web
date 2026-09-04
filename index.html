@@ -104,29 +104,55 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --teal-900: #0d4a4a;
-      --teal-700: #0f6b6b;
-      --teal-600: #12828b;
-      --teal-500: #14919b;
-      --teal-400: #22b2bd;
-      --teal-200: #a8e6eb;
-      --teal-100: #d4f4f7;
-      --teal-50:  #f0fbfc;
-      --gray-900: #111827;
-      --gray-700: #374151;
-      --gray-600: #4b5563;
-      --gray-500: #6b7280;
-      --gray-300: #d1d5db;
-      --gray-200: #e5e7eb;
-      --gray-100: #f3f4f6;
-      --white: #ffffff;
+      /* Apple System Colors (Light) */
+      --system-blue: #007AFF;
+      --system-blue-tint: rgba(0, 122, 255, 0.08);
+      --system-blue-tint-strong: rgba(0, 122, 255, 0.15);
+      --system-blue-hover: #0062CC;
+
+      --system-red: #FF3B30;
+      --system-green: #34C759;
+      --system-teal: #00C7BE;
+
+      /* Apple Semantic Labels (Light) */
+      --label-primary: #1C1C1E;
+      --label-secondary: #6E6E73;
+      --label-tertiary: #8E8E93;
+      --label-quaternary: rgba(60, 60, 67, 0.18);
+
+      /* Apple Backgrounds & Fills (Light) */
+      --system-bg: #F2F2F7;
+      --card-bg: #FFFFFF;
+      --card-border: rgba(0, 0, 0, 0.08);
+      --input-bg: #F2F2F7;
+      --input-border: #E5E5EA;
+      --separator: #E5E5EA;
+
+      /* Fallback variables mapped cleanly to Apple HIG */
+      --gray-900: #1C1C1E;
+      --gray-700: #3A3A3C;
+      --gray-600: #6E6E73;
+      --gray-500: #8E8E93;
+      --gray-300: #D1D1D6;
+      --gray-200: #E5E5EA;
+      --gray-100: #F2F2F7;
+      --teal-900: #004085;
+      --teal-700: #007AFF;
+      --teal-600: #007AFF;
+      --teal-500: #007AFF;
+      --teal-400: #0A84FF;
+      --teal-300: #D1D1D6;
+      --teal-200: #E5E5EA;
+      --teal-100: #F2F2F7;
+      --teal-50:  rgba(0, 122, 255, 0.06);
+      --white: #FFFFFF;
       --radius-lg: 1.15rem;
       --radius-md: 0.75rem;
       --radius-sm: 0.5rem;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
-      --shadow-lg: 0 8px 36px rgba(0,0,0,0.12);
-      --font-zh: 'Noto Sans TC', sans-serif;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 36px rgba(0,0,0,0.08);
+      --font-zh: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
     }
 
     html, body {
@@ -750,29 +776,30 @@
       box-shadow: none;
     }
     .action-btn.mic-mode:hover {
-      background: var(--teal-50);
-      border-color: var(--teal-300);
-      color: var(--teal-700);
+      background: rgba(0, 122, 255, 0.08);
+      border-color: #007AFF;
+      color: #007AFF;
       transform: scale(1.06);
     }
     /* 錄音中狀態（即時辨識呼吸燈） */
     .action-btn.recording-mode {
-      background: #fef2f2;
-      border: 1.5px solid #ef4444;
-      color: #ef4444;
+      background: rgba(255, 59, 48, 0.1);
+      border: 1.5px solid #FF3B30;
+      color: #FF3B30;
       animation: pulse-recording 1.2s infinite;
       transform: scale(1.06);
     }
     /* 送出狀態（已輸入文字時） */
     .action-btn.send-mode {
-      background: linear-gradient(135deg, #007AFF, #0051C5);
-      color: var(--white);
+      background: #007AFF;
+      color: #FFFFFF;
       border: none;
-      box-shadow: 0 2px 8px rgba(20,145,155,0.35);
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.35);
     }
     .action-btn.send-mode:hover {
+      background: #0062CC;
       transform: scale(1.06);
-      box-shadow: 0 4px 14px rgba(20,145,155,0.45);
+      box-shadow: 0 4px 14px rgba(0, 122, 255, 0.45);
     }
     .action-btn.send-mode:active {
       transform: scale(0.96);
@@ -789,12 +816,10 @@
       transition: transform 0.18s ease;
     }
     @keyframes pulse-recording {
-      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-      70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(255, 59, 48, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
     }
-
-
 
     /* Search Status & Typing indicator */
     .search-status {
@@ -802,7 +827,7 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.15rem 0;
-      color: var(--teal-700);
+      color: #007AFF;
       font-size: 0.82rem;
       font-weight: 500;
     }
@@ -812,8 +837,8 @@
     .search-spinner {
       width: 0.9rem;
       height: 0.9rem;
-      border: 2px solid var(--teal-200);
-      border-top-color: var(--teal-500);
+      border: 2px solid rgba(0, 122, 255, 0.18);
+      border-top-color: #007AFF;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       flex-shrink: 0;
@@ -841,8 +866,8 @@
       flex: 1 1 auto;
       min-width: 0;
       width: 100%;
-      border: 1.5px solid var(--gray-300);
-      border-radius: var(--radius-md);
+      border: 1px solid #E5E5EA;
+      border-radius: 1.1rem;
       padding: 0.65rem 0.875rem;
       font-size: 16px; /* 16px 防止 iOS Safari 點擊聚焦時自動放大畫面 */
       font-family: var(--font-zh);
@@ -850,15 +875,15 @@
       min-height: 2.75rem;
       max-height: 7.5rem;
       line-height: 1.45;
-      transition: border-color 0.18s;
+      transition: border-color 0.18s, background 0.18s;
       outline: none;
-      color: var(--gray-900);
-      background: #fafafa;
+      color: #1C1C1E;
+      background: #F2F2F7;
       -webkit-appearance: none;
       box-sizing: border-box;
     }
-    #input:focus { border-color: var(--teal-500); background: var(--white); }
-    #input::placeholder { color: var(--gray-500); font-size: 0.88rem; }
+    #input:focus { border-color: #007AFF; background: #FFFFFF; }
+    #input::placeholder { color: #8E8E93; font-size: 0.88rem; }
 
 
 
@@ -1785,10 +1810,10 @@
       align-items: center;
       justify-content: space-between;
       padding: 0.65rem 0.85rem;
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
+      background: #F2F2F7;
+      border: 1px solid #E5E5EA;
       border-radius: 0.75rem;
-      color: #111827;
+      color: #1C1C1E;
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
@@ -1798,14 +1823,14 @@
       width: 100%;
     }
     .drawer-action-btn:hover, .drawer-action-btn:active {
-      background: #F3F4F6;
-      border-color: #D1D5DB;
+      background: #E5E5EA;
+      border-color: #D1D1D6;
     }
     .drawer-action-btn .btn-left {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      color: #111827;
+      color: #1C1C1E;
       font-weight: 600;
       flex: 1;
       min-width: 0;
@@ -1838,11 +1863,11 @@
     }
     .drawer-sec-hint {
       font-size: 0.68rem;
-      color: #6B7280;
+      color: #8E8E93;
     }
     .drawer-empty-title {
       font-weight: 600;
-      color: #111827;
+      color: #1C1C1E;
       font-size: 0.95rem;
     }
     .drawer-empty-desc {
@@ -1874,14 +1899,14 @@
       font-size: 0.72rem;
       font-weight: 700;
       color: #007AFF;
-      background: rgba(0, 122, 255, 0.1);
+      background: rgba(0, 122, 255, 0.08);
       padding: 2px 7px;
       border-radius: 6px;
       letter-spacing: 0.3px;
     }
     .screener-hero-title {
       font-size: 0.78rem;
-      color: #6B7280;
+      color: #6E6E73;
       font-weight: 600;
     }
     .screener-cards-grid {
@@ -1890,8 +1915,8 @@
       gap: 0.55rem;
     }
     .screener-card {
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(229, 231, 235, 0.9);
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 0.85rem;
       padding: 0.75rem 0.8rem;
       display: flex;
@@ -1934,7 +1959,7 @@
     .screener-card-name {
       font-size: 0.84rem;
       font-weight: 700;
-      color: #111827;
+      color: #1C1C1E;
       margin-top: 0.15rem;
       line-height: 1.3;
     }
@@ -1942,6 +1967,13 @@
       font-size: 0.7rem;
       color: #8E8E93;
       line-height: 1.3;
+    }
+    .screener-topics-link {
+      color: #007AFF;
+      transition: color 0.15s ease, opacity 0.15s ease;
+    }
+    .screener-topics-link:hover {
+      opacity: 0.82;
     }
 
     /* ── ⚡ 3 秒快篩彈窗樣式 ── */
@@ -1975,12 +2007,12 @@
     .screener-option-btn {
       width: 100%;
       padding: 0.75rem 0.9rem;
-      background: rgba(243, 244, 246, 0.8);
-      border: 1px solid rgba(229, 231, 235, 0.9);
+      background: #F2F2F7;
+      border: 1px solid #E5E5EA;
       border-radius: 0.75rem;
       font-size: 0.84rem;
       font-weight: 600;
-      color: #1F2937;
+      color: #1C1C1E;
       text-align: left;
       cursor: pointer;
       display: flex;
@@ -1997,18 +2029,20 @@
       box-shadow: 0 2px 8px rgba(0, 122, 255, 0.15);
     }
     .screener-option-arrow {
-      color: #9CA3AF;
+      color: #8E8E93;
       font-size: 0.8rem;
       font-weight: 700;
     }
     .screener-custom-btn {
       border-style: dashed;
-      background: rgba(249, 250, 251, 0.9);
-      color: #4B5563;
+      background: #F2F2F7;
+      border-color: #D1D1D6;
+      color: #6E6E73;
     }
     .screener-custom-btn:hover {
       border-color: #007AFF;
       color: #007AFF;
+      background: rgba(0, 122, 255, 0.08);
     }
     .screener-custom-box {
       width: 100%;
@@ -2024,7 +2058,7 @@
       font-size: 0.86rem;
       font-family: var(--font-zh);
       background: #FFFFFF;
-      color: #111827;
+      color: #1C1C1E;
       outline: none;
       box-sizing: border-box;
       box-shadow: 0 2px 8px rgba(0, 122, 255, 0.12);
@@ -2441,23 +2475,23 @@
 
       /* Marquee suggestions strip & chips */
       .suggestions-strip {
-        background: #1c1c1e;
+        background: transparent;
       }
       .chip {
-        background: #2c2c2e;
-        border: 0.5px solid #38383a;
-        color: #63e6e2;
+        background: #2C2C2E;
+        border: 0.5px solid #38383A;
+        color: #0A84FF;
         box-shadow: none;
       }
       .chip:hover, .chip:active {
-        background: rgba(10, 132, 255, 0.2);
-        border-color: #0a84ff;
-        color: #ffffff;
+        background: rgba(10, 132, 255, 0.15);
+        border-color: #0A84FF;
+        color: #FFFFFF;
       }
 
       /* Bot & User Chat Bubbles */
       .msg.bot .avatar {
-        background: linear-gradient(135deg, #00c7be 0%, #0a84ff 100%);
+        background: linear-gradient(135deg, #007AFF 0%, #0A84FF 100%);
         color: #ffffff;
       }
       .msg.bot .bubble {
@@ -2486,13 +2520,13 @@
       }
       .bubble code {
         background: #3a3a3c;
-        color: #63e6e2;
+        color: #0A84FF;
       }
       .md-li {
         color: #ebebf5;
       }
       .md-li .bullet {
-        color: #00c7be;
+        color: #0A84FF;
       }
       .md-oli {
         background: #1C1C1E;
@@ -2507,7 +2541,7 @@
       }
       .md-quote {
         background: #1c1c1e;
-        border-left: 3px solid #00c7be;
+        border-left: 3px solid #0A84FF;
         color: #ebebf5;
       }
       .md-hr {
@@ -2516,18 +2550,18 @@
 
       /* PubMed Link Badges */
       .bubble a {
-        color: #63e6e2;
+        color: #0A84FF;
       }
       .bubble a[href*="pubmed.ncbi.nlm.nih.gov"] {
-        background: rgba(0, 199, 190, 0.15);
-        border: 1px solid rgba(0, 199, 190, 0.35);
-        color: #63e6e2;
+        background: rgba(10, 132, 255, 0.12);
+        border: 1px solid rgba(10, 132, 255, 0.3);
+        color: #0A84FF;
       }
       .bubble a[href*="pubmed.ncbi.nlm.nih.gov"]:hover,
       .bubble a[href*="pubmed.ncbi.nlm.nih.gov"]:active {
-        background: #00c7be;
-        color: #000000;
-        border-color: #00c7be;
+        background: #0A84FF;
+        color: #FFFFFF;
+        border-color: #0A84FF;
       }
 
       /* Dark Mode Evidence Badges */
@@ -2562,12 +2596,12 @@
         border: 1px solid #38383a;
       }
       .followup-title {
-        color: #63e6e2;
+        color: #0A84FF;
       }
       .followup-chip {
         background: rgba(10, 132, 255, 0.1);
         border: 0.5px solid rgba(10, 132, 255, 0.28);
-        color: #63e6e2;
+        color: #0A84FF;
       }
       .followup-chip:hover, .followup-chip:active {
         background: rgba(10, 132, 255, 0.22);
@@ -2632,9 +2666,12 @@
         color: #0a84ff;
       }
       .action-btn.send-mode {
-        background: linear-gradient(135deg, #0a84ff 0%, #00c7be 100%);
+        background: #0A84FF;
         border: none;
         box-shadow: 0 2px 10px rgba(10, 132, 255, 0.4);
+      }
+      .action-btn.send-mode:hover {
+        background: #0071E3;
       }
       .action-btn.recording-mode {
         background: rgba(255, 69, 58, 0.15);
@@ -2716,14 +2753,14 @@
       .drawer-action-btn {
         background: #2C2C2E;
         border-color: #3A3A3C;
-        color: #F9FAFB;
+        color: #FFFFFF;
       }
       .drawer-action-btn:hover, .drawer-action-btn:active {
         background: #3A3A3C;
         border-color: #48484A;
       }
       .drawer-action-btn .btn-left {
-        color: #F9FAFB;
+        color: #FFFFFF;
       }
       .drawer-action-btn .btn-badge {
         color: #FF453A;
@@ -2737,16 +2774,16 @@
         color: #8E8E93;
       }
       .drawer-empty-title {
-        color: #F9FAFB;
+        color: #FFFFFF;
       }
       .drawer-empty-desc {
-        color: #9CA3AF;
+        color: #8E8E93;
       }
 
       /* Screener Dark Mode */
       .screener-card {
         background: #2C2C2E;
-        border-color: #3A3A3C;
+        border-color: #38383A;
       }
       .screener-card:hover, .screener-card:active {
         background: #3A3A3C;
@@ -2754,24 +2791,24 @@
         box-shadow: 0 4px 16px rgba(10, 132, 255, 0.25);
       }
       .screener-card-name {
-        color: #F9FAFB;
+        color: #FFFFFF;
       }
       .screener-card-desc {
-        color: #9CA3AF;
+        color: #8E8E93;
       }
       .screener-card-arrow {
-        color: #60A5FA;
-        background: rgba(96, 165, 250, 0.15);
+        color: #0A84FF;
+        background: rgba(10, 132, 255, 0.15);
       }
       .screener-card-icon {
-        color: #60A5FA;
+        color: #0A84FF;
       }
       .screener-badge {
-        color: #60A5FA;
-        background: rgba(96, 165, 250, 0.15);
+        color: #0A84FF;
+        background: rgba(10, 132, 255, 0.15);
       }
       .screener-hero-title {
-        color: #9CA3AF;
+        color: #8E8E93;
       }
       .screener-step-bar {
         background: rgba(255, 255, 255, 0.12);
@@ -2780,26 +2817,27 @@
         background: #0A84FF;
       }
       .screener-question-title {
-        color: #F9FAFB;
+        color: #FFFFFF;
       }
       .screener-option-btn {
         background: #2C2C2E;
-        border-color: #3A3A3C;
-        color: #F3F4F6;
+        border-color: #38383A;
+        color: #EBEBF5;
       }
       .screener-option-btn:hover, .screener-option-btn:active {
         background: #3A3A3C;
         border-color: #0A84FF;
-        color: #60A5FA;
+        color: #0A84FF;
       }
       .screener-custom-btn {
         background: #2C2C2E;
-        border-color: #48484A;
-        color: #9CA3AF;
+        border-color: #38383A;
+        color: #8E8E93;
       }
       .screener-custom-btn:hover {
         border-color: #0A84FF;
-        color: #60A5FA;
+        color: #0A84FF;
+        background: rgba(10, 132, 255, 0.15);
       }
       .screener-custom-input {
         background: #2C2C2E;
@@ -2811,16 +2849,19 @@
         color: #FFFFFF;
       }
       .screener-custom-confirm-btn:hover, .screener-custom-confirm-btn:active {
-        background: #0062CC;
+        background: #0071E3;
+      }
+      .screener-topics-link {
+        color: #0A84FF;
       }
 
       /* Search Status & Typing Indicator */
       .search-status {
-        color: #ebebf5;
+        color: #0A84FF;
       }
       .search-spinner {
         border-color: #38383a;
-        border-top-color: #00c7be;
+        border-top-color: #0A84FF;
       }
       .disclaimer {
         color: #6e6e73;
@@ -3665,7 +3706,7 @@
             </button>
           </div>
           <div style="text-align:center; margin-top:0.75rem;">
-            <a href="/topics/" style="font-size:0.78rem; color:#007AFF; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem;">
+            <a href="/topics/" class="screener-topics-link" style="font-size:0.78rem; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem;">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
