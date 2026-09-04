@@ -1868,6 +1868,9 @@
       padding: 0 0.25rem;
     }
     .screener-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
       font-size: 0.72rem;
       font-weight: 700;
       color: #007AFF;
@@ -1913,7 +1916,12 @@
       justify-content: space-between;
     }
     .screener-card-icon {
-      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      color: #007AFF;
     }
     .screener-card-arrow {
       font-size: 0.7rem;
@@ -2755,6 +2763,9 @@
         color: #60A5FA;
         background: rgba(96, 165, 250, 0.15);
       }
+      .screener-card-icon {
+        color: #60A5FA;
+      }
       .screener-badge {
         color: #60A5FA;
         background: rgba(96, 165, 250, 0.15);
@@ -3128,17 +3139,21 @@
 
       <div style="margin-top:1.25rem; text-align:center;">
         <a href="/topics/" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.65rem 1.2rem; background:#007AFF; color:#FFFFFF; border-radius:999px; text-decoration:none; font-weight:700; font-size:0.92rem; box-shadow:0 3px 10px rgba(0,122,255,0.25);">
-          <span>📚 查看全部 104 篇常見症狀實證百科</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          <span>查看全部 104 篇常見症狀實證百科</span>
           <span>➔</span>
         </a>
       </div>
 
       <div style="margin-top:1.25rem; display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; font-size:0.82rem;">
-        <a href="/topics/#neck-shoulder" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">💆 頸肩與上肢</a>
-        <a href="/topics/#spine-back" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🪑 脊椎胸腰與核心</a>
-        <a href="/topics/#hip-knee" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🏃 髖部骨盆與膝關節</a>
-        <a href="/topics/#foot-ankle" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🦶 足踝足底與步態</a>
-        <a href="/topics/#ergonomics-sports" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">🏋️ 辦公人體工學與運動</a>
+        <a href="/topics/#neck-shoulder" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">頸肩與上肢</a>
+        <a href="/topics/#spine-back" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">脊椎胸腰與核心</a>
+        <a href="/topics/#hip-knee" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">髖部骨盆與膝關節</a>
+        <a href="/topics/#foot-ankle" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">足踝足底與步態</a>
+        <a href="/topics/#ergonomics-sports" style="padding:0.4rem 0.75rem; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:0.6rem; text-decoration:none; font-weight:600;">辦公人體工學與運動</a>
       </div>
     </div>
   </div>
@@ -3235,7 +3250,12 @@
   <div class="drawer-brand">
     <div>
       <div class="drawer-brand-title">臺灣物理治療實證助手</div>
-      <div class="drawer-brand-subtitle">🔒 本地安全儲存 · 無個資上傳</div>
+      <div class="drawer-brand-subtitle">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1.5px; margin-right:3px;">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>本地安全儲存 · 無個資上傳
+      </div>
     </div>
     <button class="drawer-new-btn" onclick="closeHistoryDrawer(); resetChat();" title="新諮詢對話" aria-label="新對話">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3571,16 +3591,28 @@
         <h2>你好，我是臺灣物理治療實證助手</h2>
         <p>依據國際醫學實證與臨床指引，為你提供安心、客觀的動作衛教與運動指引。</p>
 
-        <!-- ⚡ 3 秒常見症狀互動快篩 -->
+        <!-- 3 秒常見症狀互動快篩 -->
         <div class="screener-hero-box">
           <div class="screener-hero-header">
-            <span class="screener-badge">⚡ 3 秒互動快篩</span>
+            <span class="screener-badge">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              <span>3 秒互動快篩</span>
+            </span>
             <span class="screener-hero-title">不知道怎麼問？點選身體狀況快速自測</span>
           </div>
           <div class="screener-cards-grid">
             <button type="button" class="screener-card" onclick="openScreenerModal('sitting')">
               <div class="screener-card-top">
-                <span class="screener-card-icon">🪑</span>
+                <span class="screener-card-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/>
+                    <path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"/>
+                    <path d="M5 18v2"/>
+                    <path d="M19 18v2"/>
+                  </svg>
+                </span>
                 <span class="screener-card-arrow">開始 ↗</span>
               </div>
               <div class="screener-card-name">辦公久坐腰痠自測</div>
@@ -3589,7 +3621,14 @@
 
             <button type="button" class="screener-card" onclick="openScreenerModal('knee')">
               <div class="screener-card-top">
-                <span class="screener-card-icon">🏃</span>
+                <span class="screener-card-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="14" cy="4" r="2"/>
+                    <path d="m9 20 3-6 3 2 3-5"/>
+                    <path d="m6 13 3-2 3 2 4-3"/>
+                    <path d="m4 17 3-3"/>
+                  </svg>
+                </span>
                 <span class="screener-card-arrow">開始 ↗</span>
               </div>
               <div class="screener-card-name">膝關節健康與退化快篩</div>
@@ -3598,7 +3637,13 @@
 
             <button type="button" class="screener-card" onclick="openScreenerModal('neck')">
               <div class="screener-card-top">
-                <span class="screener-card-icon">💆</span>
+                <span class="screener-card-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M6 21v-2a6 6 0 0 1 12 0v2"/>
+                    <line x1="12" y1="11" x2="12" y2="17"/>
+                  </svg>
+                </span>
                 <span class="screener-card-arrow">開始 ↗</span>
               </div>
               <div class="screener-card-name">低頭肩頸與富貴包自評</div>
@@ -3607,7 +3652,12 @@
 
             <button type="button" class="screener-card" onclick="openScreenerModal('foot')">
               <div class="screener-card-top">
-                <span class="screener-card-icon">🦶</span>
+                <span class="screener-card-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.5v2"/>
+                    <path d="M14 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C8.63 6 8 7.8 8 9.5c0 3.11 2 5.66 2 8.5v2"/>
+                  </svg>
+                </span>
                 <span class="screener-card-arrow">開始 ↗</span>
               </div>
               <div class="screener-card-name">早晨足底刺痛快篩</div>
@@ -3615,8 +3665,12 @@
             </button>
           </div>
           <div style="text-align:center; margin-top:0.75rem;">
-            <a href="/topics/" style="font-size:0.78rem; color:#007AFF; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">
-              <span>📚 查看全部 104 篇常見症狀實證百科</span>
+            <a href="/topics/" style="font-size:0.78rem; color:#007AFF; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+              <span>查看全部 104 篇常見症狀實證百科</span>
               <span>➔</span>
             </a>
           </div>
@@ -3715,7 +3769,7 @@
         </svg>
         <span>已讚好</span>
       `;
-      showAppToast('✓ 感謝您的肯定！這有助於實證模型持續精進 👍');
+      showAppToast('✓ 感謝您的肯定！這有助於實證模型持續精進');
       
       const payload = { type: 'up', query, msgId, timestamp: Date.now() };
       recordFeedbackLocally(payload);
@@ -3842,7 +3896,7 @@
       document.body.style.overflow = '';
     }
     pendingImproveFeedback = null;
-    showAppToast('✓ 感謝您的寶貴建議！已記錄並將持續優化 🤝');
+    showAppToast('✓ 感謝您的寶貴建議！已記錄並將持續優化');
   }
 
     // ── OpenEvidence 動作與純文字/圖片生成模組 ──────────────────────
@@ -5068,7 +5122,7 @@
           const errData = await res?.json();
           if (errData?.error) errMsg = errData.error;
         } catch {}
-        appendMsg('bot', `<span style="color:#ef4444">⚠️ ${errMsg}</span>`, `⚠️ ${errMsg}`);
+        appendMsg('bot', `<span style="color:#ef4444;display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>${errMsg}</span></span>`, errMsg);
         return;
       }
 
@@ -5653,7 +5707,11 @@
     if (sessions.length === 0) {
       bodyEl.innerHTML = `
         <div class="drawer-empty">
-          <div style="font-size:1.6rem;margin-bottom:0.4rem;">💬</div>
+          <div style="margin-bottom:0.6rem; color:var(--text-muted, #94a3b8); display:flex; justify-content:center;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
           <div class="drawer-empty-title">尚無對話紀錄</div>
           <div class="drawer-empty-desc">
             你向實證助手諮詢的對話<br>會自動安全保存在本裝置中
@@ -5805,7 +5863,7 @@
       recognition.onstart = () => {
         isListening = true;
         updateActionButtonState();
-        inputEl.placeholder = '🎙️ 正在聆聽，請說出身體狀況…';
+        inputEl.placeholder = '正在聆聽，請說出身體狀況…';
       };
 
       recognition.onresult = (event) => {
@@ -5891,11 +5949,18 @@
     });
   }
 
-  // ── ⚡ 3 秒常見症狀互動快篩題庫與狀態引擎 ───────────────────────
+  // ── 3 秒常見症狀互動快篩題庫與狀態引擎 ───────────────────────
+  const SCREENER_ICONS = {
+    sitting: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"/><path d="M5 18v2"/><path d="M19 18v2"/></svg>`,
+    knee: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="4" r="2"/><path d="m9 20 3-6 3 2 3-5"/><path d="m6 13 3-2 3 2 4-3"/><path d="m4 17 3-3"/></svg>`,
+    neck: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/><line x1="12" y1="11" x2="12" y2="17"/></svg>`,
+    foot: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.5v2"/><path d="M14 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C8.63 6 8 7.8 8 9.5c0 3.11 2 5.66 2 8.5v2"/></svg>`
+  };
+
   const SCREENER_DATA = {
     sitting: {
       name: '辦公久坐腰痠自測',
-      icon: '🪑',
+      icon: SCREENER_ICONS.sitting,
       steps: [
         {
           title: '步驟 1/3：哪裡最容易感到痠痛或不適？',
@@ -5925,7 +5990,7 @@
     },
     knee: {
       name: '膝關節健康與退化快篩',
-      icon: '🏃',
+      icon: SCREENER_ICONS.knee,
       steps: [
         {
           title: '步驟 1/3：膝蓋最主要的不適部位在哪裡？',
@@ -5955,7 +6020,7 @@
     },
     neck: {
       name: '低頭肩頸與富貴包自評',
-      icon: '💆',
+      icon: SCREENER_ICONS.neck,
       steps: [
         {
           title: '步驟 1/3：肩頸最明顯的緊繃點在哪裡？',
@@ -5985,7 +6050,7 @@
     },
     foot: {
       name: '早晨足底刺痛快篩',
-      icon: '🦶',
+      icon: SCREENER_ICONS.foot,
       steps: [
         {
           title: '步驟 1/3：腳部最主要的痛點在哪裡？',
@@ -6029,7 +6094,7 @@
     const titleEl = document.getElementById('screener-modal-title');
     const iconEl = document.getElementById('screener-modal-icon');
     if (titleEl) titleEl.textContent = data.name;
-    if (iconEl) iconEl.textContent = data.icon;
+    if (iconEl) iconEl.innerHTML = data.icon;
 
     renderScreenerStep();
     const modal = document.getElementById('screener-modal');
@@ -6080,8 +6145,14 @@
     html += `
       <div id="screener-custom-container" style="margin-top:0.25rem;">
         <button type="button" class="screener-option-btn screener-custom-btn" id="screener-custom-toggle-btn" onclick="toggleScreenerCustomInput()">
-          <span>✏️ 其他（不在選項中，自行補充描述）</span>
-          <span class="screener-option-arrow">自填 ✎</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            <span>其他（不在選項中，自行補充描述）</span>
+          </span>
+          <span class="screener-option-arrow">自填 ↗</span>
         </button>
         <div id="screener-custom-box" class="screener-custom-box" style="display:none;">
           <div style="display:flex; gap:0.45rem; align-items:center;">
@@ -6475,7 +6546,11 @@
           </div>
         </div>
         <button type="button" id="jko-copy-badge" class="jko-step-action-btn" onclick="event.stopPropagation(); copyJkoAccount(this.closest('.jko-step-row'));">
-          <span>📋 點擊複製</span>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span>點擊複製</span>
         </button>
         <div id="jko-account-val" style="display:none;">901290119</div>
       </div>
@@ -6507,8 +6582,12 @@
       </div>
 
       <!-- 提示與安全聲明 -->
-      <div class="jko-sec-box">
-        🔒 <strong>官方加密轉帳 · 杜絕詐騙風險</strong>：本站絕不索取您的信用卡或銀行帳密，轉帳全程由街口官方 App 加密處理，請安心支持！
+      <div class="jko-sec-box" style="display:flex; align-items:flex-start; gap:6px;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:2px;">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <div><strong>官方加密轉帳 · 杜絕詐騙風險</strong>：本站絕不索取您的信用卡或銀行帳密，轉帳全程由街口官方 App 加密處理，請安心支持！</div>
       </div>
 
       <!-- 關閉按鈕 -->
@@ -6533,12 +6612,15 @@
     </div>
   </div>
 
-  <!-- 📝 改善回答意見回饋 Modal -->
+  <!-- 改善回答意見回饋 Modal -->
   <div id="feedback-modal" class="modal-backdrop" onclick="if(event.target===this)closeFeedbackModal()">
     <div class="modal-card" style="max-width:380px; padding:18px 20px; box-sizing:border-box; text-align:left;">
       <div class="modal-header" style="margin-bottom:8px; padding:0 0 8px; display:flex; justify-content:space-between; align-items:center;">
         <div style="display:flex; align-items:center; gap:6px;">
-          <span style="font-size:1.15rem;">📝</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary,#8e8e93);">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
           <span class="modal-title" style="font-size:1.05rem; font-weight:700;">協助我們改善回答</span>
         </div>
         <button type="button" class="modal-close-btn" onclick="closeFeedbackModal()" aria-label="關閉">✕</button>
@@ -6602,12 +6684,12 @@
     </div>
   </div>
 
-  <!-- ⚡ 3 秒常見症狀互動快篩 Modal -->
+  <!-- 3 秒常見症狀互動快篩 Modal -->
   <div id="screener-modal" class="modal-backdrop" onclick="if(event.target===this)closeScreenerModal()">
     <div class="modal-card" style="max-width:420px; padding:20px; box-sizing:border-box; text-align:left;">
       <div class="modal-header" style="margin-bottom:10px; padding:0 0 8px; display:flex; justify-content:space-between; align-items:center;">
         <div style="display:flex; align-items:center; gap:6px;">
-          <span id="screener-modal-icon" style="font-size:1.2rem;">⚡</span>
+          <span id="screener-modal-icon" style="display:inline-flex; align-items:center; justify-content:center; color:#007AFF;"></span>
           <span id="screener-modal-title" class="modal-title" style="font-size:1.05rem; font-weight:700;">3 秒症狀快篩</span>
         </div>
         <button type="button" class="modal-close-btn" onclick="closeScreenerModal()" aria-label="關閉">✕</button>
