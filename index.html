@@ -486,44 +486,44 @@
     }
 
     /* 🩺 Apple Squircle 行內實證等級微膠囊 */
+    .bubble a.evidence-badge,
     .evidence-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.36rem;
-      padding: 0.13rem 0.48rem 0.13rem 0.44rem;
-      border-radius: 0.42rem;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.28rem !important;
+      padding: 0.12rem 0.44rem 0.12rem 0.4rem !important;
+      border-radius: 0.38rem;
       font-size: 0.72rem;
       font-weight: 600;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Text", system-ui, sans-serif;
       text-decoration: none !important;
-      margin: 0 0.22rem;
-      vertical-align: 0.05rem;
+      margin: 0 0.2rem;
+      vertical-align: 0.06rem;
       cursor: pointer;
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
       line-height: 1.25;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.01em;
       white-space: nowrap;
     }
     .evidence-badge .dot {
-      width: 5.5px;
-      height: 5.5px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background-color: currentColor;
       display: inline-block;
-      font-size: 0;
       flex-shrink: 0;
     }
     .evidence-badge .txt {
       font-size: 0.72rem;
       font-weight: 650;
-      letter-spacing: 0.015em;
+      letter-spacing: 0.01em;
     }
     .evidence-badge .arr {
       font-size: 0.62rem;
       opacity: 0.65;
       font-weight: 700;
-      margin-left: 0.06rem;
+      margin-left: 0.04rem;
       transition: transform 0.15s ease;
     }
     .evidence-badge:hover .arr {
@@ -1093,12 +1093,26 @@
       gap: 1.05rem;
     }
 
-    /* 1. 研究文獻卡片（置頂第一順位） */
+    /* 1. 實證彈窗分組與區塊標題（左右完全對齊基準線） */
+    .sheet-section-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .sheet-section-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #636366;
+      padding-left: 0.2rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* 2. 研究文獻資訊卡片 */
     .evidence-paper-card {
       background: rgba(255, 255, 255, 0.72);
       border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 1rem;
-      padding: 1.05rem;
+      padding: 1rem 1.05rem;
       display: flex;
       flex-direction: column;
       gap: 0.65rem;
@@ -1123,17 +1137,17 @@
       opacity: 0.5;
     }
     .evidence-summary-box {
-      background: rgba(0, 122, 255, 0.04);
-      border-left: 3px solid #007aff;
-      border-radius: 0.5rem;
-      padding: 0.65rem 0.85rem;
+      background: rgba(0, 122, 255, 0.05);
+      border: 1px solid rgba(0, 122, 255, 0.14);
+      border-radius: 0.75rem;
+      padding: 0.75rem 0.85rem;
     }
     .evidence-summary-label {
-      font-size: 0.68rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #007aff;
       margin-bottom: 0.25rem;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
     }
     .evidence-summary-text {
       font-size: 0.84rem;
@@ -1166,25 +1180,16 @@
       font-size: 0.85rem;
     }
 
-    /* 2. 實證等級說明區塊（置於下方） */
-    .evidence-scale-section {
+    /* 3. 實證等級說明卡片（與上方論文卡片齊頭齊尾完全對齊） */
+    .evidence-scale-card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 1rem;
+      padding: 0.85rem 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-    }
-    .evidence-scale-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .scale-section-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #636366;
-    }
-    .scale-section-hint {
-      font-size: 0.7rem;
-      color: #8e8e93;
+      gap: 0.65rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
     .evidence-scale-track {
       display: flex;
@@ -1215,17 +1220,17 @@
     .scale-step-top {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      justify-content: center;
+      gap: 0.32rem;
       font-size: 0.8rem;
       font-weight: 700;
     }
     .scale-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: currentColor;
       display: inline-block;
-      font-size: 0;
       flex-shrink: 0;
     }
     .scale-step.step-a .scale-step-top { color: #1a8738; }
@@ -1246,7 +1251,7 @@
       background: rgba(0, 122, 255, 0.05);
       border: 1px solid rgba(0, 122, 255, 0.14);
       border-radius: 0.75rem;
-      padding: 0.75rem 0.95rem;
+      padding: 0.75rem 0.85rem;
       box-sizing: border-box;
       transition: all 0.2s ease;
     }
@@ -2918,7 +2923,11 @@
       .evidence-sheet-title {
         color: #f2f2f7;
       }
-      .evidence-paper-card {
+      .sheet-section-title {
+        color: #aeaeb2;
+      }
+      .evidence-paper-card,
+      .evidence-scale-card {
         background: rgba(44, 44, 46, 0.72);
         border-color: rgba(255, 255, 255, 0.08);
       }
@@ -2930,7 +2939,7 @@
       }
       .evidence-summary-box {
         background: rgba(10, 132, 255, 0.1);
-        border-left-color: #0a84ff;
+        border: 1px solid rgba(10, 132, 255, 0.25);
       }
       .evidence-summary-label {
         color: #64d2ff;
@@ -2944,9 +2953,6 @@
       .scale-step.active {
         background: #3a3a3c;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-      }
-      .scale-section-title {
-        color: #aeaeb2;
       }
       .scale-step.step-a .scale-step-top {
         color: #34c759 !important;
@@ -4840,10 +4846,11 @@
       .replace(/^\s*(【.+?】)\s*$/gm, '<strong class="md-heading">$1</strong>')
       // Markdown 標題（1 到 6 個 #，並自動轉為 heading）
       .replace(/^\s*#{1,6}\s*(.+)$/gm, '<strong class="md-heading">$1</strong>')
-      // 項目清單 * 或 -
-      .replace(/^\s*[\*\-]\s+(.+)$/gm, '<div class="md-li"><span class="bullet">•</span><span>$1</span></div>')
-      // 數字清單 1. 2.
-      .replace(/^\s*(\d+)\.\s+(.+)$/gm, '<div class="md-oli"><span class="num">$1</span><span>$2</span></div>')
+      // 數字清單 1. 2. 1、 1） (1) * 1. （優先解析數字清單，確保 123 圓標絕對不漏失）
+      .replace(/^[ \t]*([①-⑨])/gm, (m, c) => (c.charCodeAt(0) - 0x2460 + 1) + '. ')
+      .replace(/^\s*(?:[\*\-•]\s*)?(?:(?:(?:\(|（)?(\d+)(?:\)|）|\.|\、))\s*)(.+)$/gm, '<div class="md-oli"><span class="num">$1</span><span>$2</span></div>')
+      // 項目清單 * 或 - 或 •
+      .replace(/^\s*[\*\-•]\s+(.+)$/gm, '<div class="md-li"><span class="bullet">•</span><span>$1</span></div>')
       // 粗體、斜體、行內程式碼
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -4860,8 +4867,8 @@
           const cleanJournal = (parts[4] || '國際醫學與物理治療臨床指引').trim();
           const cleanUrl = parts.slice(5).join('|').trim();
 
-          // 框框內不顯示年份，僅呈現「● Level A ↗」極簡 Apple 膠囊
-          return `<a href="javascript:void(0)" class="evidence-badge ${levelClass}" data-level="${cleanLevel}" data-year="${cleanYear}" data-title="${encodeURIComponent(cleanTitle)}" data-conclusion="${encodeURIComponent(cleanConclusion)}" data-journal="${encodeURIComponent(cleanJournal)}" data-url="${encodeURIComponent(cleanUrl)}" onclick="openEvidenceModal(this)"><span class="dot">●</span><span class="txt">Level ${cleanLevel}</span><span class="arr">↗</span></a>`;
+          // 框框內不顯示年份，僅呈現「● Level A ↗」極簡 Apple 膠囊（純向量圓點，完美水平居中）
+          return `<a href="javascript:void(0)" class="evidence-badge ${levelClass}" data-level="${cleanLevel}" data-year="${cleanYear}" data-title="${encodeURIComponent(cleanTitle)}" data-conclusion="${encodeURIComponent(cleanConclusion)}" data-journal="${encodeURIComponent(cleanJournal)}" data-url="${encodeURIComponent(cleanUrl)}" onclick="openEvidenceModal(this)"><span class="dot"></span><span class="txt">Level ${cleanLevel}</span><span class="arr">↗</span></a>`;
         }
       )
       // 🩺 2. 簡潔 Standalone Evidence 標籤：[🟢 Level A · 2023 ↗] 或 [Level B]
@@ -4874,7 +4881,7 @@
           const defaultConclusion = cleanLevel === 'A' ? '經多項大規模臨床人體試驗證實，具最高等級科學依據，臨床指引強烈推薦優先採用。' : cleanLevel === 'B' ? '具良好臨床對照研究支持，證實具顯著改善效果與臨床參考價值。' : '由物理治療師依據臨床實務經驗與操作指引制定。';
           const defaultJournal = cleanLevel === 'A' ? 'JOSPT / Cochrane' : cleanLevel === 'B' ? 'BJSM / PTJ' : 'Taiwan PT 臨床共識';
 
-          return `<a href="javascript:void(0)" class="evidence-badge ${levelClass}" data-level="${cleanLevel}" data-year="${cleanYear}" data-title="${encodeURIComponent(defaultTitle)}" data-conclusion="${encodeURIComponent(defaultConclusion)}" data-journal="${encodeURIComponent(defaultJournal)}" data-url="" onclick="openEvidenceModal(this)"><span class="dot">●</span><span class="txt">Level ${cleanLevel}</span><span class="arr">↗</span></a>`;
+          return `<a href="javascript:void(0)" class="evidence-badge ${levelClass}" data-level="${cleanLevel}" data-year="${cleanYear}" data-title="${encodeURIComponent(defaultTitle)}" data-conclusion="${encodeURIComponent(defaultConclusion)}" data-journal="${encodeURIComponent(defaultJournal)}" data-url="" onclick="openEvidenceModal(this)"><span class="dot"></span><span class="txt">Level ${cleanLevel}</span><span class="arr">↗</span></a>`;
         }
       )
       // 🩺 3. 徹底清除任何孤立或意外殘留的 (evidence:...) 語法，杜絕洩漏至使用者內文
@@ -6393,67 +6400,69 @@
       </div>
 
       <div class="evidence-sheet-body">
-        <!-- 1. 研究文獻卡片（置頂第一順位，點擊後最直接映入眼簾） -->
-        <div class="evidence-paper-card">
-          <!-- 中文研究標題 -->
-          <div class="evidence-paper-title" id="evidence-modal-title">--</div>
+        <!-- 1. 研究論文資訊（置頂第一順位，點擊後最直接映入眼簾） -->
+        <div class="sheet-section-group">
+          <div class="sheet-section-title">研究論文資訊</div>
+          <div class="evidence-paper-card">
+            <!-- 中文研究標題 -->
+            <div class="evidence-paper-title" id="evidence-modal-title">--</div>
 
-          <!-- 年份與來源期刊 -->
-          <div class="evidence-paper-meta">
-            <span id="evidence-modal-year">--</span>
-            <span class="meta-dot">·</span>
-            <span id="evidence-modal-journal">--</span>
-          </div>
+            <!-- 年份與來源期刊 -->
+            <div class="evidence-paper-meta">
+              <span id="evidence-modal-year">--</span>
+              <span class="meta-dot">·</span>
+              <span id="evidence-modal-journal">--</span>
+            </div>
 
-          <!-- 核心研究結論 -->
-          <div class="evidence-summary-box">
-            <div class="evidence-summary-label">研究核心結論</div>
-            <div class="evidence-summary-text" id="evidence-modal-conclusion">--</div>
-          </div>
+            <!-- 核心研究結論 -->
+            <div class="evidence-summary-box">
+              <div class="evidence-summary-label">研究核心結論</div>
+              <div class="evidence-summary-text" id="evidence-modal-conclusion">--</div>
+            </div>
 
-          <!-- 原文外跳按鈕 -->
-          <div id="evidence-modal-link-wrap" style="margin-top:0.25rem;">
-            <a id="evidence-modal-url" href="#" target="_blank" rel="noopener noreferrer" class="evidence-pubmed-btn">
-              <span>前往查看研究原文</span>
-              <span class="link-arrow">↗</span>
-            </a>
+            <!-- 原文外跳按鈕 -->
+            <div id="evidence-modal-link-wrap" style="margin-top:0.25rem;">
+              <a id="evidence-modal-url" href="#" target="_blank" rel="noopener noreferrer" class="evidence-pubmed-btn">
+                <span>前往查看研究原文</span>
+                <span class="link-arrow">↗</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <!-- 2. 實證等級說明區塊（置於下方，白話簡明，無繁瑣英文專有名詞） -->
-        <div class="evidence-scale-section">
-          <div class="evidence-scale-header">
-            <span class="scale-section-title">實證等級說明</span>
-          </div>
+        <!-- 2. 實證等級說明區塊（置於下方，白話簡明，結構完全左右對齊） -->
+        <div class="sheet-section-group">
+          <div class="sheet-section-title">實證等級說明</div>
+          <div class="evidence-scale-card">
+            <!-- 三段式刻度量尺 -->
+            <div class="evidence-scale-track">
+              <div class="scale-step step-a" id="scale-step-a" onclick="switchEvidenceScaleLevel('A')">
+                <div class="scale-step-top">
+                  <span class="scale-dot level-a"></span>
+                  <span>Level A</span>
+                </div>
+                <div class="scale-step-sub">最高實證 · 優先推薦</div>
+              </div>
+              <div class="scale-step step-b" id="scale-step-b" onclick="switchEvidenceScaleLevel('B')">
+                <div class="scale-step-top">
+                  <span class="scale-dot level-b"></span>
+                  <span>Level B</span>
+                </div>
+                <div class="scale-step-sub">良好依據 · 明確效益</div>
+              </div>
+              <div class="scale-step step-c" id="scale-step-c" onclick="switchEvidenceScaleLevel('C')">
+                <div class="scale-step-top">
+                  <span class="scale-dot level-c"></span>
+                  <span>Level C</span>
+                </div>
+                <div class="scale-step-sub">專家共識 · 實務指引</div>
+              </div>
+            </div>
 
-          <!-- 三段式刻度量尺 -->
-          <div class="evidence-scale-track">
-            <div class="scale-step step-a" id="scale-step-a" onclick="switchEvidenceScaleLevel('A')">
-              <div class="scale-step-top">
-                <span class="scale-dot level-a">●</span>
-                <span>Level A</span>
-              </div>
-              <div class="scale-step-sub">最高實證 · 優先推薦</div>
+            <!-- 動態白話定義說明卡 -->
+            <div class="scale-desc-box" id="evidence-scale-desc">
+              <!-- Dynamically populated by switchEvidenceScaleLevel -->
             </div>
-            <div class="scale-step step-b" id="scale-step-b" onclick="switchEvidenceScaleLevel('B')">
-              <div class="scale-step-top">
-                <span class="scale-dot level-b">●</span>
-                <span>Level B</span>
-              </div>
-              <div class="scale-step-sub">良好依據 · 明確效益</div>
-            </div>
-            <div class="scale-step step-c" id="scale-step-c" onclick="switchEvidenceScaleLevel('C')">
-              <div class="scale-step-top">
-                <span class="scale-dot level-c">●</span>
-                <span>Level C</span>
-              </div>
-              <div class="scale-step-sub">專家共識 · 實務指引</div>
-            </div>
-          </div>
-
-          <!-- 動態白話定義說明卡 -->
-          <div class="scale-desc-box" id="evidence-scale-desc">
-            <!-- Dynamically populated by switchEvidenceScaleLevel -->
           </div>
         </div>
       </div>
