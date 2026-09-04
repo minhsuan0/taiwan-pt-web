@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
@@ -8,6 +8,26 @@
   <meta name="google-site-verification" content="4FE8VjPYT4NzDNajbYPiakW30hZDkauPCJ14JmDDrEo" />
   <link rel="canonical" href="https://taiwan-pt-web.vercel.app/" />
   
+  <!-- Open Graph / Facebook / LINE / Threads / Discord (置頂確保爬蟲優先辨識) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://taiwan-pt-web.vercel.app/" />
+  <meta property="og:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
+  <meta property="og:description" content="即時查詢實證文獻、臨床指南與臺灣《物理治療師法》，提供專業實證衛教資訊與居家運動指引。" />
+  <meta property="og:image" content="https://taiwan-pt-web.vercel.app/og-image.png" />
+  <meta property="og:image:secure_url" content="https://taiwan-pt-web.vercel.app/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
+  <meta property="og:site_name" content="臺灣物理治療實證助手" />
+  <meta property="og:locale" content="zh_TW" />
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
+  <meta name="twitter:description" content="即時查詢 PubMed 實證文獻、臨床指南與臺灣《物理治療師法》。" />
+  <meta name="twitter:image" content="https://taiwan-pt-web.vercel.app/og-image.png" />
+
   <!-- PWA & Theme -->
   <link rel="manifest" href="/manifest.json?v=20260904" />
   <meta name="theme-color" content="#007AFF" />
@@ -17,7 +37,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="物治" />
-  <!-- Apple iOS PWA -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=20260904" />
   <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-touch-icon-precomposed.png?v=20260904" />
 
@@ -32,23 +51,6 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=20260904" />
   <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=20260904" />
   <link rel="icon" type="image/svg+xml" href="/icon.svg?v=20260904" />
-
-  <!-- Open Graph / Facebook / LINE / Threads / Discord -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://taiwan-pt-web.vercel.app/" />
-  <meta property="og:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
-  <meta property="og:description" content="即時查詢實證文獻、臨床指南與臺灣《物理治療師法》，提供專業實證衛教資訊與居家運動指引。" />
-  <meta property="og:image" content="https://taiwan-pt-web.vercel.app/og-image.png?v=4" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:site_name" content="臺灣物理治療實證助手" />
-  <meta property="og:locale" content="zh_TW" />
-
-  <!-- Twitter / X Cards -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="臺灣物理治療實證助手 — 專業實證 AI 衛教" />
-  <meta name="twitter:description" content="即時查詢 PubMed 實證文獻、臨床指南與臺灣《物理治療師法》。" />
-  <meta name="twitter:image" content="https://taiwan-pt-web.vercel.app/og-image.png?v=4" />
 
   <!-- JSON-LD Structured Data (Google SEO, E-E-A-T & SGE) -->
   <script type="application/ld+json">
