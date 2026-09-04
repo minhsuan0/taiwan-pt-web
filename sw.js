@@ -2,16 +2,17 @@
  * Service Worker for 台灣物理治療實證助手 (PWA)
  */
 
-const CACHE_NAME = 'taiwan-pt-v6.5';
+const CACHE_NAME = 'taiwan-pt-v7.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/apple-touch-icon.png',
-  '/favicon.png',
-  '/icon.svg'
+  '/manifest.json?v=20260904',
+  '/icon-192.png?v=20260904',
+  '/icon-512.png?v=20260904',
+  '/apple-touch-icon.png?v=20260904',
+  '/favicon.png?v=20260904',
+  '/favicon.ico?v=20260904',
+  '/icon.svg?v=20260904'
 ];
 
 self.addEventListener('install', event => {
@@ -40,8 +41,12 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // HTML 頁面強制網路優先（Network First），確保使用者即時獲取最新代碼，徹底解決舊快取殘留問題
-  if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html') || event.request.url.endsWith('/') || event.request.url.endsWith('index.html')) {
+  // HTML 頁面與 Web App Manifest 強制網路優先（Network First），確保使用者與瀏覽器即時獲取最新代碼與圖示配置
+  if (event.request.mode === 'navigate' ||
+      event.request.headers.get('accept')?.includes('text/html') ||
+      event.request.url.endsWith('/') ||
+      event.request.url.endsWith('index.html') ||
+      event.request.url.includes('manifest.json')) {
     event.respondWith(
       fetch(event.request)
         .then(response => {
