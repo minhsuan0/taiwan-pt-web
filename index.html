@@ -3252,7 +3252,7 @@
         <circle cx="12" cy="12" r="10"/>
         <polyline points="12 6 12 12 16 14"/>
       </svg>
-      <span>歷史諮詢紀錄</span>
+      <span>歷史對話紀錄</span>
     </div>
     <span class="drawer-count-badge" id="history-count">0</span>
   </div>
@@ -3264,10 +3264,15 @@
 
   <!-- 底部拇指黃金熱區 (Thumb Zone) · 溫暖支持與預約評估 -->
   <div class="drawer-footer-zone">
-    <!-- 📚 實證疼痛百科（百大專題） -->
+    <!-- 實證疼痛百科（百大專題） -->
     <a href="/topics/" class="drawer-action-btn" style="text-decoration:none;">
       <div class="btn-left">
-        <div class="btn-icon">📚</div>
+        <div class="btn-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
         <span>實證疼痛百科（百大專題）</span>
       </div>
       <span class="btn-line-badge" style="color:#007AFF;">專題 ↗</span>
@@ -3276,7 +3281,15 @@
     <!-- 請喝咖啡 -->
     <button type="button" class="drawer-action-btn" onclick="closeHistoryDrawer(); openJkoModal();">
       <div class="btn-left">
-        <div class="btn-icon">☕</div>
+        <div class="btn-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+            <line x1="6" y1="1" x2="6" y2="4"/>
+            <line x1="10" y1="1" x2="10" y2="4"/>
+            <line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
+        </div>
         <span>請團隊喝杯咖啡</span>
       </div>
       <span class="btn-badge">街口轉帳</span>
@@ -3286,7 +3299,7 @@
     <a href="https://lin.ee/y6VBRuh" target="_blank" rel="noopener noreferrer" class="drawer-action-btn">
       <div class="btn-left">
         <div class="btn-icon">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
             <path fill="#06C755" d="M19.365 9.864c0-4.04-4.2-7.33-9.365-7.33S.635 5.824.635 9.864c0 3.616 3.208 6.66 7.545 7.21.294.063.694.194.795.446.091.229.06.586.03.816l-.13.784c-.04.24-.187.938.822.512 1.009-.427 5.442-3.206 7.426-5.49 1.442-1.227 2.242-2.736 2.242-4.278z"/>
             <path fill="#FFFFFF" d="M8.053 8.35v3.238H6.512V7.47h2.42v.88H8.053zm1.884 3.238h-.878V7.47h.878v4.118zm3.626 0h-.88V9.458l-1.48 2.13h-.768V7.47h.88v2.13l1.48-2.13h.768v4.118zm2.668-3.238h-1.54v.737h1.432v.88h-1.432v.741h1.54v.88H14.69V7.47h2.541v.88z"/>
           </svg>
@@ -4704,8 +4717,14 @@
             </svg>
             <span>分享</span>
           </button>
-          <button class="action-pill-btn" onclick="triggerCoffeeDonation()" title="隨喜請團隊喝杯咖啡" style="color:#D97706; border-color:rgba(217,119,6,0.25); background:rgba(217,119,6,0.06); font-weight:700;">
-            <span style="font-size:0.9rem; margin-right:4px;">☕</span>
+          <button class="action-pill-btn" onclick="triggerCoffeeDonation()" title="請團隊喝杯咖啡">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+              <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+              <line x1="6" y1="1" x2="6" y2="4"/>
+              <line x1="10" y1="1" x2="10" y2="4"/>
+              <line x1="14" y1="1" x2="14" y2="4"/>
+            </svg>
             <span>請喝咖啡</span>
           </button>
         </div>
@@ -5632,7 +5651,7 @@
       bodyEl.innerHTML = `
         <div class="drawer-empty">
           <div style="font-size:1.6rem;margin-bottom:0.4rem;">💬</div>
-          <div class="drawer-empty-title">尚無諮詢紀錄</div>
+          <div class="drawer-empty-title">尚無對話紀錄</div>
           <div class="drawer-empty-desc">
             你向實證助手諮詢的對話<br>會自動安全保存在本裝置中
           </div>
@@ -5695,7 +5714,7 @@
   function clearAllHistory() {
     const sessions = getHistorySessions();
     if (sessions.length === 0) return;
-    if (confirm('確定要清除本機的所有歷史諮詢紀錄嗎？\n（此動作無法復原）')) {
+    if (confirm('確定要清除本機的所有歷史對話紀錄嗎？\n（此動作無法復原）')) {
       localStorage.removeItem('tw_pt_history_sessions');
       localStorage.removeItem('tw_pt_favorites');
       updateBadgeCounts();
@@ -6422,7 +6441,13 @@
     <div class="modal-card" style="max-width:370px; max-height:90vh; overflow-y:auto; padding:16px 18px; box-sizing:border-box; text-align:center;">
       <div class="modal-header" style="margin-bottom:8px; padding:0 0 8px; display:flex; justify-content:space-between; align-items:center;">
         <div style="display:flex; align-items:center; gap:6px;">
-          <span style="font-size:1.15rem;">☕</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary,#8e8e93);">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+            <line x1="6" y1="1" x2="6" y2="4"/>
+            <line x1="10" y1="1" x2="10" y2="4"/>
+            <line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
           <span class="modal-title" style="font-size:1.05rem; font-weight:700;">請團隊喝杯咖啡</span>
         </div>
         <button type="button" class="modal-close-btn" onclick="closeJkoModal()" aria-label="關閉">✕</button>
