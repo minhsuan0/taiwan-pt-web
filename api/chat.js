@@ -446,7 +446,8 @@ export default async function handler(req) {
   }
 
   // ② Edge 全串流傳輸（零超時、邊緣毫秒響應）
-  const MODELS = ['gemini-flash-lite-latest', 'gemini-3.6-flash', 'gemini-flash-latest'];
+  // 優先級：gemini-3-flash-preview（速度最快 ~2-4s） -> gemini-3.1-flash-lite（備援 ~4s）
+  const MODELS = ['gemini-3-flash-preview', 'gemini-3.1-flash-lite'];
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const chatHistory = sanitizedHistory.map(m => ({
@@ -474,7 +475,20 @@ export default async function handler(req) {
       });
 
       const chat = model.startChat({ history: chatHistory });
-      const result = await chat.sendMessageStream(userContent);
+
+      // 設定 9 秒超時：若模型在 9 秒內未建立連線，立即切換備援模型
+      const streamPromise = chat.sendMessageStream(userContent);
+      const streamTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error(`Stream start timeout (9s) for ${modelName}`)), 9000));
+      const result = await Promise.race([streamPromise, streamTimeout]);
+
+      const iterator = result.stream[Symbol.asyncIterator]();
+      const firstChunkPromise = iterator.next();
+      const firstChunkTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error(`First chunk timeout (8s) for ${modelName}`)), 8000));
+      const firstChunkResult = await Promise.race([firstChunkPromise, firstChunkTimeout]);
+
+      if (!firstChunkResult || firstChunkResult.done) {
+        throw new Error('Empty stream response');
+      }
 
       const encoder = new TextEncoder();
       let fullResponseText = '';
@@ -482,12 +496,31 @@ export default async function handler(req) {
       const readableStream = new ReadableStream({
         async start(controller) {
           try {
-            for await (const chunk of result.stream) {
+            // 處理首個 Token
+            let firstText = '';
+            try {
+              firstText = firstChunkResult.value?.text ? firstChunkResult.value.text() : '';
+            } catch {
+              const parts = firstChunkResult.value?.candidates?.[0]?.content?.parts;
+              if (Array.isArray(parts)) {
+                firstText = parts.map(p => p.text || '').join('');
+              }
+            }
+            if (firstText) {
+              const loc = localizeTaiwanese(firstText);
+              fullResponseText += loc;
+              controller.enqueue(encoder.encode(loc));
+            }
+
+            // 串流後續內容
+            while (true) {
+              const { value, done } = await iterator.next();
+              if (done) break;
               let text = '';
               try {
-                text = chunk.text();
-              } catch (chunkErr) {
-                const parts = chunk?.candidates?.[0]?.content?.parts;
+                text = value.text();
+              } catch {
+                const parts = value?.candidates?.[0]?.content?.parts;
                 if (Array.isArray(parts)) {
                   text = parts.map(p => p.text || '').join('');
                 }
