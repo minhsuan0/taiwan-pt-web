@@ -3,6 +3,7 @@ import { PT_CORPUS } from '../lib/rag/corpus.js';
 import { hybridSearch } from '../lib/rag/vector-search.js';
 import { expandQuery, buildHybridQueryString } from '../lib/rag/query-expander.js';
 import { rerank, formatForPrompt } from '../lib/rag/reranker.js';
+import { getSmartCache, setDynamicCache as setSmartDynamicCache } from '../lib/cache.js';
 
 export const config = {
   runtime: 'edge',
@@ -13,9 +14,9 @@ const MAX_MESSAGE_LENGTH = 2000;     // 單則訊息最大字元數（防 DoS �
 const MAX_HISTORY_TURNS  = 10;       // 最多傳入 10 輪對話歷史
 const ALLOWED_ORIGIN = 'https://taiwan-pt-web.vercel.app';
 
-// ── 速率限制（每個 IP 每小時最多 100 次 /api/chat）───────────────────────
+// ── 速率限制（每個 IP 每小時最多 30 次 /api/chat）────────────────────────
 const rateLimitMap = new Map();
-const RATE_LIMIT = 100;
+const RATE_LIMIT = 30;
 const RATE_WINDOW = 60 * 60 * 1000;
 
 function isAllowedOrigin(origin) {
@@ -378,6 +379,10 @@ export default async function handler(req) {
   // ── 快取查詢（僅無歷史對話時啟用）────────────────────────────
   const cacheKey = message.trim();
   if (sanitizedHistory.length === 0) {
+    const smartCached = getSmartCache(cacheKey);
+    if (smartCached?.answer) {
+      return new Response(smartCached.answer, { headers: streamHeaders });
+    }
     const cached = getDynamicCache(cacheKey);
     if (cached) {
       return new Response(cached, { headers: streamHeaders });
@@ -553,6 +558,7 @@ AI 提供的是普遍實證指引，但每個人身體受力模式與代償機�
         }
         if (sanitizedHistory.length === 0 && fullResponseText.length > 50) {
           setDynamicCache(cacheKey, fullResponseText);
+          setSmartDynamicCache(cacheKey, fullResponseText);
         }
       }
 

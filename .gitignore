@@ -6,3 +6,4 @@ dist/
 *.log
 scratch/
 scripts/_comparison_result.json
+.vercel
